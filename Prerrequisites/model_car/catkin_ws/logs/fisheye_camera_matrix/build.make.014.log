@@ -1,0 +1,18 @@
+[ 14%] [32mBuilding CXX object CMakeFiles/camera_matrix_publisher.dir/src/camera_matrix_publisher.cpp.o
+[0m[ 28%] [32mBuilding CXX object CMakeFiles/camera_matrix_publisher.dir/src/camera_matrix.cpp.o
+[0m[31m[1mLinking CXX executable /root/model_car/catkin_ws/devel/lib/fisheye_camera_matrix/camera_matrix_publisher
+[0m[35m[1mScanning dependencies of target fisheye_camera_matrix
+[ 28%] Built target camera_matrix_publisher
+[35m[1mScanning dependencies of target offline_calibration_manual
+[0m[ 42%] [35m[1mScanning dependencies of target undistorted_image_publisher
+[32mBuilding CXX object CMakeFiles/fisheye_camera_matrix.dir/src/camera_matrix.cpp.o
+[0m[0m[ 57%] [0m[32mBuilding CXX object CMakeFiles/offline_calibration_manual.dir/src/offline_calibration_manual.cpp.o
+[0m[ 71%] [32mBuilding CXX object CMakeFiles/undistorted_image_publisher.dir/src/undistorted_image_publisher.cpp.o
+[0m[ 85%] [32mBuilding CXX object CMakeFiles/undistorted_image_publisher.dir/src/camera_matrix.cpp.o
+[0m[31m[1mLinking CXX shared library /root/model_car/catkin_ws/devel/lib/libfisheye_camera_matrix.so
+[0m[ 85%] Built target fisheye_camera_matrix
+[100%] [32mBuilding CXX object CMakeFiles/offline_calibration_manual.dir/src/camera_matrix.cpp.o
+[0m[31m[1mLinking CXX executable /root/model_car/catkin_ws/devel/lib/fisheye_camera_matrix/offline_calibration_manual
+[0m[31m[1mLinking CXX executable /root/model_car/catkin_ws/devel/lib/fisheye_camera_matrix/undistorted_image_publisher
+[0m[100%] Built target offline_calibration_manual
+[100%] Built target undistorted_image_publisher

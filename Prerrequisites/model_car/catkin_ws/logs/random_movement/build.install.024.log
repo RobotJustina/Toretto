@@ -1,0 +1,17 @@
+[100%] Built target random_movement_node
+[36mInstall the project...
+[0m-- Install configuration: ""
+-- Installing: /root/model_car/catkin_ws/install/_setup_util.py
+-- Installing: /root/model_car/catkin_ws/install/env.sh
+-- Installing: /root/model_car/catkin_ws/install/setup.bash
+-- Installing: /root/model_car/catkin_ws/install/setup.sh
+-- Installing: /root/model_car/catkin_ws/install/setup.zsh
+-- Installing: /root/model_car/catkin_ws/install/.rosinstall
+-- Up-to-date: /root/model_car/catkin_ws/install/lib/pkgconfig/random_movement.pc
+-- Up-to-date: /root/model_car/catkin_ws/install/share/random_movement/cmake/random_movementConfig.cmake
+-- Up-to-date: /root/model_car/catkin_ws/install/share/random_movement/cmake/random_movementConfig-version.cmake
+-- Up-to-date: /root/model_car/catkin_ws/install/share/random_movement/package.xml
+-- Up-to-date: /root/model_car/catkin_ws/install/lib/random_movement/random_movement_node
+-- Installing: /root/model_car/catkin_ws/install/share/random_movement/launch
+-- Up-to-date: /root/model_car/catkin_ws/install/share/random_movement/launch/random_movement.launch
+-- Up-to-date: /root/model_car/catkin_ws/install/share/random_movement/launch/auto.launch

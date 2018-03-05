@@ -1,0 +1,20 @@
+[ 50%] Built target usb_cam
+[100%] Built target usb_cam_node
+[36mInstall the project...
+[0m-- Install configuration: ""
+-- Installing: /root/model_car/catkin_ws/install/_setup_util.py
+-- Installing: /root/model_car/catkin_ws/install/env.sh
+-- Installing: /root/model_car/catkin_ws/install/setup.bash
+-- Installing: /root/model_car/catkin_ws/install/setup.sh
+-- Installing: /root/model_car/catkin_ws/install/setup.zsh
+-- Installing: /root/model_car/catkin_ws/install/.rosinstall
+-- Up-to-date: /root/model_car/catkin_ws/install/lib/pkgconfig/usb_cam.pc
+-- Up-to-date: /root/model_car/catkin_ws/install/share/usb_cam/cmake/usb_camConfig.cmake
+-- Up-to-date: /root/model_car/catkin_ws/install/share/usb_cam/cmake/usb_camConfig-version.cmake
+-- Up-to-date: /root/model_car/catkin_ws/install/share/usb_cam/package.xml
+-- Up-to-date: /root/model_car/catkin_ws/install/lib/usb_cam/usb_cam_node
+-- Up-to-date: /root/model_car/catkin_ws/install/lib/libusb_cam.so
+-- Installing: /root/model_car/catkin_ws/install/share/usb_cam/launch
+-- Up-to-date: /root/model_car/catkin_ws/install/share/usb_cam/launch/usb_cam-test.launch
+-- Installing: /root/model_car/catkin_ws/install/include/usb_cam
+-- Up-to-date: /root/model_car/catkin_ws/install/include/usb_cam/usb_cam.h

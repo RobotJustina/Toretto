@@ -1,0 +1,22 @@
+[ 50%] Built target send_steering_light
+[100%] Built target send_steering_light_node
+[36mInstall the project...[0m
+-- Install configuration: ""
+-- Up-to-date: /home/jesus/autoModel/model_car/catkin_ws/install/_setup_util.py
+-- Up-to-date: /home/jesus/autoModel/model_car/catkin_ws/install/env.sh
+-- Up-to-date: /home/jesus/autoModel/model_car/catkin_ws/install/setup.bash
+-- Up-to-date: /home/jesus/autoModel/model_car/catkin_ws/install/setup.sh
+-- Up-to-date: /home/jesus/autoModel/model_car/catkin_ws/install/setup.zsh
+-- Up-to-date: /home/jesus/autoModel/model_car/catkin_ws/install/.rosinstall
+-- Installing: /home/jesus/autoModel/model_car/catkin_ws/install/lib/pkgconfig/send_steering_light.pc
+-- Installing: /home/jesus/autoModel/model_car/catkin_ws/install/share/send_steering_light/cmake/send_steering_lightConfig.cmake
+-- Installing: /home/jesus/autoModel/model_car/catkin_ws/install/share/send_steering_light/cmake/send_steering_lightConfig-version.cmake
+-- Installing: /home/jesus/autoModel/model_car/catkin_ws/install/share/send_steering_light/package.xml
+-- Installing: /home/jesus/autoModel/model_car/catkin_ws/install/lib/libsend_steering_light.so
+-- Installing: /home/jesus/autoModel/model_car/catkin_ws/install/lib/send_steering_light/send_steering_light_node
+-- Set runtime path of "/home/jesus/autoModel/model_car/catkin_ws/install/lib/send_steering_light/send_steering_light_node" to ""
+-- Installing: /home/jesus/autoModel/model_car/catkin_ws/install/include/send_steering_light
+-- Installing: /home/jesus/autoModel/model_car/catkin_ws/install/include/send_steering_light/send_steering_light.h
+-- Installing: /home/jesus/autoModel/model_car/catkin_ws/install/share/send_steering_light/launch
+-- Installing: /home/jesus/autoModel/model_car/catkin_ws/install/share/send_steering_light/launch/servo_PC.launch
+-- Installing: /home/jesus/autoModel/model_car/catkin_ws/install/share/send_steering_light/launch/servo_light_odroid.launch

@@ -1,0 +1,14 @@
+[ 50%] Built target navigation
+[100%] Built target park
+[36mInstall the project...
+[0m-- Install configuration: ""
+-- Installing: /root/model_car/catkin_ws/install/_setup_util.py
+-- Up-to-date: /root/model_car/catkin_ws/install/env.sh
+-- Up-to-date: /root/model_car/catkin_ws/install/setup.bash
+-- Up-to-date: /root/model_car/catkin_ws/install/setup.sh
+-- Up-to-date: /root/model_car/catkin_ws/install/setup.zsh
+-- Up-to-date: /root/model_car/catkin_ws/install/.rosinstall
+-- Installing: /root/model_car/catkin_ws/install/lib/pkgconfig/navigation.pc
+-- Installing: /root/model_car/catkin_ws/install/share/navigation/cmake/navigationConfig.cmake
+-- Installing: /root/model_car/catkin_ws/install/share/navigation/cmake/navigationConfig-version.cmake
+-- Installing: /root/model_car/catkin_ws/install/share/navigation/package.xml

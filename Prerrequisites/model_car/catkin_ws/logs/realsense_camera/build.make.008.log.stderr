@@ -1,0 +1,8 @@
+make[2]: *** No rule to make target `/usr/local/lib/librealsense.so', needed by `/root/model_car/catkin_ws/devel/lib/librealsense_camera_nodelet.so'.  Stop.
+make[2]: *** Waiting for unfinished jobs....
+In file included from /root/model_car/catkin_ws/src/realsense_camera/src/realsense_camera_nodelet.cpp:31:0:
+/root/model_car/catkin_ws/src/realsense_camera/src/realsense_camera_nodelet.h:61:31: fatal error: librealsense/rs.hpp: No such file or directory
+compilation terminated.
+make[2]: *** [CMakeFiles/realsense_camera_nodelet.dir/src/realsense_camera_nodelet.cpp.o] Error 1
+make[1]: *** [CMakeFiles/realsense_camera_nodelet.dir/all] Error 2
+make: *** [all] Error 2

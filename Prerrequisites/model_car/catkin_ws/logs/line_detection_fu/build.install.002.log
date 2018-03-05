@@ -1,0 +1,24 @@
+[ 60%] Built target LaneDetectorFu
+[ 80%] Built target line_detection_fu_gencfg
+[100%] Built target line_detection_fu_node
+[36mInstall the project...
+[0m-- Install configuration: ""
+-- Up-to-date: /root/model_car/catkin_ws/install/_setup_util.py
+-- Up-to-date: /root/model_car/catkin_ws/install/env.sh
+-- Up-to-date: /root/model_car/catkin_ws/install/setup.bash
+-- Up-to-date: /root/model_car/catkin_ws/install/setup.sh
+-- Up-to-date: /root/model_car/catkin_ws/install/setup.zsh
+-- Up-to-date: /root/model_car/catkin_ws/install/.rosinstall
+-- Up-to-date: /root/model_car/catkin_ws/install/include/line_detection_fu/LaneDetectionConfig.h
+-- Up-to-date: /root/model_car/catkin_ws/install/lib/python2.7/dist-packages/line_detection_fu/__init__.py
+Listing /root/model_car/catkin_ws/devel/lib/python2.7/dist-packages/line_detection_fu/cfg ...
+-- Installing: /root/model_car/catkin_ws/install/lib/python2.7/dist-packages/line_detection_fu/cfg
+-- Up-to-date: /root/model_car/catkin_ws/install/lib/python2.7/dist-packages/line_detection_fu/cfg/LaneDetectionConfig.py
+-- Up-to-date: /root/model_car/catkin_ws/install/lib/python2.7/dist-packages/line_detection_fu/cfg/__init__.py
+-- Up-to-date: /root/model_car/catkin_ws/install/lib/python2.7/dist-packages/line_detection_fu/cfg/LaneDetectionConfig.pyc
+-- Up-to-date: /root/model_car/catkin_ws/install/lib/python2.7/dist-packages/line_detection_fu/cfg/__init__.pyc
+-- Installing: /root/model_car/catkin_ws/install/lib/pkgconfig/line_detection_fu.pc
+-- Up-to-date: /root/model_car/catkin_ws/install/share/line_detection_fu/cmake/line_detection_fuConfig.cmake
+-- Up-to-date: /root/model_car/catkin_ws/install/share/line_detection_fu/cmake/line_detection_fuConfig-version.cmake
+-- Up-to-date: /root/model_car/catkin_ws/install/share/line_detection_fu/package.xml
+-- Up-to-date: /root/model_car/catkin_ws/install/lib/line_detection_fu/line_detection_fu_node

@@ -1,0 +1,4 @@
+[ 50%] [100%] [32mBuilding CXX object CMakeFiles/cross_node.dir/src/CrossDetector.cpp.o
+[32mBuilding CXX object CMakeFiles/cross_node.dir/src/cross_node.cpp.o
+[0m[0m[31m[1mLinking CXX executable /root/model_car/catkin_ws/devel/lib/cross/cross_node
+[0m[100%] Built target cross_node

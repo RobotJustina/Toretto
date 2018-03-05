@@ -1,0 +1,11 @@
+[31m[1mCMake Error[0m at /opt/odroid-x2/sdk/opt/ros/indigo/share/pcl_ros/cmake/pcl_rosConfig.cmake:106 (message):
+  Project 'pcl_ros' specifies '/usr/include/pcl-1.7' as an include dir, which
+  is not found.  It does neither exist as an absolute directory nor in
+  '/opt/odroid-x2/sdk//opt/ros/indigo//usr/include/pcl-1.7'.  Ask the
+  maintainer 'Paul Bovbel <paul@@bovbel.com>, Bill Morris
+  <bill@@neautomation.com>' to fix it.
+[36mCall Stack (most recent call first):[0m
+  /opt/odroid-x2/sdk/opt/ros/indigo/share/catkin/cmake/catkinConfig.cmake:76 (find_package)
+  CMakeLists.txt:16 (find_package)
+
+

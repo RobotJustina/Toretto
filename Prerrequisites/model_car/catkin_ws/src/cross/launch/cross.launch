@@ -1,0 +1,4 @@
+<launch>
+ <node pkg="cross" type="cross_node" name="cross_node" output="screen">
+   </node>
+</launch>

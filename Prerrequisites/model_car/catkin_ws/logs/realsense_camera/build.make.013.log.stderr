@@ -1,0 +1,17 @@
+/usr/src/gtest/src/gtest-all.cc:39:25: fatal error: gtest/gtest.h: No such file or directory
+compilation terminated.
+make[2]: *** [gtest/CMakeFiles/gtest.dir/src/gtest-all.cc.o] Error 1
+make[1]: *** [gtest/CMakeFiles/gtest.dir/all] Error 2
+make[1]: *** Waiting for unfinished jobs....
+make[2]: *** No rule to make target `/usr/local/lib/librealsense.so', needed by `/root/model_car/catkin_ws/devel/lib/librealsense_camera_nodelet.so'.  Stop.
+make[2]: *** Waiting for unfinished jobs....
+In file included from /opt/odroid-x2/sdk/opt/ros/indigo/include/ros/platform.h:53:0,
+                 from /opt/odroid-x2/sdk/opt/ros/indigo/include/ros/time.h:53,
+                 from /opt/odroid-x2/sdk/opt/ros/indigo/include/ros/ros.h:38,
+                 from /root/model_car/catkin_ws/src/realsense_camera/src/realsense_camera_nodelet.h:35,
+                 from /root/model_car/catkin_ws/src/realsense_camera/src/realsense_camera_nodelet.cpp:31:
+/opt/odroid-x2/sdk/usr/include/stdlib.h:760:34: fatal error: bits/stdlib-bsearch.h: No such file or directory
+compilation terminated.
+make[2]: *** [CMakeFiles/realsense_camera_nodelet.dir/src/realsense_camera_nodelet.cpp.o] Error 1
+make[1]: *** [CMakeFiles/realsense_camera_nodelet.dir/all] Error 2
+make: *** [all] Error 2

@@ -1,0 +1,19 @@
+[ 50%] Built target heading
+[100%] Built target heading_node
+[36mInstall the project...
+[0m-- Install configuration: ""
+-- Installing: /root/model_car/catkin_ws/install/_setup_util.py
+-- Installing: /root/model_car/catkin_ws/install/env.sh
+-- Installing: /root/model_car/catkin_ws/install/setup.bash
+-- Installing: /root/model_car/catkin_ws/install/setup.sh
+-- Installing: /root/model_car/catkin_ws/install/setup.zsh
+-- Installing: /root/model_car/catkin_ws/install/.rosinstall
+-- Installing: /root/model_car/catkin_ws/install/lib/pkgconfig/heading.pc
+-- Up-to-date: /root/model_car/catkin_ws/install/share/heading/cmake/headingConfig.cmake
+-- Up-to-date: /root/model_car/catkin_ws/install/share/heading/cmake/headingConfig-version.cmake
+-- Up-to-date: /root/model_car/catkin_ws/install/share/heading/package.xml
+-- Up-to-date: /root/model_car/catkin_ws/install/lib/heading/heading_node
+-- Installing: /root/model_car/catkin_ws/install/include/heading
+-- Up-to-date: /root/model_car/catkin_ws/install/include/heading/heading.h
+-- Installing: /root/model_car/catkin_ws/install/include/heading/launch
+-- Up-to-date: /root/model_car/catkin_ws/install/include/heading/launch/heading_odroid.launch

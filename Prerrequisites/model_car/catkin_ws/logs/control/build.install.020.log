@@ -1,0 +1,19 @@
+[ 50%] Built target control_node
+[100%] Built target control_wasd
+[36mInstall the project...
+[0m-- Install configuration: ""
+-- Up-to-date: /root/model_car/catkin_ws/install/_setup_util.py
+-- Up-to-date: /root/model_car/catkin_ws/install/env.sh
+-- Up-to-date: /root/model_car/catkin_ws/install/setup.bash
+-- Up-to-date: /root/model_car/catkin_ws/install/setup.sh
+-- Up-to-date: /root/model_car/catkin_ws/install/setup.zsh
+-- Up-to-date: /root/model_car/catkin_ws/install/.rosinstall
+-- Up-to-date: /root/model_car/catkin_ws/install/lib/pkgconfig/control.pc
+-- Up-to-date: /root/model_car/catkin_ws/install/share/control/cmake/controlConfig.cmake
+-- Up-to-date: /root/model_car/catkin_ws/install/share/control/cmake/controlConfig-version.cmake
+-- Up-to-date: /root/model_car/catkin_ws/install/share/control/package.xml
+-- Up-to-date: /root/model_car/catkin_ws/install/lib/control/control_node
+-- Up-to-date: /root/model_car/catkin_ws/install/lib/control/control_wasd
+-- Installing: /root/model_car/catkin_ws/install/share/control/launch
+-- Up-to-date: /root/model_car/catkin_ws/install/share/control/launch/control.launch
+-- Up-to-date: /root/model_car/catkin_ws/install/share/control/launch/control_wasd.launch

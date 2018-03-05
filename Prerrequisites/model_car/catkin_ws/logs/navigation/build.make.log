@@ -1,0 +1,6 @@
+[100%] [100%] [32mBuilding CXX object CMakeFiles/navigation.dir/src/navigation.cpp.o
+[32mBuilding CXX object CMakeFiles/park.dir/src/park.cpp.o
+[0m[0m[31m[1mLinking CXX executable /root/model_car/catkin_ws/devel/lib/navigation/park
+[0m[100%] Built target park
+[31m[1mLinking CXX executable /root/model_car/catkin_ws/devel/lib/navigation/navigation
+[0m[100%] Built target navigation

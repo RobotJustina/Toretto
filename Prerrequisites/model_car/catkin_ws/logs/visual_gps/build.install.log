@@ -1,0 +1,64 @@
+[ 12%] Built target kalman_2d
+[ 25%] Built target kalman_3d
+[ 37%] Built target visual_gps_2d_node
+[ 50%] Built target visual_gps_3d_node
+[ 50%] Built target std_msgs_generate_messages_py
+[ 50%] Built target _visual_gps_generate_messages_check_deps_Transform
+[ 50%] Built target geometry_msgs_generate_messages_py
+[ 75%] Built target visual_gps_generate_messages_py
+[ 75%] Built target geometry_msgs_generate_messages_lisp
+[ 75%] Built target std_msgs_generate_messages_lisp
+[ 87%] Built target visual_gps_generate_messages_lisp
+[ 87%] Built target std_msgs_generate_messages_cpp
+[ 87%] Built target geometry_msgs_generate_messages_cpp
+[100%] Built target visual_gps_generate_messages_cpp
+[100%] Built target visual_gps_generate_messages
+[36mInstall the project...
+[0m-- Install configuration: ""
+-- Installing: /root/model_car/catkin_ws/install/_setup_util.py
+-- Installing: /root/model_car/catkin_ws/install/env.sh
+-- Installing: /root/model_car/catkin_ws/install/setup.bash
+-- Installing: /root/model_car/catkin_ws/install/setup.sh
+-- Installing: /root/model_car/catkin_ws/install/setup.zsh
+-- Installing: /root/model_car/catkin_ws/install/.rosinstall
+-- Up-to-date: /root/model_car/catkin_ws/install/share/visual_gps/msg/Transform.msg
+-- Installing: /root/model_car/catkin_ws/install/share/visual_gps/cmake/visual_gps-msg-paths.cmake
+-- Installing: /root/model_car/catkin_ws/install/include/visual_gps
+-- Installing: /root/model_car/catkin_ws/install/include/visual_gps/Transform.h
+-- Installing: /root/model_car/catkin_ws/install/share/common-lisp/ros/visual_gps
+-- Installing: /root/model_car/catkin_ws/install/share/common-lisp/ros/visual_gps/msg
+-- Installing: /root/model_car/catkin_ws/install/share/common-lisp/ros/visual_gps/msg/_package_Transform.lisp
+-- Installing: /root/model_car/catkin_ws/install/share/common-lisp/ros/visual_gps/msg/visual_gps-msg.asd
+-- Installing: /root/model_car/catkin_ws/install/share/common-lisp/ros/visual_gps/msg/Transform.lisp
+-- Installing: /root/model_car/catkin_ws/install/share/common-lisp/ros/visual_gps/msg/_package.lisp
+Listing /root/model_car/catkin_ws/devel/lib/python2.7/dist-packages/visual_gps ...
+Compiling /root/model_car/catkin_ws/devel/lib/python2.7/dist-packages/visual_gps/__init__.py ...
+Listing /root/model_car/catkin_ws/devel/lib/python2.7/dist-packages/visual_gps/msg ...
+Compiling /root/model_car/catkin_ws/devel/lib/python2.7/dist-packages/visual_gps/msg/_Transform.py ...
+Compiling /root/model_car/catkin_ws/devel/lib/python2.7/dist-packages/visual_gps/msg/__init__.py ...
+-- Installing: /root/model_car/catkin_ws/install/lib/python2.7/dist-packages/visual_gps
+-- Installing: /root/model_car/catkin_ws/install/lib/python2.7/dist-packages/visual_gps/msg
+-- Installing: /root/model_car/catkin_ws/install/lib/python2.7/dist-packages/visual_gps/msg/_Transform.pyc
+-- Installing: /root/model_car/catkin_ws/install/lib/python2.7/dist-packages/visual_gps/msg/__init__.py
+-- Installing: /root/model_car/catkin_ws/install/lib/python2.7/dist-packages/visual_gps/msg/_Transform.py
+-- Installing: /root/model_car/catkin_ws/install/lib/python2.7/dist-packages/visual_gps/msg/__init__.pyc
+-- Installing: /root/model_car/catkin_ws/install/lib/python2.7/dist-packages/visual_gps/__init__.py
+-- Installing: /root/model_car/catkin_ws/install/lib/python2.7/dist-packages/visual_gps/__init__.pyc
+-- Installing: /root/model_car/catkin_ws/install/lib/pkgconfig/visual_gps.pc
+-- Installing: /root/model_car/catkin_ws/install/share/visual_gps/cmake/visual_gps-msg-extras.cmake
+-- Installing: /root/model_car/catkin_ws/install/share/visual_gps/cmake/visual_gpsConfig.cmake
+-- Installing: /root/model_car/catkin_ws/install/share/visual_gps/cmake/visual_gpsConfig-version.cmake
+-- Up-to-date: /root/model_car/catkin_ws/install/share/visual_gps/package.xml
+-- Installing: /root/model_car/catkin_ws/install/lib/visual_gps/visual_gps_2d_node
+-- Removed runtime path from "/root/model_car/catkin_ws/install/lib/visual_gps/visual_gps_2d_node"
+-- Installing: /root/model_car/catkin_ws/install/share/visual_gps/launch
+-- Up-to-date: /root/model_car/catkin_ws/install/share/visual_gps/launch/visual_gps_2d_rviz.launch
+-- Up-to-date: /root/model_car/catkin_ws/install/share/visual_gps/launch/visual_gps_odroid.launch
+-- Up-to-date: /root/model_car/catkin_ws/install/share/visual_gps/launch/visual_gps_3d_rviz.launch
+-- Installing: /root/model_car/catkin_ws/install/share/visual_gps/config
+-- Installing: /root/model_car/catkin_ws/install/share/visual_gps/config/FEATURE_FILES
+-- Up-to-date: /root/model_car/catkin_ws/install/share/visual_gps/config/FEATURE_FILES/camera.txt
+-- Up-to-date: /root/model_car/catkin_ws/install/share/visual_gps/config/FEATURE_FILES/map.txt
+-- Up-to-date: /root/model_car/catkin_ws/install/share/visual_gps/config/FEATURE_FILES/map (copy).txt
+-- Installing: /root/model_car/catkin_ws/install/share/visual_gps/msg
+-- Up-to-date: /root/model_car/catkin_ws/install/share/visual_gps/msg/Transform.msg

@@ -1,0 +1,7 @@
+[ 50%] [32mBuilding CXX object CMakeFiles/control_node.dir/src/control_node.cpp.o
+[0m[35m[1mScanning dependencies of target control_wasd
+[0m[100%] [32mBuilding CXX object CMakeFiles/control_wasd.dir/src/control_wasd.cpp.o
+[0m[31m[1mLinking CXX executable /root/model_car/catkin_ws/devel/lib/control/control_node
+[0m[100%] Built target control_node
+[31m[1mLinking CXX executable /root/model_car/catkin_ws/devel/lib/control/control_wasd
+[0m[100%] Built target control_wasd

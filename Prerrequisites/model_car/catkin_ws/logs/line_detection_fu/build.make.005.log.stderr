@@ -1,0 +1,36 @@
+In file included from /opt/odroid-x2/compiler/bin/../lib/gcc/arm-linux-gnueabihf/4.7.2/../../../../arm-linux-gnueabihf/include/c++/4.7.2/cstdlib:66:0,
+                 from /opt/odroid-x2/compiler/bin/../lib/gcc/arm-linux-gnueabihf/4.7.2/../../../../arm-linux-gnueabihf/include/c++/4.7.2/bits/stl_algo.h:61,
+                 from /opt/odroid-x2/compiler/bin/../lib/gcc/arm-linux-gnueabihf/4.7.2/../../../../arm-linux-gnueabihf/include/c++/4.7.2/algorithm:63,
+                 from /opt/odroid-x2/sdk/usr/include/boost/numeric/ublas/storage.hpp:16,
+                 from /opt/odroid-x2/sdk/usr/include/boost/numeric/ublas/vector.hpp:19,
+                 from /opt/odroid-x2/sdk/usr/include/boost/numeric/ublas/matrix.hpp:16,
+                 from /root/model_car/catkin_ws/src/fu_line_detection/src/tools/NewtonPolynomial.h:4,
+                 from /root/model_car/catkin_ws/src/fu_line_detection/src/tools/LanePolynomial.h:11,
+                 from /root/model_car/catkin_ws/src/fu_line_detection/src/tools/LanePolynomial.cpp:8:
+/opt/odroid-x2/sdk/usr/include/stdlib.h:955:31: fatal error: bits/stdlib-float.h: No such file or directory
+compilation terminated.
+make[2]: *** [CMakeFiles/LaneDetectorFu.dir/src/tools/LanePolynomial.cpp.o] Error 1
+make[2]: *** Waiting for unfinished jobs....
+In file included from /opt/odroid-x2/sdk/usr/include/opencv2/core/types_c.h:56:0,
+                 from /opt/odroid-x2/sdk/usr/include/opencv2/core/core.hpp:49,
+                 from /root/model_car/catkin_ws/src/fu_line_detection/src/tools/IPMapper.h:7,
+                 from /root/model_car/catkin_ws/src/fu_line_detection/src/tools/IPMapper.cpp:1:
+/opt/odroid-x2/sdk/usr/include/stdlib.h:955:31: fatal error: bits/stdlib-float.h: No such file or directory
+compilation terminated.
+make[2]: *** [CMakeFiles/LaneDetectorFu.dir/src/tools/IPMapper.cpp.o] Error 1
+In file included from /opt/odroid-x2/compiler/bin/../lib/gcc/arm-linux-gnueabihf/4.7.2/../../../../arm-linux-gnueabihf/include/c++/4.7.2/cstdlib:66:0,
+                 from /opt/odroid-x2/compiler/bin/../lib/gcc/arm-linux-gnueabihf/4.7.2/../../../../arm-linux-gnueabihf/include/c++/4.7.2/ext/string_conversions.h:37,
+                 from /opt/odroid-x2/compiler/bin/../lib/gcc/arm-linux-gnueabihf/4.7.2/../../../../arm-linux-gnueabihf/include/c++/4.7.2/bits/basic_string.h:2814,
+                 from /opt/odroid-x2/compiler/bin/../lib/gcc/arm-linux-gnueabihf/4.7.2/../../../../arm-linux-gnueabihf/include/c++/4.7.2/string:54,
+                 from /opt/odroid-x2/compiler/bin/../lib/gcc/arm-linux-gnueabihf/4.7.2/../../../../arm-linux-gnueabihf/include/c++/4.7.2/bits/locale_classes.h:42,
+                 from /opt/odroid-x2/compiler/bin/../lib/gcc/arm-linux-gnueabihf/4.7.2/../../../../arm-linux-gnueabihf/include/c++/4.7.2/bits/ios_base.h:43,
+                 from /opt/odroid-x2/compiler/bin/../lib/gcc/arm-linux-gnueabihf/4.7.2/../../../../arm-linux-gnueabihf/include/c++/4.7.2/ios:43,
+                 from /opt/odroid-x2/compiler/bin/../lib/gcc/arm-linux-gnueabihf/4.7.2/../../../../arm-linux-gnueabihf/include/c++/4.7.2/istream:40,
+                 from /opt/odroid-x2/compiler/bin/../lib/gcc/arm-linux-gnueabihf/4.7.2/../../../../arm-linux-gnueabihf/include/c++/4.7.2/sstream:39,
+                 from /opt/odroid-x2/sdk/usr/include/boost/numeric/ublas/io.hpp:18,
+                 from /root/model_car/catkin_ws/src/fu_line_detection/src/tools/NewtonPolynomial.cpp:1:
+/opt/odroid-x2/sdk/usr/include/stdlib.h:955:31: fatal error: bits/stdlib-float.h: No such file or directory
+compilation terminated.
+make[2]: *** [CMakeFiles/LaneDetectorFu.dir/src/tools/NewtonPolynomial.cpp.o] Error 1
+make[1]: *** [CMakeFiles/LaneDetectorFu.dir/all] Error 2
+make: *** [all] Error 2

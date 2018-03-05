@@ -1,0 +1,4 @@
+<launch>
+ <node pkg="navigation" type="navigation" name="navigation" output="screen">
+   </node>
+</launch>

@@ -1,0 +1,18 @@
+[100%] Built target detect
+[36mInstall the project...
+[0m-- Install configuration: ""
+-- Installing: /root/model_car/catkin_ws/install/_setup_util.py
+-- Up-to-date: /root/model_car/catkin_ws/install/env.sh
+-- Up-to-date: /root/model_car/catkin_ws/install/setup.bash
+-- Up-to-date: /root/model_car/catkin_ws/install/setup.sh
+-- Up-to-date: /root/model_car/catkin_ws/install/setup.zsh
+-- Up-to-date: /root/model_car/catkin_ws/install/.rosinstall
+-- Up-to-date: /root/model_car/catkin_ws/install/lib/pkgconfig/detect_roof_rectangles.pc
+-- Up-to-date: /root/model_car/catkin_ws/install/share/detect_roof_rectangles/cmake/detect_roof_rectanglesConfig.cmake
+-- Up-to-date: /root/model_car/catkin_ws/install/share/detect_roof_rectangles/cmake/detect_roof_rectanglesConfig-version.cmake
+-- Up-to-date: /root/model_car/catkin_ws/install/share/detect_roof_rectangles/package.xml
+-- Up-to-date: /root/model_car/catkin_ws/install/lib/detect_roof_rectangles/detect
+-- Installing: /root/model_car/catkin_ws/install/share/detect_roof_rectangles/launch
+-- Up-to-date: /root/model_car/catkin_ws/install/share/detect_roof_rectangles/launch/d.launch
+-- Up-to-date: /root/model_car/catkin_ws/install/share/detect_roof_rectangles/launch/test.launch
+-- Up-to-date: /root/model_car/catkin_ws/install/share/detect_roof_rectangles/launch/detect.launch

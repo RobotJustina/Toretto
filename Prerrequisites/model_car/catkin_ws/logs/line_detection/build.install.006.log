@@ -1,0 +1,17 @@
+[ 88%] Built target LaneDetector
+[100%] Built target line_detection_node
+[36mInstall the project...
+[0m-- Install configuration: ""
+-- Up-to-date: /root/model_car/catkin_ws/install/_setup_util.py
+-- Up-to-date: /root/model_car/catkin_ws/install/env.sh
+-- Up-to-date: /root/model_car/catkin_ws/install/setup.bash
+-- Up-to-date: /root/model_car/catkin_ws/install/setup.sh
+-- Up-to-date: /root/model_car/catkin_ws/install/setup.zsh
+-- Up-to-date: /root/model_car/catkin_ws/install/.rosinstall
+-- Installing: /root/model_car/catkin_ws/install/lib/pkgconfig/line_detection.pc
+-- Up-to-date: /root/model_car/catkin_ws/install/share/line_detection/cmake/line_detectionConfig.cmake
+-- Up-to-date: /root/model_car/catkin_ws/install/share/line_detection/cmake/line_detectionConfig-version.cmake
+-- Up-to-date: /root/model_car/catkin_ws/install/share/line_detection/package.xml
+-- Up-to-date: /root/model_car/catkin_ws/install/lib/line_detection/line_detection_node
+-- Installing: /root/model_car/catkin_ws/install/share/line_detection/launch
+-- Up-to-date: /root/model_car/catkin_ws/install/share/line_detection/launch/vision.launch

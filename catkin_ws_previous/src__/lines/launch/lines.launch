@@ -1,0 +1,4 @@
+<launch>
+ <node pkg="lines" type="lines_node" name="lines_node" output="screen">
+   </node>
+</launch>

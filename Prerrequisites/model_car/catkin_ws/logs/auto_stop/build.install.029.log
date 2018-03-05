@@ -1,0 +1,16 @@
+[100%] Built target auto_stop_node
+[36mInstall the project...
+[0m-- Install configuration: ""
+-- Installing: /root/model_car/catkin_ws/install/_setup_util.py
+-- Up-to-date: /root/model_car/catkin_ws/install/env.sh
+-- Up-to-date: /root/model_car/catkin_ws/install/setup.bash
+-- Up-to-date: /root/model_car/catkin_ws/install/setup.sh
+-- Up-to-date: /root/model_car/catkin_ws/install/setup.zsh
+-- Up-to-date: /root/model_car/catkin_ws/install/.rosinstall
+-- Installing: /root/model_car/catkin_ws/install/lib/pkgconfig/auto_stop.pc
+-- Up-to-date: /root/model_car/catkin_ws/install/share/auto_stop/cmake/auto_stopConfig.cmake
+-- Up-to-date: /root/model_car/catkin_ws/install/share/auto_stop/cmake/auto_stopConfig-version.cmake
+-- Up-to-date: /root/model_car/catkin_ws/install/share/auto_stop/package.xml
+-- Up-to-date: /root/model_car/catkin_ws/install/lib/auto_stop/auto_stop_node
+-- Installing: /root/model_car/catkin_ws/install/share/auto_stop/launch
+-- Up-to-date: /root/model_car/catkin_ws/install/share/auto_stop/launch/auto_stop.launch

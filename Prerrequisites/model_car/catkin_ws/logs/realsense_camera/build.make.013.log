@@ -1,0 +1,134 @@
+/usr/bin/cmake -H/root/model_car/catkin_ws/src/realsense_camera -B/root/model_car/catkin_ws/build/realsense_camera --check-build-system CMakeFiles/Makefile.cmake 0
+/usr/bin/cmake -E cmake_progress_start /root/model_car/catkin_ws/build/realsense_camera/CMakeFiles /root/model_car/catkin_ws/build/realsense_camera/CMakeFiles/progress.marks
+/usr/bin/make -f CMakeFiles/Makefile2 all
+make[1]: Entering directory `/root/model_car/catkin_ws/build/realsense_camera'
+/usr/bin/make -f CMakeFiles/realsense_camera_gencfg.dir/build.make CMakeFiles/realsense_camera_gencfg.dir/depend
+/usr/bin/make -f CMakeFiles/std_msgs_generate_messages_lisp.dir/build.make CMakeFiles/std_msgs_generate_messages_lisp.dir/depend
+/usr/bin/make -f CMakeFiles/_realsense_camera_generate_messages_check_deps_cameraConfiguration.dir/build.make CMakeFiles/_realsense_camera_generate_messages_check_deps_cameraConfiguration.dir/depend
+make[2]: Entering directory `/root/model_car/catkin_ws/build/realsense_camera'
+cd /root/model_car/catkin_ws/build/realsense_camera && /usr/bin/cmake -E cmake_depends "Unix Makefiles" /root/model_car/catkin_ws/src/realsense_camera /root/model_car/catkin_ws/src/realsense_camera /root/model_car/catkin_ws/build/realsense_camera /root/model_car/catkin_ws/build/realsense_camera /root/model_car/catkin_ws/build/realsense_camera/CMakeFiles/realsense_camera_gencfg.dir/DependInfo.cmake --color=
+make[2]: Entering directory `/root/model_car/catkin_ws/build/realsense_camera'
+cd /root/model_car/catkin_ws/build/realsense_camera && /usr/bin/cmake -E cmake_depends "Unix Makefiles" /root/model_car/catkin_ws/src/realsense_camera /root/model_car/catkin_ws/src/realsense_camera /root/model_car/catkin_ws/build/realsense_camera /root/model_car/catkin_ws/build/realsense_camera /root/model_car/catkin_ws/build/realsense_camera/CMakeFiles/std_msgs_generate_messages_lisp.dir/DependInfo.cmake --color=
+make[2]: Entering directory `/root/model_car/catkin_ws/build/realsense_camera'
+cd /root/model_car/catkin_ws/build/realsense_camera && /usr/bin/cmake -E cmake_depends "Unix Makefiles" /root/model_car/catkin_ws/src/realsense_camera /root/model_car/catkin_ws/src/realsense_camera /root/model_car/catkin_ws/build/realsense_camera /root/model_car/catkin_ws/build/realsense_camera /root/model_car/catkin_ws/build/realsense_camera/CMakeFiles/_realsense_camera_generate_messages_check_deps_cameraConfiguration.dir/DependInfo.cmake --color=
+make[2]: Leaving directory `/root/model_car/catkin_ws/build/realsense_camera'
+make[2]: Leaving directory `/root/model_car/catkin_ws/build/realsense_camera'
+make[2]: Leaving directory `/root/model_car/catkin_ws/build/realsense_camera'
+/usr/bin/make -f CMakeFiles/realsense_camera_gencfg.dir/build.make CMakeFiles/realsense_camera_gencfg.dir/build
+/usr/bin/make -f CMakeFiles/_realsense_camera_generate_messages_check_deps_cameraConfiguration.dir/build.make CMakeFiles/_realsense_camera_generate_messages_check_deps_cameraConfiguration.dir/build
+/usr/bin/make -f CMakeFiles/std_msgs_generate_messages_lisp.dir/build.make CMakeFiles/std_msgs_generate_messages_lisp.dir/build
+make[2]: Entering directory `/root/model_car/catkin_ws/build/realsense_camera'
+make[2]: Nothing to be done for `CMakeFiles/realsense_camera_gencfg.dir/build'.
+make[2]: Leaving directory `/root/model_car/catkin_ws/build/realsense_camera'
+make[2]: Entering directory `/root/model_car/catkin_ws/build/realsense_camera'
+catkin_generated/env_cached.sh /usr/bin/python /opt/odroid-x2/sdk/opt/ros/indigo/share/genmsg/cmake/../../../lib/genmsg/genmsg_check_deps.py realsense_camera /root/model_car/catkin_ws/src/realsense_camera/srv/cameraConfiguration.srv 
+/usr/bin/cmake -E cmake_progress_report /root/model_car/catkin_ws/build/realsense_camera/CMakeFiles  3
+make[2]: Entering directory `/root/model_car/catkin_ws/build/realsense_camera'
+make[2]: Nothing to be done for `CMakeFiles/std_msgs_generate_messages_lisp.dir/build'.
+make[2]: Leaving directory `/root/model_car/catkin_ws/build/realsense_camera'
+/usr/bin/cmake -E cmake_progress_report /root/model_car/catkin_ws/build/realsense_camera/CMakeFiles 
+[ 11%] [ 11%] Built target realsense_camera_gencfg
+/usr/bin/make -f CMakeFiles/std_msgs_generate_messages_cpp.dir/build.make CMakeFiles/std_msgs_generate_messages_cpp.dir/depend
+Built target std_msgs_generate_messages_lisp
+/usr/bin/make -f CMakeFiles/std_msgs_generate_messages_py.dir/build.make CMakeFiles/std_msgs_generate_messages_py.dir/depend
+make[2]: Entering directory `/root/model_car/catkin_ws/build/realsense_camera'
+cd /root/model_car/catkin_ws/build/realsense_camera && /usr/bin/cmake -E cmake_depends "Unix Makefiles" /root/model_car/catkin_ws/src/realsense_camera /root/model_car/catkin_ws/src/realsense_camera /root/model_car/catkin_ws/build/realsense_camera /root/model_car/catkin_ws/build/realsense_camera /root/model_car/catkin_ws/build/realsense_camera/CMakeFiles/std_msgs_generate_messages_cpp.dir/DependInfo.cmake --color=
+make[2]: Entering directory `/root/model_car/catkin_ws/build/realsense_camera'
+cd /root/model_car/catkin_ws/build/realsense_camera && /usr/bin/cmake -E cmake_depends "Unix Makefiles" /root/model_car/catkin_ws/src/realsense_camera /root/model_car/catkin_ws/src/realsense_camera /root/model_car/catkin_ws/build/realsense_camera /root/model_car/catkin_ws/build/realsense_camera /root/model_car/catkin_ws/build/realsense_camera/CMakeFiles/std_msgs_generate_messages_py.dir/DependInfo.cmake --color=
+make[2]: Leaving directory `/root/model_car/catkin_ws/build/realsense_camera'
+/usr/bin/make -f CMakeFiles/std_msgs_generate_messages_cpp.dir/build.make CMakeFiles/std_msgs_generate_messages_cpp.dir/build
+/usr/bin/make -f gtest/CMakeFiles/gtest.dir/build.make gtest/CMakeFiles/gtest.dir/depend
+make[2]: Entering directory `/root/model_car/catkin_ws/build/realsense_camera'
+make[2]: Nothing to be done for `CMakeFiles/std_msgs_generate_messages_cpp.dir/build'.
+make[2]: Leaving directory `/root/model_car/catkin_ws/build/realsense_camera'
+/usr/bin/cmake -E cmake_progress_report /root/model_car/catkin_ws/build/realsense_camera/CMakeFiles 
+make[2]: Entering directory `/root/model_car/catkin_ws/build/realsense_camera'
+cd /root/model_car/catkin_ws/build/realsense_camera && /usr/bin/cmake -E cmake_depends "Unix Makefiles" /root/model_car/catkin_ws/src/realsense_camera /usr/src/gtest /root/model_car/catkin_ws/build/realsense_camera /root/model_car/catkin_ws/build/realsense_camera/gtest /root/model_car/catkin_ws/build/realsense_camera/gtest/CMakeFiles/gtest.dir/DependInfo.cmake --color=
+make[2]: Leaving directory `/root/model_car/catkin_ws/build/realsense_camera'
+/usr/bin/make -f CMakeFiles/std_msgs_generate_messages_py.dir/build.make CMakeFiles/std_msgs_generate_messages_py.dir/build
+make[2]: Entering directory `/root/model_car/catkin_ws/build/realsense_camera'
+make[2]: Nothing to be done for `CMakeFiles/std_msgs_generate_messages_py.dir/build'.
+make[2]: Leaving directory `/root/model_car/catkin_ws/build/realsense_camera'
+/usr/bin/cmake -E cmake_progress_report /root/model_car/catkin_ws/build/realsense_camera/CMakeFiles 
+[ 11%] make[2]: Leaving directory `/root/model_car/catkin_ws/build/realsense_camera'
+Built target std_msgs_generate_messages_cpp
+/usr/bin/cmake -E cmake_progress_report /root/model_car/catkin_ws/build/realsense_camera/CMakeFiles 
+make[2]: Leaving directory `/root/model_car/catkin_ws/build/realsense_camera'
+/usr/bin/make -f gtest/CMakeFiles/gtest.dir/build.make gtest/CMakeFiles/gtest.dir/build
+make[2]: Entering directory `/root/model_car/catkin_ws/build/realsense_camera'
+/usr/bin/cmake -E cmake_progress_report /root/model_car/catkin_ws/build/realsense_camera/CMakeFiles 1
+[ 11%] [ 11%] Built target std_msgs_generate_messages_py
+Built target _realsense_camera_generate_messages_check_deps_cameraConfiguration
+/usr/bin/make -f CMakeFiles/realsense_camera_generate_messages_lisp.dir/build.make CMakeFiles/realsense_camera_generate_messages_lisp.dir/depend
+/usr/bin/make -f CMakeFiles/realsense_camera_generate_messages_cpp.dir/build.make CMakeFiles/realsense_camera_generate_messages_cpp.dir/depend
+/usr/bin/make -f CMakeFiles/realsense_camera_generate_messages_py.dir/build.make CMakeFiles/realsense_camera_generate_messages_py.dir/depend
+make[2]: Entering directory `/root/model_car/catkin_ws/build/realsense_camera'
+make[2]: Entering directory `/root/model_car/catkin_ws/build/realsense_camera'
+cd /root/model_car/catkin_ws/build/realsense_camera && /usr/bin/cmake -E cmake_depends "Unix Makefiles" /root/model_car/catkin_ws/src/realsense_camera /root/model_car/catkin_ws/src/realsense_camera /root/model_car/catkin_ws/build/realsense_camera /root/model_car/catkin_ws/build/realsense_camera /root/model_car/catkin_ws/build/realsense_camera/CMakeFiles/realsense_camera_generate_messages_cpp.dir/DependInfo.cmake --color=
+cd /root/model_car/catkin_ws/build/realsense_camera && /usr/bin/cmake -E cmake_depends "Unix Makefiles" /root/model_car/catkin_ws/src/realsense_camera /root/model_car/catkin_ws/src/realsense_camera /root/model_car/catkin_ws/build/realsense_camera /root/model_car/catkin_ws/build/realsense_camera /root/model_car/catkin_ws/build/realsense_camera/CMakeFiles/realsense_camera_generate_messages_lisp.dir/DependInfo.cmake --color=
+[ 22%] make[2]: Entering directory `/root/model_car/catkin_ws/build/realsense_camera'
+cd /root/model_car/catkin_ws/build/realsense_camera && /usr/bin/cmake -E cmake_depends "Unix Makefiles" /root/model_car/catkin_ws/src/realsense_camera /root/model_car/catkin_ws/src/realsense_camera /root/model_car/catkin_ws/build/realsense_camera /root/model_car/catkin_ws/build/realsense_camera /root/model_car/catkin_ws/build/realsense_camera/CMakeFiles/realsense_camera_generate_messages_py.dir/DependInfo.cmake --color=
+[32mBuilding CXX object gtest/CMakeFiles/gtest.dir/src/gtest-all.cc.o
+[0mcd /root/model_car/catkin_ws/build/realsense_camera/gtest && /opt/odroid-x2/compiler/bin/arm-linux-gnueabihf-g++   -DGTEST_CREATE_SHARED_LIBRARY=1 -Dgtest_EXPORTS -fPIE -fPIC -std=c++11 -O2 -D_FORTIFY_SOURCE=2 -fstack-protector -Wformat -Wformat-security -Wall  -fPIC -I/usr/src/gtest/include -I/usr/src/gtest    -fPIE -fPIC -std=c++11 -O2 -D_FORTIFY_SOURCE=2 -fstack-protector -Wformat -Wformat-security -Wall  -Wall -Wshadow -DGTEST_HAS_PTHREAD=1 -fexceptions -Wextra -o CMakeFiles/gtest.dir/src/gtest-all.cc.o -c /usr/src/gtest/src/gtest-all.cc
+make[2]: Leaving directory `/root/model_car/catkin_ws/build/realsense_camera'
+make[2]: Leaving directory `/root/model_car/catkin_ws/build/realsense_camera'
+/usr/bin/make -f CMakeFiles/realsense_camera_generate_messages_py.dir/build.make CMakeFiles/realsense_camera_generate_messages_py.dir/build
+make[2]: Leaving directory `/root/model_car/catkin_ws/build/realsense_camera'
+/usr/bin/make -f CMakeFiles/realsense_camera_generate_messages_lisp.dir/build.make CMakeFiles/realsense_camera_generate_messages_lisp.dir/build
+/usr/bin/make -f CMakeFiles/realsense_camera_generate_messages_cpp.dir/build.make CMakeFiles/realsense_camera_generate_messages_cpp.dir/build
+make[2]: Entering directory `/root/model_car/catkin_ws/build/realsense_camera'
+make[2]: Nothing to be done for `CMakeFiles/realsense_camera_generate_messages_lisp.dir/build'.
+make[2]: Leaving directory `/root/model_car/catkin_ws/build/realsense_camera'
+/usr/bin/cmake -E cmake_progress_report /root/model_car/catkin_ws/build/realsense_camera/CMakeFiles  5
+make[2]: Entering directory `/root/model_car/catkin_ws/build/realsense_camera'
+make[2]: Nothing to be done for `CMakeFiles/realsense_camera_generate_messages_py.dir/build'.
+make[2]: Leaving directory `/root/model_car/catkin_ws/build/realsense_camera'
+/usr/bin/cmake -E cmake_progress_report /root/model_car/catkin_ws/build/realsense_camera/CMakeFiles  6 7
+make[2]: Entering directory `/root/model_car/catkin_ws/build/realsense_camera'
+make[2]: Nothing to be done for `CMakeFiles/realsense_camera_generate_messages_cpp.dir/build'.
+make[2]: Leaving directory `/root/model_car/catkin_ws/build/realsense_camera'
+/usr/bin/cmake -E cmake_progress_report /root/model_car/catkin_ws/build/realsense_camera/CMakeFiles  4
+[ 66%] [ 66%] [ 66%] Built target realsense_camera_generate_messages_py
+Built target realsense_camera_generate_messages_lisp
+Built target realsense_camera_generate_messages_cpp
+/usr/bin/make -f CMakeFiles/realsense_camera_generate_messages.dir/build.make CMakeFiles/realsense_camera_generate_messages.dir/depend
+/usr/bin/make -f CMakeFiles/realsense_camera_nodelet.dir/build.make CMakeFiles/realsense_camera_nodelet.dir/depend
+make[2]: Entering directory `/root/model_car/catkin_ws/build/realsense_camera'
+cd /root/model_car/catkin_ws/build/realsense_camera && /usr/bin/cmake -E cmake_depends "Unix Makefiles" /root/model_car/catkin_ws/src/realsense_camera /root/model_car/catkin_ws/src/realsense_camera /root/model_car/catkin_ws/build/realsense_camera /root/model_car/catkin_ws/build/realsense_camera /root/model_car/catkin_ws/build/realsense_camera/CMakeFiles/realsense_camera_generate_messages.dir/DependInfo.cmake --color=
+make[2]: Entering directory `/root/model_car/catkin_ws/build/realsense_camera'
+cd /root/model_car/catkin_ws/build/realsense_camera && /usr/bin/cmake -E cmake_depends "Unix Makefiles" /root/model_car/catkin_ws/src/realsense_camera /root/model_car/catkin_ws/src/realsense_camera /root/model_car/catkin_ws/build/realsense_camera /root/model_car/catkin_ws/build/realsense_camera /root/model_car/catkin_ws/build/realsense_camera/CMakeFiles/realsense_camera_nodelet.dir/DependInfo.cmake --color=
+[35m[1mScanning dependencies of target realsense_camera_generate_messages
+[0mmake[2]: Leaving directory `/root/model_car/catkin_ws/build/realsense_camera'
+/usr/bin/make -f CMakeFiles/realsense_camera_generate_messages.dir/build.make CMakeFiles/realsense_camera_generate_messages.dir/build
+[35m[1mScanning dependencies of target realsense_camera_nodelet
+make[2]: Entering directory `/root/model_car/catkin_ws/build/realsense_camera'
+make[2]: Nothing to be done for `CMakeFiles/realsense_camera_generate_messages.dir/build'.
+make[2]: Leaving directory `/root/model_car/catkin_ws/build/realsense_camera'
+/usr/bin/cmake -E cmake_progress_report /root/model_car/catkin_ws/build/realsense_camera/CMakeFiles 
+/usr/src/gtest/src/gtest-all.cc:39:25: fatal error: gtest/gtest.h: No such file or directory
+compilation terminated.
+[ 66%] Built target realsense_camera_generate_messages
+make[2]: *** [gtest/CMakeFiles/gtest.dir/src/gtest-all.cc.o] Error 1
+make[2]: Leaving directory `/root/model_car/catkin_ws/build/realsense_camera'
+make[1]: *** [gtest/CMakeFiles/gtest.dir/all] Error 2
+make[1]: *** Waiting for unfinished jobs....
+[0mmake[2]: Leaving directory `/root/model_car/catkin_ws/build/realsense_camera'
+/usr/bin/make -f CMakeFiles/realsense_camera_nodelet.dir/build.make CMakeFiles/realsense_camera_nodelet.dir/build
+make[2]: Entering directory `/root/model_car/catkin_ws/build/realsense_camera'
+/usr/bin/cmake -E cmake_progress_report /root/model_car/catkin_ws/build/realsense_camera/CMakeFiles 8
+make[2]: *** No rule to make target `/usr/local/lib/librealsense.so', needed by `/root/model_car/catkin_ws/devel/lib/librealsense_camera_nodelet.so'.  Stop.
+make[2]: *** Waiting for unfinished jobs....
+[ 77%] [32mBuilding CXX object CMakeFiles/realsense_camera_nodelet.dir/src/realsense_camera_nodelet.cpp.o
+[0m/opt/odroid-x2/compiler/bin/arm-linux-gnueabihf-g++   -DROSCONSOLE_BACKEND_LOG4CXX -DROS_PACKAGE_NAME=\"realsense_camera\" -Drealsense_camera_nodelet_EXPORTS -fPIE -fPIC -std=c++11 -O2 -D_FORTIFY_SOURCE=2 -fstack-protector -Wformat -Wformat-security -Wall  -fPIC -I/root/model_car/catkin_ws/devel/include -I/root/model_car/catkin_ws/src/cv_bridge/include -I/opt/odroid-x2/sdk/opt/ros/indigo/include -I/opt/odroid-x2/sdk/usr/include/opencv -I/opt/odroid-x2/sdk/usr/include -I/usr/include/eigen3 -I/usr/include/pcl-1.7 -I/usr/include/ni -I/usr/include/vtk-5.8    -o CMakeFiles/realsense_camera_nodelet.dir/src/realsense_camera_nodelet.cpp.o -c /root/model_car/catkin_ws/src/realsense_camera/src/realsense_camera_nodelet.cpp
+In file included from /opt/odroid-x2/sdk/opt/ros/indigo/include/ros/platform.h:53:0,
+                 from /opt/odroid-x2/sdk/opt/ros/indigo/include/ros/time.h:53,
+                 from /opt/odroid-x2/sdk/opt/ros/indigo/include/ros/ros.h:38,
+                 from /root/model_car/catkin_ws/src/realsense_camera/src/realsense_camera_nodelet.h:35,
+                 from /root/model_car/catkin_ws/src/realsense_camera/src/realsense_camera_nodelet.cpp:31:
+/opt/odroid-x2/sdk/usr/include/stdlib.h:760:34: fatal error: bits/stdlib-bsearch.h: No such file or directory
+compilation terminated.
+make[2]: *** [CMakeFiles/realsense_camera_nodelet.dir/src/realsense_camera_nodelet.cpp.o] Error 1
+make[2]: Leaving directory `/root/model_car/catkin_ws/build/realsense_camera'
+make[1]: *** [CMakeFiles/realsense_camera_nodelet.dir/all] Error 2
+make[1]: Leaving directory `/root/model_car/catkin_ws/build/realsense_camera'
+make: *** [all] Error 2

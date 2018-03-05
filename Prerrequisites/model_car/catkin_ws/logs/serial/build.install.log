@@ -1,0 +1,23 @@
+[ 75%] Built target serial
+[100%] Built target serial_example
+[36mInstall the project...
+[0m-- Install configuration: ""
+-- Installing: /root/model_car/catkin_ws/install/_setup_util.py
+-- Installing: /root/model_car/catkin_ws/install/env.sh
+-- Installing: /root/model_car/catkin_ws/install/setup.bash
+-- Installing: /root/model_car/catkin_ws/install/setup.sh
+-- Installing: /root/model_car/catkin_ws/install/setup.zsh
+-- Installing: /root/model_car/catkin_ws/install/.rosinstall
+-- Installing: /root/model_car/catkin_ws/install/lib/pkgconfig/serial.pc
+-- Up-to-date: /root/model_car/catkin_ws/install/share/serial/cmake/serialConfig.cmake
+-- Up-to-date: /root/model_car/catkin_ws/install/share/serial/cmake/serialConfig-version.cmake
+-- Up-to-date: /root/model_car/catkin_ws/install/share/serial/package.xml
+-- Up-to-date: /root/model_car/catkin_ws/install/lib/libserial.so
+-- Up-to-date: /root/model_car/catkin_ws/install/include/serial/serial.h
+-- Up-to-date: /root/model_car/catkin_ws/install/include/serial/v8stdint.h
+-- Installing: /root/model_car/catkin_ws/install/include/serial
+-- Up-to-date: /root/model_car/catkin_ws/install/include/serial/serial.h
+-- Installing: /root/model_car/catkin_ws/install/include/serial/impl
+-- Up-to-date: /root/model_car/catkin_ws/install/include/serial/impl/win.h
+-- Up-to-date: /root/model_car/catkin_ws/install/include/serial/impl/unix.h
+-- Up-to-date: /root/model_car/catkin_ws/install/include/serial/v8stdint.h

@@ -1,0 +1,29 @@
+[ 28%] Built target camera_matrix_publisher
+[ 42%] Built target fisheye_camera_matrix
+[ 71%] Built target offline_calibration_manual
+[100%] Built target undistorted_image_publisher
+[36mInstall the project...
+[0m-- Install configuration: ""
+-- Up-to-date: /root/model_car/catkin_ws/install/_setup_util.py
+-- Up-to-date: /root/model_car/catkin_ws/install/env.sh
+-- Up-to-date: /root/model_car/catkin_ws/install/setup.bash
+-- Up-to-date: /root/model_car/catkin_ws/install/setup.sh
+-- Up-to-date: /root/model_car/catkin_ws/install/setup.zsh
+-- Up-to-date: /root/model_car/catkin_ws/install/.rosinstall
+-- Installing: /root/model_car/catkin_ws/install/lib/pkgconfig/fisheye_camera_matrix.pc
+-- Up-to-date: /root/model_car/catkin_ws/install/share/fisheye_camera_matrix/cmake/fisheye_camera_matrixConfig.cmake
+-- Up-to-date: /root/model_car/catkin_ws/install/share/fisheye_camera_matrix/cmake/fisheye_camera_matrixConfig-version.cmake
+-- Up-to-date: /root/model_car/catkin_ws/install/share/fisheye_camera_matrix/package.xml
+-- Up-to-date: /root/model_car/catkin_ws/install/lib/libfisheye_camera_matrix.so
+-- Up-to-date: /root/model_car/catkin_ws/install/lib/fisheye_camera_matrix/offline_calibration_manual
+-- Up-to-date: /root/model_car/catkin_ws/install/lib/fisheye_camera_matrix/camera_matrix_publisher
+-- Up-to-date: /root/model_car/catkin_ws/install/lib/fisheye_camera_matrix/undistorted_image_publisher
+-- Installing: /root/model_car/catkin_ws/install/include/fisheye_camera_matrix
+-- Up-to-date: /root/model_car/catkin_ws/install/include/fisheye_camera_matrix/camera_matrix.hpp
+-- Installing: /root/model_car/catkin_ws/install/share/fisheye_camera_matrix/launch
+-- Up-to-date: /root/model_car/catkin_ws/install/share/fisheye_camera_matrix/launch/calibrate_offline_manual.launch
+-- Up-to-date: /root/model_car/catkin_ws/install/share/fisheye_camera_matrix/launch/undistorted_image_publisher.launch
+-- Up-to-date: /root/model_car/catkin_ws/install/share/fisheye_camera_matrix/launch/camera_matrix_publisher.launch
+-- Installing: /root/model_car/catkin_ws/install/share/fisheye_camera_matrix/config
+-- Up-to-date: /root/model_car/catkin_ws/install/share/fisheye_camera_matrix/config/test.calib
+-- Up-to-date: /root/model_car/catkin_ws/install/share/fisheye_camera_matrix/config/default.calib

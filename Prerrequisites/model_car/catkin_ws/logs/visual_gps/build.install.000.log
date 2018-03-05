@@ -1,0 +1,64 @@
+[  0%] Built target _visual_gps_generate_messages_check_deps_Transform
+[  0%] Built target geometry_msgs_generate_messages_lisp
+[  0%] Built target std_msgs_generate_messages_lisp
+[  8%] Built target visual_gps_generate_messages_lisp
+[  8%] Built target std_msgs_generate_messages_py
+[  8%] Built target geometry_msgs_generate_messages_py
+[ 25%] Built target visual_gps_generate_messages_py
+[ 25%] Built target std_msgs_generate_messages_cpp
+[ 25%] Built target geometry_msgs_generate_messages_cpp
+[ 33%] Built target visual_gps_generate_messages_cpp
+[ 33%] Built target visual_gps_generate_messages
+[ 50%] Built target kalman_3d
+[ 66%] Built target visual_gps_3d_node
+[ 83%] Built target kalman_2d
+[100%] Built target visual_gps_2d_node
+[36mInstall the project...[0m
+-- Install configuration: ""
+-- Installing: /home/jesus/autoModel/model_car/catkin_ws/install/_setup_util.py
+-- Installing: /home/jesus/autoModel/model_car/catkin_ws/install/env.sh
+-- Installing: /home/jesus/autoModel/model_car/catkin_ws/install/setup.bash
+-- Installing: /home/jesus/autoModel/model_car/catkin_ws/install/setup.sh
+-- Installing: /home/jesus/autoModel/model_car/catkin_ws/install/setup.zsh
+-- Installing: /home/jesus/autoModel/model_car/catkin_ws/install/.rosinstall
+-- Installing: /home/jesus/autoModel/model_car/catkin_ws/install/share/visual_gps/msg/Transform.msg
+-- Installing: /home/jesus/autoModel/model_car/catkin_ws/install/share/visual_gps/cmake/visual_gps-msg-paths.cmake
+-- Installing: /home/jesus/autoModel/model_car/catkin_ws/install/include/visual_gps
+-- Installing: /home/jesus/autoModel/model_car/catkin_ws/install/include/visual_gps/Transform.h
+-- Installing: /home/jesus/autoModel/model_car/catkin_ws/install/share/common-lisp/ros/visual_gps
+-- Installing: /home/jesus/autoModel/model_car/catkin_ws/install/share/common-lisp/ros/visual_gps/msg
+-- Installing: /home/jesus/autoModel/model_car/catkin_ws/install/share/common-lisp/ros/visual_gps/msg/_package_Transform.lisp
+-- Installing: /home/jesus/autoModel/model_car/catkin_ws/install/share/common-lisp/ros/visual_gps/msg/visual_gps-msg.asd
+-- Installing: /home/jesus/autoModel/model_car/catkin_ws/install/share/common-lisp/ros/visual_gps/msg/Transform.lisp
+-- Installing: /home/jesus/autoModel/model_car/catkin_ws/install/share/common-lisp/ros/visual_gps/msg/_package.lisp
+Listing /home/jesus/autoModel/model_car/catkin_ws/devel/lib/python2.7/dist-packages/visual_gps ...
+Compiling /home/jesus/autoModel/model_car/catkin_ws/devel/lib/python2.7/dist-packages/visual_gps/__init__.py ...
+Listing /home/jesus/autoModel/model_car/catkin_ws/devel/lib/python2.7/dist-packages/visual_gps/msg ...
+Compiling /home/jesus/autoModel/model_car/catkin_ws/devel/lib/python2.7/dist-packages/visual_gps/msg/_Transform.py ...
+Compiling /home/jesus/autoModel/model_car/catkin_ws/devel/lib/python2.7/dist-packages/visual_gps/msg/__init__.py ...
+-- Installing: /home/jesus/autoModel/model_car/catkin_ws/install/lib/python2.7/dist-packages/visual_gps
+-- Installing: /home/jesus/autoModel/model_car/catkin_ws/install/lib/python2.7/dist-packages/visual_gps/msg
+-- Installing: /home/jesus/autoModel/model_car/catkin_ws/install/lib/python2.7/dist-packages/visual_gps/msg/_Transform.pyc
+-- Installing: /home/jesus/autoModel/model_car/catkin_ws/install/lib/python2.7/dist-packages/visual_gps/msg/__init__.py
+-- Installing: /home/jesus/autoModel/model_car/catkin_ws/install/lib/python2.7/dist-packages/visual_gps/msg/_Transform.py
+-- Installing: /home/jesus/autoModel/model_car/catkin_ws/install/lib/python2.7/dist-packages/visual_gps/msg/__init__.pyc
+-- Installing: /home/jesus/autoModel/model_car/catkin_ws/install/lib/python2.7/dist-packages/visual_gps/__init__.py
+-- Installing: /home/jesus/autoModel/model_car/catkin_ws/install/lib/python2.7/dist-packages/visual_gps/__init__.pyc
+-- Installing: /home/jesus/autoModel/model_car/catkin_ws/install/lib/pkgconfig/visual_gps.pc
+-- Installing: /home/jesus/autoModel/model_car/catkin_ws/install/share/visual_gps/cmake/visual_gps-msg-extras.cmake
+-- Installing: /home/jesus/autoModel/model_car/catkin_ws/install/share/visual_gps/cmake/visual_gpsConfig.cmake
+-- Installing: /home/jesus/autoModel/model_car/catkin_ws/install/share/visual_gps/cmake/visual_gpsConfig-version.cmake
+-- Installing: /home/jesus/autoModel/model_car/catkin_ws/install/share/visual_gps/package.xml
+-- Installing: /home/jesus/autoModel/model_car/catkin_ws/install/lib/visual_gps/visual_gps_2d_node
+-- Set runtime path of "/home/jesus/autoModel/model_car/catkin_ws/install/lib/visual_gps/visual_gps_2d_node" to ""
+-- Installing: /home/jesus/autoModel/model_car/catkin_ws/install/share/visual_gps/launch
+-- Installing: /home/jesus/autoModel/model_car/catkin_ws/install/share/visual_gps/launch/visual_gps_2d_rviz.launch
+-- Installing: /home/jesus/autoModel/model_car/catkin_ws/install/share/visual_gps/launch/visual_gps_odroid.launch
+-- Installing: /home/jesus/autoModel/model_car/catkin_ws/install/share/visual_gps/launch/visual_gps_3d_rviz.launch
+-- Installing: /home/jesus/autoModel/model_car/catkin_ws/install/share/visual_gps/config
+-- Installing: /home/jesus/autoModel/model_car/catkin_ws/install/share/visual_gps/config/FEATURE_FILES
+-- Installing: /home/jesus/autoModel/model_car/catkin_ws/install/share/visual_gps/config/FEATURE_FILES/camera.txt
+-- Installing: /home/jesus/autoModel/model_car/catkin_ws/install/share/visual_gps/config/FEATURE_FILES/map.txt
+-- Installing: /home/jesus/autoModel/model_car/catkin_ws/install/share/visual_gps/config/FEATURE_FILES/map (copy).txt
+-- Up-to-date: /home/jesus/autoModel/model_car/catkin_ws/install/share/visual_gps/msg
+-- Up-to-date: /home/jesus/autoModel/model_car/catkin_ws/install/share/visual_gps/msg/Transform.msg

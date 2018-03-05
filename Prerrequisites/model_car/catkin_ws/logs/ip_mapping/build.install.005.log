@@ -1,0 +1,16 @@
+[ 50%] Built target IPMapper
+[100%] Built target ip_mapper_node
+[36mInstall the project...
+[0m-- Install configuration: ""
+-- Up-to-date: /root/model_car/catkin_ws/install/_setup_util.py
+-- Installing: /root/model_car/catkin_ws/install/env.sh
+-- Installing: /root/model_car/catkin_ws/install/setup.bash
+-- Installing: /root/model_car/catkin_ws/install/setup.sh
+-- Installing: /root/model_car/catkin_ws/install/setup.zsh
+-- Installing: /root/model_car/catkin_ws/install/.rosinstall
+-- Installing: /root/model_car/catkin_ws/install/lib/pkgconfig/ip_mapping.pc
+-- Installing: /root/model_car/catkin_ws/install/share/ip_mapping/cmake/ip_mappingConfig.cmake
+-- Installing: /root/model_car/catkin_ws/install/share/ip_mapping/cmake/ip_mappingConfig-version.cmake
+-- Up-to-date: /root/model_car/catkin_ws/install/share/ip_mapping/package.xml
+-- Installing: /root/model_car/catkin_ws/install/lib/ip_mapping/ip_mapper_node
+-- Removed runtime path from "/root/model_car/catkin_ws/install/lib/ip_mapping/ip_mapper_node"

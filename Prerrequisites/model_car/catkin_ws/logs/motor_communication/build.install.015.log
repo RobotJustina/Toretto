@@ -1,0 +1,24 @@
+[ 33%] Built target motor_communication
+[ 66%] Built target motor_communication_node
+[100%] Built target motor_control_node
+[36mInstall the project...
+[0m-- Install configuration: ""
+-- Installing: /root/model_car/catkin_ws/install/_setup_util.py
+-- Installing: /root/model_car/catkin_ws/install/env.sh
+-- Installing: /root/model_car/catkin_ws/install/setup.bash
+-- Installing: /root/model_car/catkin_ws/install/setup.sh
+-- Installing: /root/model_car/catkin_ws/install/setup.zsh
+-- Installing: /root/model_car/catkin_ws/install/.rosinstall
+-- Installing: /root/model_car/catkin_ws/install/lib/pkgconfig/motor_communication.pc
+-- Up-to-date: /root/model_car/catkin_ws/install/share/motor_communication/cmake/motor_communicationConfig.cmake
+-- Up-to-date: /root/model_car/catkin_ws/install/share/motor_communication/cmake/motor_communicationConfig-version.cmake
+-- Up-to-date: /root/model_car/catkin_ws/install/share/motor_communication/package.xml
+-- Up-to-date: /root/model_car/catkin_ws/install/lib/libmotor_communication.so
+-- Up-to-date: /root/model_car/catkin_ws/install/lib/motor_communication/motor_communication_node
+-- Up-to-date: /root/model_car/catkin_ws/install/lib/motor_communication/motor_control_node
+-- Installing: /root/model_car/catkin_ws/install/include/motor_communication
+-- Up-to-date: /root/model_car/catkin_ws/install/include/motor_communication/motor_communication.h
+-- Installing: /root/model_car/catkin_ws/install/share/motor_communication/launch
+-- Up-to-date: /root/model_car/catkin_ws/install/share/motor_communication/launch/motor_PC.launch
+-- Up-to-date: /root/model_car/catkin_ws/install/share/motor_communication/launch/motor_odroid.launch
+-- Up-to-date: /root/model_car/catkin_ws/install/share/motor_communication/launch/motor.launch
