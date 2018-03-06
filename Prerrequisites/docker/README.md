@@ -45,7 +45,24 @@ Reperat until everythin is compiled. Alternatively if you want to compile only o
 And repeat previous step in case of errors.
 Also if you need to do a clean Build
 ```bash
-  catkin clean -b --profile odroid 
+  catkin clean -b --profile odroid
+```
+
+## Re-satarting the container running
+You only need to run the container once and then it stays stored on you machine drive. To run it again you must restart it and the attach to it.
+```bash
+  docker restart  name_of_the_container
+  docker attach name_of_the_container
+```
+By detault docker assing some random name to the continer to check the name of you particular continer you can user
+
+```bash
+docker ps -a
+```
+An example of the relevant output is given below. In this case the container name is infallible_bartik
+```bash
+CONTAINER ID        IMAGE                    COMMAND                  CREATED             STATUS                  PORTS               NAMES
+c978a6c30787        automodel:latest         "/ros_entrypoint.sh …"   7 days ago          Exited (1) 5 days ago                       infallible_bartik
 ```
 
 ## Copying
@@ -55,3 +72,10 @@ To copy you need to copy the workspace into the model car. And reconfigure the w
 target=root@192.168.43.102:./model_car/$ws_name/
 ```
 As it is now. The configuration script only works if you copy the workspace into /root/model_car inside the model car. If you want to compile somewhere else you must change the workspace directory on the container to match exactly the path of the workspace in the model car.
+
+## Testing compilation
+In case you intend to try if your code compile using ros-indigo. You can simply attach to the container and navigate to the proper directory there you can use:
+```bash
+  catkin_make
+```
+The compiled binaries will be useless but you can check if you code is indigo compliant.
