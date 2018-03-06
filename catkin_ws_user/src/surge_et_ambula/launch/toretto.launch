@@ -2,5 +2,20 @@
 	<param name="robot_description" command="cat $(find config_files)/toretto.xml" />
 	<node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher"/>
 
+	<node name="odometry_calculator" pkg="odometry_calculator" type="odometry_calculator_node" output="screen"/>
+	<node name="loc_amcl" pkg="amcl" type="amcl" output="screen" args="scan:=/scan">
+	  <param name="odom_alpha1" value="0.4"/>
+	  <param name="odom_alpha2" value="0.4"/>
+	  <param name="odom_alpha3" value="0.4"/>
+	  <param name="odom_alpha4" value="0.4"/>
+	  <!-- param name="odom_alpha5" value="0.4"/-->
+	  <param name="initial_pose_x" value="0.0"/>
+	  <param name="initial_pose_y" value="0.0"/>
+	  <param name="initial_pose_a" value="0.0"/>
+	  <param name="update_min_a" value="0.05"/>
+	  <param name="laser_min_range" value="0.1"/>
+	  <param name="odom_model_type" value="diff"/>
+	</node>
+	
 	<node name="rviz" pkg="rviz" type="rviz"/>
 </launch>
