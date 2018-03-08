@@ -3,19 +3,16 @@
 	<node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher"/>
 
 	<node name="odometry_calculator" pkg="odometry_calculator" type="odometry_calculator_node" output="screen"/>
-	<node name="loc_amcl" pkg="amcl" type="amcl" output="screen" args="scan:=/scan">
-	  <param name="odom_alpha1" value="0.4"/>
-	  <param name="odom_alpha2" value="0.4"/>
-	  <param name="odom_alpha3" value="0.4"/>
-	  <param name="odom_alpha4" value="0.4"/>
-	  <!-- param name="odom_alpha5" value="0.4"/-->
-	  <param name="initial_pose_x" value="0.0"/>
-	  <param name="initial_pose_y" value="0.0"/>
-	  <param name="initial_pose_a" value="0.0"/>
-	  <param name="update_min_a" value="0.05"/>
-	  <param name="laser_min_range" value="0.1"/>
-	  <param name="odom_model_type" value="diff"/>
+	<node name="gmapping" pkg="gmapping" type="slam_gmapping" args="scan:=/scan" output="screen">
+		<param name="map_update_interval" value="1.0" />
+		<param name="maxUrange" value="3.8"/>
+		<param name="linearUpdate" value="0.25"/>
+		<param name="angularUpdate" value="0.2"/>
+		<param name="xmin" value="-50"/>
+		<param name="ymin" value="-20"/>
+		<param name="xmax" value="50"/>
+		<param name="ymax" value="20"/>
+		<param name="maxRange" value="8.0"/>
+		<param name="minimumScore" value="50"/>
 	</node>
-	
-	<node name="rviz" pkg="rviz" type="rviz"/>
 </launch>
