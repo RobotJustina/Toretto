@@ -2,7 +2,7 @@ echo "replace root path"
 var=$(pwd)
 ws_name=$(basename $var)
 tmpfile=/tmp/magicReplaceTempFile
-target=root@192.168.1.199:./$ws_name/
+target=root@192.168.43.102:./$ws_name/
 echo "The workspace directory is $var."
 
 
