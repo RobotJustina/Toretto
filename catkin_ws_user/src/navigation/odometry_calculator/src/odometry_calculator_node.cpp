@@ -5,20 +5,20 @@
 
 float speed = 0;
 float steering = 0;
-float l_r = 0.13; //Physical parameters. Check paper Kong, Pfeiffer, Schildbach, Borelli. 
+float l_r = 0.13; //Physical parameters. Check paper Kong, Pfeiffer, Schildbach, Borelli.
 float l_f = 0.13; //Kinematic and dynamic vehicle models for autonomous driving control design
 
 void callback_speed(const std_msgs::Int16::ConstPtr& msg)
 {
     speed = -0.0005626384*msg->data;
     //This value was obtained by making a linear regression from experimental data
-    std::cout << "Received speed [m/s]: " << speed << std::endl;
+  //  std::cout << "Received speed [m/s]: " << speed << std::endl;
 }
 
 void callback_steering(const std_msgs::Int16::ConstPtr& msg)
 {
-    steering = (msg->data - 100.0)/80.0*26.0*M_PI/180.0;
-    std::cout << "Received steering: " << steering << std::endl;
+    steering = -(msg->data - 100.0)/80.0*26.0*M_PI/180.0;
+  //  std::cout << "Received steering: " << steering << std::endl;
 }
 
 int main(int argc, char** argv)
@@ -33,12 +33,12 @@ int main(int argc, char** argv)
     tf::Transform t;
 
     //Variables for the differential equation model;
-    
+
     float car_x = 0;
     float car_y = 0;
     float car_t = 0;
     int simul_freq = 30; //Inverse of the simul step
-    
+
     ros::Rate loop(simul_freq);
     while(ros::ok())
     {

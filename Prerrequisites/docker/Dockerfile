@@ -12,6 +12,8 @@ RUN apt-get update && apt-get install -y \
   lib32stdc++6 \
   lib32z1
 
+RUN apt-get install -y ros-indigo-cv-bridge
+
 ##run update again, as in wiki
 RUN apt-get update
 #SDK and compiler
