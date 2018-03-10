@@ -1,11 +1,6 @@
 <launch>
   <param name="calib_file" value="/root/catkin_ws_user/homoMat4.yaml" />
 
-  <node pkg="usb_cam" type="usb_cam_node" name="usb_camera" output="screen">
-    <param name="pixel_format" value="yuyv" />
-  </node>
-
-
     <node pkg="lane_detection" type="lane_detection_node" name="lines_node" output="screen">
       <remap from="image" to="/app/camera/rgb/image_raw"/>
    </node>

@@ -1,6 +1,7 @@
 #include "ros/ros.h"
 #include "lane_detection.h"
 
+
 cv::Mat Image;
 bool image_flag=false;
 cv::Mat persp;
@@ -30,7 +31,8 @@ int main(int argc, char** argv)
         image_transport::Publisher pub = itp.advertise("lines",1);
         sensor_msgs::ImagePtr msg;
 
-        ros::Publisher path_pub= nh.advertise<nav_msgs::Path>("path",1000);
+        ros::Publisher path_pub_r= nh.advertise<nav_msgs::Path>("/right",1000);
+        ros::Publisher path_pub_l= nh.advertise<nav_msgs::Path>("/left",1000);
         nav_msgs::Path msg_path;
 
         ros::Rate loop_rate(10);
@@ -67,21 +69,31 @@ int main(int argc, char** argv)
         while (ros::ok()) {
                 if (image_flag)
                 {
+                        image_flag = false;
                         cv::Mat trans;
-                        std::vector<geometry_msgs::PoseStamped> poses;
+                        std::vector<geometry_msgs::PoseStamped> poses_right, poses_left;
+                        float angle_r, angle_l;
 
                         cv::warpPerspective(Image, trans, transfMatrix, transfSize, cv::INTER_LINEAR, cv::BORDER_REPLICATE, cv::Scalar(127, 127, 127) );
 
-                        trans = extract_lane(trans,value_thr_low,value_thr_high, poses);
-                        image_flag = false;
+                        trans = extract_lane(trans,value_thr_low,value_thr_high, poses_right, poses_left);
+
                         sensor_msgs::ImagePtr msg=cv_bridge::CvImage(std_msgs::Header(),"bgr8",trans).toImageMsg();
 
                         pub.publish(msg);
 
-                        if(poses.size()>0)
+                        if(poses_right.size()>0)
                         {
-                                msg_path.poses = poses;
-                                path_pub.publish(msg_path);
+                                msg_path.poses = poses_right;
+                                path_pub_r.publish(msg_path);
+                                angle_r = calculate_lane_angle(poses_right);
+                        }
+
+                        if(poses_left.size()>0)
+                        {
+                                msg_path.poses = poses_left;
+                                path_pub_l.publish(msg_path);
+                                angle_l = calculate_lane_angle(poses_left);
                         }
                 }
                 ros::spinOnce();

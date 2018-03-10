@@ -14,7 +14,7 @@ void draw_angle_arrows(cv::Mat &image, cv::Mat fase, int tam, cv::Point localiza
         cv::line(image, localizacion, fin_lin, cv::Scalar(0,200,0),5);
 }
 
-cv::Mat extract_lane(cv::Mat image,  int lowValThr,int highValThr,std::vector<geometry_msgs::PoseStamped> &poses)
+cv::Mat extract_lane(cv::Mat image,  int lowValThr,int highValThr,std::vector<geometry_msgs::PoseStamped> &poses_right, std::vector<geometry_msgs::PoseStamped> &poses_left)
 {
         int cols=image.cols;
         int rows=image.rows;
@@ -22,7 +22,7 @@ cv::Mat extract_lane(cv::Mat image,  int lowValThr,int highValThr,std::vector<ge
         //Change to HSV
         cv::Mat hsv;
         cv::cvtColor(image, hsv, cv::COLOR_BGR2HSV);
-        cv::blur(hsv,hsv,cv::Size(5,11));
+        cv::blur(hsv,hsv,cv::Size(11,11));
         //Split channels and binarize based on value
         //TODO: Try HSL.
         cv::Mat chan_hsv[3],binarized;
@@ -42,6 +42,7 @@ cv::Mat extract_lane(cv::Mat image,  int lowValThr,int highValThr,std::vector<ge
         cv::Sobel(chan_hsv[2], dev_y, 5, 0,1 );
         cv::phase(dev_x,dev_y, fase);
 
+        // Right side
         for(int i=0; i<BOXES; i++)
         {
                 cv::Rect micro_roi_der;
@@ -75,10 +76,58 @@ cv::Mat extract_lane(cv::Mat image,  int lowValThr,int highValThr,std::vector<ge
                         pose_now.pose.position.x=loc_max_hor.x;
                         pose_now.pose.position.y=loc_max_ver.y;
                         pose_now.pose.position.z=0;
-                        poses.push_back(pose_now);
+                        poses_right.push_back(pose_now);
                         cv::Point abs_loc=locale+micro_roi_corner;
+                        cv::circle(image, abs_loc, 5, cv::Scalar(0,255,0),5);
+                        //draw_angle_arrows(image,fase,100,abs_loc);
 
-                        draw_angle_arrows(image,fase,100,abs_loc);
+
+                }
+
+
+        }
+
+        //left Side
+        for(int i=0; i<BOXES; i++)
+        {
+                geometry_msgs::PoseStamped pose_now;
+
+                cv::Rect micro_roi_izq;
+                micro_roi_izq.x=1;
+                micro_roi_izq.y=rows/BOXES*(i)+1; //roi wont accept index 0 for whateer reason
+                micro_roi_izq.height=rows/BOXES-1;
+                micro_roi_izq.width=cols/2-1; //wont accept image overflow either
+
+                cv::Point micro_roi_corner(micro_roi_izq.x,micro_roi_izq.y);
+                //cv::rectangle(image,micro_roi_izq,cv::Scalar(0,0,255),5);
+                //Rigth Side
+                cv::Mat region_izq(binarized_val,micro_roi_izq);
+                cv::Mat profile_hor, profile_ver;
+                cv::reduce(region_izq,profile_hor,0,CV_REDUCE_SUM,CV_32SC1);
+                cv::reduce(region_izq,profile_ver,1,CV_REDUCE_SUM,CV_32SC1);
+
+                double max_hor, max_ver;
+                cv::Point loc_max_hor, loc_max_ver;
+                cv::minMaxLoc(profile_hor,NULL,&max_hor,NULL,&loc_max_hor,cv::noArray());
+                cv::minMaxLoc(profile_ver,NULL,&max_ver,NULL,&loc_max_ver,cv::noArray());
+                //cant discriminate y y axis
+                cv::Point locale = loc_max_hor+loc_max_ver;
+                //std::cout<<locale<<std::endl;
+                if (max_hor < thr_val_per_box)
+                {
+                        //Cant decide if found lane or noise, set to 0 and continue
+                        cv::circle(image, micro_roi_corner, 5, cv::Scalar(0,0,255),5);
+                }
+                else
+                {
+                        pose_now.pose.position.x=loc_max_hor.x;
+                        pose_now.pose.position.y=loc_max_ver.y;
+                        pose_now.pose.position.z=0;
+                        poses_left.push_back(pose_now);
+                        cv::Point abs_loc=locale+micro_roi_corner;
+                        cv::circle(image, abs_loc, 5, cv::Scalar(0,255,0),5);
+
+                        //  draw_angle_arrows(image,fase,100,abs_loc);
 
 
                 }

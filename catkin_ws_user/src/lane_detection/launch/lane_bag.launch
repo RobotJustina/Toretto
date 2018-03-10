@@ -10,7 +10,7 @@
    </node>
 
 
-   <node pkg="image_view" type="image_view" name="image_viewer" output="screen">
+   <node pkg="image_view2" type="image_view2" name="image_viewer" output="screen">
      <remap from="image" to="/lines"/>
   </node>
 </launch>

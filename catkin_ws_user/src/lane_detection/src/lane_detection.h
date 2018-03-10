@@ -7,4 +7,5 @@
 #include <geometry_msgs/Pose.h>
 #include <nav_msgs/Path.h>
 
-cv::Mat extract_lane(cv::Mat image,int highValThr, int lowValThr,std::vector<geometry_msgs::PoseStamped> &poses);
+cv::Mat extract_lane(cv::Mat image,  int lowValThr,int highValThr,std::vector<geometry_msgs::PoseStamped> &poses_right, std::vector<geometry_msgs::PoseStamped> &poses_left);
+float calculate_lane_angle(std::vector<geometry_msgs::PoseStamped> &poses);

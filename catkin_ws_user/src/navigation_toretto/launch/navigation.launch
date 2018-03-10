@@ -1,0 +1,4 @@
+<launch>
+ <node pkg="navigation_toretto" type="navigation_toretto" name="navigation_toretto" output="screen">
+   </node>
+</launch>
