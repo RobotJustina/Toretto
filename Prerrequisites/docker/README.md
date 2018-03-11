@@ -21,12 +21,12 @@ This can take a few minutes as it pull and updpate relevant data from  server. t
 The configuration for the cross compiling is already set via the dockerfile all you need to do is run the container.
 
 ```bash
-  docker run -it -v  /route_to_repo_on host/PumasToretto/model_car:/root/model_car/  automodel:latest bash
+  docker run -it -v  /route_to_repo_on host/catkin_ws_user:/root/catkin_ws_user/  automodel:latest bash
 ```
 This will return a bash session inside the container. However it is important to note the usage of the -v tag. This tells docker to mount a file on the host machine on the container file system. so any changes on the container will be reflected on the host system.
 
 ## Compiling
-Once inside the container go to /root/model_car it is important to use this directory as, currently, the configuration of the catkin_ws will point to this file. If eveything was succesful you should see catkin_ws inside.
+Once inside the container go to /root/model_car it is important to use this directory as, currently, the configuration of the catkin_ws_user will point to this file. If eveything was succesful you should see catkin_ws_user inside.
 Move to the workspace directory and:
 ```bash
   cd catkin_ws/
@@ -69,7 +69,7 @@ c978a6c30787        automodel:latest         "/ros_entrypoint.sh …"   7 days a
 Now you can exit the container, the docker daemon will stop it so it will not use cpu.
 To copy you need to copy the workspace into the model car. And reconfigure the workspace, thankfully the replace.sh file does all that. But this line must be mentioned.
 ```bash
-target=root@192.168.43.102:./model_car/$ws_name/
+target=root@192.168.43.102:./$ws_name/
 ```
 As it is now. The configuration script only works if you copy the workspace into /root/model_car inside the model car. If you want to compile somewhere else you must change the workspace directory on the container to match exactly the path of the workspace in the model car.
 
