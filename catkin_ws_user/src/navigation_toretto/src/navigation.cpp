@@ -54,20 +54,20 @@ int right_lane_target;
 //P controller
 float navigation(float x){
         //x is the distane from the lane average center to the image middle
-
-        float ctrl_law = kp*(x-right_lane_target);
+        float error =(x-right_lane_target);
+        float ctrl_law = kp*error+90;
         //ctrl law commands -inf,inf rads
-        ctrl_law=ctrl_law+90; //steering controls 0-180. Shifting 90 degeress
+         //steering controls 0-180. Shifting 90 degeress
 
         //saturation
         std::cout << "Unsaturated control law:" << ctrl_law<< '\n';
         if (ctrl_law>170)
         {
-          ctrl_law=170;
+                ctrl_law=170;
         }
         else if (ctrl_law<10)
         {
-          ctrl_law=10;
+                ctrl_law=10;
         }
 
         return ctrl_law;
@@ -122,42 +122,32 @@ void Callback_path(const nav_msgs::Path& path)
                 float y_i=0;
 
                 //get average of points.
-                if (path.poses.size() > 0) {
-                        cout << "10 \n";
-                        for (int i=0; i< 25; i++) { //15
+                if (path.poses.size() > 0)
+                {
+                        cout << "Size of sample: "<< path.poses.size()<< " \n";
+                        for (int i=0; i<path.poses.size(); i++)
+                        { //15
 
                                 //cout << "x_i: " << path.poses[i].pose.position.x << "\n";
                                 x_i += path.poses[i].pose.position.x; //Pixel measurement
                                 y_i += path.poses[i].pose.position.y;
 
-                                //cout << "x_i: " << path.poses[i].pose.position.x << "\n";
-                                //cout << "x_i: " << path.poses[i].pose.position.x << "\n";
-                                /*if (abs(path.poses[i].pose.position.x - x_i1) > 200){
-                                    cout << "Es mayor por: " << abs(path.poses[i].pose.position.x - x_i1)<< "\n";
-                                    cout << "Path: " << path.poses[i].pose.position.x << "\n";
-                                    cout << "x_i1: " << x_i1 << "\n";
-                                    limite++;
-                                   }
-                                   else{
-                                    x_i += path.poses[i].pose.position.x;
-                                    y_i += path.poses[i].pose.position.y;
-                                   }
-                                   cout << "x_i: " << path.poses[i].pose.position.x << "\n";*/
                         }
 
                         x_i=x_i/path.poses.size();
                         y_i=y_i/path.poses.size();
+
+
+                        cout << "x_i prom: "<< x_i << "\n";
+                        cout << "y_i prom: "<< y_i << "\n";
+
+                        theta= navigation(x_i);
+
+                        cout << "theta: " << theta << "\n";
+                        steering.data = theta;
+                        steering_pub.publish(steering);
+                        usleep(250000);
                 }
-
-                cout << "x_i prom: "<< x_i << "\n";
-                cout << "y_i prom: "<< y_i << "\n";
-
-                theta= navigation(x_i);
-
-                cout << "theta: " << theta << "\n";
-                steering.data = theta;
-                steering_pub.publish(steering);
-                usleep(250000);
 
                 //time_i=clock()-time_i;
                 //cout << "Time E: " << (float)time_i/CLOCKS_PER_SEC << "\n";
@@ -252,16 +242,16 @@ int main(int argc, char** argv)
         ros::Subscriber speed_subscriber = n.subscribe("/manual_control/speed_auto", 1, Callback_speed);
         ros::Subscriber cross_subscriber = n.subscribe("/cross", 1, Callback_cross);
 
-        n.param<float>("kp",kp,1);
-        n.param<int>("right_lane_target",right_lane_target,550); //x position where right lane is desired.
+        n.param<float>("kp",kp,0.5);
+        n.param<int>("right_lane_target",right_lane_target,400); //x position where right lane is desired.
 
-         //topic advertises center of lane line, if you offset by a constant value
-         //You can get the center.
+        //topic advertises center of lane line, if you offset by a constant value
+        //You can get the center.
 
         while (ros::ok())
         {
 
-                ros::Rate loop_rate(10);
+                ros::Rate loop_rate(15);
                 float vu=0;
                 ros::spinOnce();
 
@@ -281,14 +271,15 @@ int main(int argc, char** argv)
                                 cout<<"Case 0 \n";
                                 lights_fr.data="diL";
                                 light_fr_pub.publish(lights_fr);
-                                ros::spinOnce();
+
                                 j=0;
                                 object=false;
                                 cross=false;
                                 cross_a=false;
                                 object=false;
-
-
+                                speed.data=-350;
+                                speeds_pub.publish(speed);
+                                //ros::spinOnce();
                                 //steering.data=120;
                                 //steering_pub.publish(steering);
                                 nextstate=0; //estaba en 0

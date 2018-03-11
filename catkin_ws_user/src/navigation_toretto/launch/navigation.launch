@@ -1,4 +1,6 @@
 <launch>
- <node pkg="navigation_toretto" type="navigation_toretto" name="navigation_toretto" output="screen">
+  <param name="kp" value="0.01"/>
+  <node pkg="navigation_toretto" type="navigation_toretto" name="navigation_toretto" output="screen">
+
    </node>
 </launch>
