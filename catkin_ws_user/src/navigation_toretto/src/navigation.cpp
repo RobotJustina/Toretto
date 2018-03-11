@@ -37,34 +37,40 @@ int speed_var;
 clock_t time_i=0,time_f=0;
 
 float time_s=0, t_100=3.4;
-float x_i=0, y_i=0, theta_i=0;
-float x_i1=0, y_i1=0, theta_i1=0;
+//float x_i=0, y_i=0, theta_i=0;
+//float x_i1=0, y_i1=0, theta_i1=0;
 float err_theta=0;
 float V=0, Vmax=2;
 float alfa=1, vy=0, vx=0;
 float l_obj=0, r_obj=0;
-float en=0, en_1=0, Kp=0.03, Rn=0;
+float en=0, en_1=0, kp, Rn=0;
 
 ros::Publisher speeds_pub;
 ros::Publisher steering_pub;
 ros::Publisher light_fr_pub;
 
+int right_lane_target;
+
 //P controller
-float navigation(){
+float navigation(float x){
+        //x is the distane from the lane average center to the image middle
 
-        //theta_i1= atan((x_i-x_i1)/(y_i - y_i1));
-        theta_i1=0.0026*x_i;
-        theta_i1=theta_i1;
+        float ctrl_law = kp*(x-right_lane_target);
+        //ctrl law commands -inf,inf rads
+        ctrl_law=ctrl_law+90; //steering controls 0-180. Shifting 90 degeress
 
-        /*if (x_i > 0){
-            theta_i1=(theta_i1/*-1.5708);
-           }
-           else
-           {
-            theta_i1=(theta_i1+1.5708);
-           }*/
+        //saturation
+        std::cout << "Unsaturated control law:" << ctrl_law<< '\n';
+        if (ctrl_law>170)
+        {
+          ctrl_law=170;
+        }
+        else if (ctrl_law<10)
+        {
+          ctrl_law=10;
+        }
 
-        return theta_i1;
+        return ctrl_law;
         /*
             err_theta = theta_i1 - theta_i;
 
@@ -112,10 +118,10 @@ void Callback_path(const nav_msgs::Path& path)
         else{
 
                 float theta;
-                x_i=0;
-                y_i=0;
+                float x_i=0;
+                float y_i=0;
 
-
+                //get average of points.
                 if (path.poses.size() > 0) {
                         cout << "10 \n";
                         for (int i=0; i< 25; i++) { //15
@@ -143,94 +149,13 @@ void Callback_path(const nav_msgs::Path& path)
                         y_i=y_i/path.poses.size();
                 }
 
-          
-
-                //x_i1=x_i;
-                x_i=x_i-225;
-                y_i=299-y_i;
-                x_i=x_i*0.7;
-                //y_i=300-y_i;
-
-
                 cout << "x_i prom: "<< x_i << "\n";
                 cout << "y_i prom: "<< y_i << "\n";
 
-                theta= navigation();
+                theta= navigation(x_i);
 
-
-                //steering_3=steering_2;
-                //steering_2=steering_1;
-                steering_1=steering_0;
-                //steering_prom_1=steering_prom;
-                //steering_prom=(steering_1+steering_0)/2;
-                en_1 = en;
-
-                //if (theta > 0.05 || theta < -0.05){
-
-                cout << "theta: " << theta *180/M_PI < "\n";
-                steering_0=((170/0.57)*theta)+120;
-                cout << "Steering 0: " << steering_0 << "\n";
-                if (steering_0 > 200) {
-                        steering_0=200;
-                }
-
-                if (steering_0 < 40) {
-                        steering_0=40;
-                }
-
-                /*}
-
-                   else{
-                    cout << "theta: " << theta << "\n";
-                    steering_0=120;
-                   }*/
-
-                if (path.poses.size() < 5) {
-                        steering_0=-30;
-                }
-
-                if (abs(steering_0  - steering_1) > 200) {
-                        cout << "gran cambio \n";
-                        steering_0=-40;
-                }
-
-                //Control
-                //en=steering_prom - steering_prom_1;
-                en=steering_0 - steering_1;
-                Rn=Kp*(en - en_1);
-                steering.data=steering_1+Rn;
-                //steering.data=steering_0;
-
-
-                cout << "Rn: " << Rn << "\n";
-                //cout << "Steering 1: " << steering_1 << "\n";
-                //steering.data= (steering_0+steering_1)/2;
-                cout << "Steering 0: " << steering_0 << "\n";
-                cout << "Steering 1: " << steering_1 << "\n";
-
-                if (steering.data > 280) {
-                        steering.data=280;
-                }
-
-                if (steering.data < -40) {
-                        steering.data=-40;
-                }
-
-                if (steering.data > 220 || steering.data < 30) {
-                        steering.data=steering.data*0.85;
-                }
-/*
-    if (path.poses.size() < 5)
-       {
-
-        steering.data=-40;
-
-       } */
-                steering.data=((steering.data-170)*0.75)+170;
-                cout << "Steering data: " << steering.data << "\n";
-                steering_pub.publish(steering);
-
-                cout << "Steering data: " << steering.data << "\n";
+                cout << "theta: " << theta << "\n";
+                steering.data = theta;
                 steering_pub.publish(steering);
                 usleep(250000);
 
@@ -311,27 +236,27 @@ void Callback_speed(const std_msgs::Int16::ConstPtr& msg)
 
 int main(int argc, char** argv)
 {
-        ros::init(argc, argv, "navigation");
+        ros::init(argc, argv, "navigation_toretto");
         ros::NodeHandle n;
 
         speeds_pub = n.advertise<std_msgs::Int16>("/manual_control/speed", 1);
         steering_pub = n.advertise<std_msgs::Int16>("/manual_control/steering", 1);
-
-        //speeds_pub = n.advertise<std_msgs::Int16>("/controlN/speed", 1);
-        //steering_pub = n.advertise<std_msgs::Int16>("/controlN/steering", 1);
-
         light_fr_pub = n.advertise<std_msgs::String>("/manual_control/lights", 1);
 
         ros::Subscriber position_subscriber = n.subscribe("/right", 1, Callback_path);
         ros::Subscriber object_subscriber = n.subscribe("/object_detection/speed", 1, Callback_object);
         ros::Subscriber objectL_subscriber = n.subscribe("/object_detection/left", 1, Callback_objectL);
         ros::Subscriber objectR_subscriber = n.subscribe("/object_detection/right", 1, Callback_objectR);
+
         ros::Subscriber stop_subscriber = n.subscribe("/manual_control/stop", 1, Callback_stop);
-
         ros::Subscriber speed_subscriber = n.subscribe("/manual_control/speed_auto", 1, Callback_speed);
-
         ros::Subscriber cross_subscriber = n.subscribe("/cross", 1, Callback_cross);
 
+        n.param<float>("kp",kp,1);
+        n.param<int>("right_lane_target",right_lane_target,550); //x position where right lane is desired.
+
+         //topic advertises center of lane line, if you offset by a constant value
+         //You can get the center.
 
         while (ros::ok())
         {
@@ -366,7 +291,7 @@ int main(int argc, char** argv)
 
                                 //steering.data=120;
                                 //steering_pub.publish(steering);
-                                nextstate=1; //estaba en 0
+                                nextstate=0; //estaba en 0
                                 //sleep(1);
                                 //ros::spinOnce();
                                 //steering.data=120;
