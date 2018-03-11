@@ -1,0 +1,3 @@
+<launch>
+  <node name="lines_node" pkg="lines_detector" type="lines_node"  args="transform" output="screen"/>
+</launch>
