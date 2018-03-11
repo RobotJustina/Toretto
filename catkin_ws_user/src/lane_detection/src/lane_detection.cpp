@@ -14,6 +14,16 @@ void draw_angle_arrows(cv::Mat &image, cv::Mat fase, int tam, cv::Point localiza
         cv::line(image, localizacion, fin_lin, cv::Scalar(0,200,0),5);
 }
 
+void draw_angle_arrows(cv::Mat &image, cv::Point origin, int tam, float theta)
+{
+        //Draw angle lines
+        float fin_lin_x=origin.x+tam*cos(theta);
+        float fin_lin_y=origin.y+tam*sin(theta);
+        cv::Point fin_lin(fin_lin_x,fin_lin_y);
+        cv::line(image, origin, fin_lin, cv::Scalar(0,200,0),5);
+}
+
+
 cv::Mat extract_lane(cv::Mat image,  int lowValThr,int highValThr,std::vector<geometry_msgs::PoseStamped> &poses_right, std::vector<geometry_msgs::PoseStamped> &poses_left)
 {
         int cols=image.cols;
@@ -73,11 +83,11 @@ cv::Mat extract_lane(cv::Mat image,  int lowValThr,int highValThr,std::vector<ge
                 }
                 else
                 {
-                        pose_now.pose.position.x=loc_max_hor.x;
-                        pose_now.pose.position.y=loc_max_ver.y;
+                        cv::Point abs_loc=locale+micro_roi_corner;
+                        pose_now.pose.position.x=abs_loc.x;
+                        pose_now.pose.position.y=abs_loc.y;
                         pose_now.pose.position.z=0;
                         poses_right.push_back(pose_now);
-                        cv::Point abs_loc=locale+micro_roi_corner;
                         cv::circle(image, abs_loc, 5, cv::Scalar(0,255,0),5);
                         //draw_angle_arrows(image,fase,100,abs_loc);
 
@@ -120,12 +130,14 @@ cv::Mat extract_lane(cv::Mat image,  int lowValThr,int highValThr,std::vector<ge
                 }
                 else
                 {
-                        pose_now.pose.position.x=loc_max_hor.x;
-                        pose_now.pose.position.y=loc_max_ver.y;
+                        cv::Point abs_loc=locale+micro_roi_corner;
+                        pose_now.pose.position.x=abs_loc.x;
+                        pose_now.pose.position.y=abs_loc.y;
                         pose_now.pose.position.z=0;
                         poses_left.push_back(pose_now);
-                        cv::Point abs_loc=locale+micro_roi_corner;
-                        cv::circle(image, abs_loc, 5, cv::Scalar(0,255,0),5);
+                        cv::circle(image, abs_loc, 5, cv::Scalar(255,0,0),5);
+
+
 
                         //  draw_angle_arrows(image,fase,100,abs_loc);
 
@@ -155,4 +167,21 @@ float calculate_lane_angle(std::vector<geometry_msgs::PoseStamped> &poses)
                 theta +=atan2( (y-y_i),(x-x_i));
         }
         return theta/poses.size();
+}
+
+cv::Point getAverageCenterLanePosition(std::vector<geometry_msgs::PoseStamped> &poses)
+{
+
+        float center_x =0;
+        float center_y =0;
+        int n = poses.size();
+        for (int i=0; i<poses.size(); i++)
+        {
+                 center_x +=poses[i].pose.position.x;
+                 center_y +=poses[i].pose.position.y;
+
+
+        }
+        cv::Point center(center_x/n,center_y/n);
+        return center;
 }

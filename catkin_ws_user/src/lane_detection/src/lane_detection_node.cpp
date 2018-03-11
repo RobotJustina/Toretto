@@ -1,7 +1,7 @@
 #include "ros/ros.h"
 #include "lane_detection.h"
 
-
+#define RADINDEG 180/M_PI
 cv::Mat Image;
 bool image_flag=false;
 cv::Mat persp;
@@ -35,6 +35,9 @@ int main(int argc, char** argv)
         ros::Publisher path_pub_l= nh.advertise<nav_msgs::Path>("/left",1000);
         nav_msgs::Path msg_path;
 
+        ros::Publisher angle_pub_r = nh.advertise<std_msgs::Float32>("angle_r",100);
+        ros::Publisher angle_pub_l = nh.advertise<std_msgs::Float32>("angle_l",100);
+        std_msgs::Float32 msg_angle;
         ros::Rate loop_rate(10);
 
         cv::Mat transfMatrix;
@@ -75,26 +78,40 @@ int main(int argc, char** argv)
                         float angle_r, angle_l;
 
                         cv::warpPerspective(Image, trans, transfMatrix, transfSize, cv::INTER_LINEAR, cv::BORDER_REPLICATE, cv::Scalar(127, 127, 127) );
-
                         trans = extract_lane(trans,value_thr_low,value_thr_high, poses_right, poses_left);
-
-                        sensor_msgs::ImagePtr msg=cv_bridge::CvImage(std_msgs::Header(),"bgr8",trans).toImageMsg();
-
-                        pub.publish(msg);
 
                         if(poses_right.size()>0)
                         {
                                 msg_path.poses = poses_right;
                                 path_pub_r.publish(msg_path);
+
                                 angle_r = calculate_lane_angle(poses_right);
+                                msg_angle.data = 180-angle_r*RADINDEG;
+                                angle_pub_r.publish(msg_angle);
+                                //Visualization
+                                cv::Point centro=getAverageCenterLanePosition(poses_right);
+                                cv::circle(trans, centro, 5, cv::Scalar(0,100,100),10);
+                                draw_angle_arrows(trans,centro,100,angle_r);
+
                         }
 
                         if(poses_left.size()>0)
                         {
                                 msg_path.poses = poses_left;
                                 path_pub_l.publish(msg_path);
+
                                 angle_l = calculate_lane_angle(poses_left);
+                                msg_angle.data = 180-angle_l*RADINDEG;
+                                angle_pub_l.publish(msg_angle);
+                                //Visualization
+                                cv::Point centro=getAverageCenterLanePosition(poses_left);
+                                cv::circle(trans, centro, 5, cv::Scalar(100,100,0),10);
+                                draw_angle_arrows(trans,centro,100,angle_l);
                         }
+
+                        sensor_msgs::ImagePtr msg=cv_bridge::CvImage(std_msgs::Header(),"bgr8",trans).toImageMsg();
+
+                        pub.publish(msg);
                 }
                 ros::spinOnce();
                 loop_rate.sleep();

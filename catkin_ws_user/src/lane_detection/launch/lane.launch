@@ -1,13 +1,13 @@
 <launch>
   <param name="calib_file" value="/home/jesus/robo_ws/homoMat4.yaml" />
-
-  <node pkg="usb_cam" type="usb_cam_node" name="usb_camera" output="screen">
+  <param name="value_thr_low" value="150"/>
+  <param name="value_thr_high" value="200" />
+  <!-- <node pkg="usb_cam" type="usb_cam_node" name="usb_camera" output="screen">
     <param name="pixel_format" value="yuyv" />
-  </node>
-
+  </node> -->
 
     <node pkg="lane_detection" type="lane_detection_node" name="lines_node" output="screen">
-      <remap from="image" to="/usb_camera/image_raw"/>
+      <remap from="image" to="/app/camera/rgb/image_raw"/>
    </node>
 
 

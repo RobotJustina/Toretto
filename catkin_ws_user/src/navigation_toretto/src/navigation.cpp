@@ -116,7 +116,7 @@ void Callback_path(const nav_msgs::Path& path)
                 y_i=0;
 
 
-                if (path.poses.size() > 25) {
+                if (path.poses.size() > 0) {
                         cout << "10 \n";
                         for (int i=0; i< 25; i++) { //15
 
@@ -139,37 +139,11 @@ void Callback_path(const nav_msgs::Path& path)
                                    cout << "x_i: " << path.poses[i].pose.position.x << "\n";*/
                         }
 
-                        x_i=x_i/25;
-                        y_i=y_i/25;
-                }
-
-                else{
-                        for (int i=0; i< path.poses.size(); i++) { //15
-
-                                //cout << "Menos de 15 \n";
-                                x_i += path.poses[i].pose.position.x;
-                                y_i += path.poses[i].pose.position.y;
-
-                                //cout << "x_i: " << path.poses[i].pose.position.x << "\n";
-                                //cout << "x_i: " << path.poses[i].pose.position.x << "\n";
-                                /*if (abs(path.poses[i].pose.position.x - x_i1) > 200){
-                                    cout << "Es mayor por: " << abs(path.poses[i].pose.position.x - x_i1)<< "\n";
-                                    cout << "Path: " << path.poses[i].pose.position.x << "\n";
-                                    cout << "x_i1: " << x_i1 << "\n";
-                                    limite++;
-                                   }
-                                   else{
-                                    x_i += path.poses[i].pose.position.x;
-                                    y_i += path.poses[i].pose.position.y;
-                                   }
-                                   cout << "x_i: " << path.poses[i].pose.position.x << "\n";*/
-                        }
-
                         x_i=x_i/path.poses.size();
                         y_i=y_i/path.poses.size();
-
                 }
 
+          
 
                 //x_i1=x_i;
                 x_i=x_i-225;
@@ -392,7 +366,7 @@ int main(int argc, char** argv)
 
                                 //steering.data=120;
                                 //steering_pub.publish(steering);
-                                nextstate=1 ;//estaba en 0
+                                nextstate=1; //estaba en 0
                                 //sleep(1);
                                 //ros::spinOnce();
                                 //steering.data=120;
