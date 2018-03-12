@@ -146,7 +146,7 @@ void Callback_path(const nav_msgs::Path& path)
                         cout << "theta: " << theta << "\n";
                         steering.data = theta;
                         steering_pub.publish(steering);
-                        usleep(250000);
+                        // usleep(250000);
                 }
 
                 //time_i=clock()-time_i;
