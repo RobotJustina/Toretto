@@ -57,9 +57,10 @@ int main(int argc, char** argv)
         {
                 std::cout<<"*********** homoMat4 FOUND @ "<<filepath<<"***********"<<std::endl;
         }
-        fs ["Homography"] >> transfMatrix;
+        fs["Homography"] >> transfMatrix;
+        cv::Size transfSize;
+        fs["tSize"] >> transfSize;
         fs.release();
-        cv::Size transfSize = cv::Size(646, 540);
 
 
         cv::Mat divMat = cv::Mat::zeros(3,3, CV_64FC1);
