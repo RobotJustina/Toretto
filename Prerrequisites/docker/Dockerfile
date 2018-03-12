@@ -12,7 +12,7 @@ RUN apt-get update && apt-get install -y \
   lib32stdc++6 \
   lib32z1
 
-RUN apt-get install -y ros-indigo-cv-bridge 
+RUN apt-get install -y ros-indigo-cv-bridge
 
 ##run update again, as in wiki
 RUN apt-get update
@@ -24,12 +24,13 @@ COPY compilerOdroid.tar.bz2 /opt/odroid-x2/
 RUN  tar -xjf /opt/odroid-x2/compilerOdroid.tar.bz2 -C /opt/odroid-x2/
 
 #workspace for mount
-RUN mkdir -p /root/model_car/catkin_ws && cd /root/model_car/catkin_ws
+#RUN mkdir -p /root/model_car/catkin_ws && cd /root/model_car/catkin_ws
+RUN mkdir -p /root/catkin_ws_user &&cd /root/catkin_ws_user
 
 RUN catkin config --profile odroid -b build -d devel -i install
-RUN catkin config --profile odroid --cmake-args  -DCMAKE_TOOLCHAIN_FILE=/root/model_car/catkin_ws/src/Toolchain-arm-linux-gnueabihf.cmake
+RUN catkin config --profile odroid --cmake-args  -DCMAKE_TOOLCHAIN_FILE=/root/catkin_ws_user/src/Toolchain-arm-linux-gnueabihf.cmake
 RUN catkin config --profile odroid --extend /opt/odroid-x2/sdk/opt/ros/indigo/
 RUN catkin config --merge-devel --profile odroid
 RUN  catkin config --profile odroid --install
 
-VOLUME /root/model_car
+VOLUME /root/catkin_ws_user
