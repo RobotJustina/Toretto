@@ -177,14 +177,18 @@ cv::Mat LinesDetector::segmentationLines(cv::Mat image, std_msgs::Float32MultiAr
 		cv::fitLine(right,lineR, CV_DIST_WELSCH, 0, 0.01,0.01);
 		float lefty = (-lineR[2]*lineR[1]/lineR[0])+lineR[3];
     	float righty = ((imageThreshold.cols-lineR[2])*lineR[1]/lineR[0])+lineR[3];
-    	float m =( righty - lefty)/(imageThreshold.cols-1);
-    	float a = lefty;
+    	//float m =( righty - lefty)/(imageThreshold.cols-1);
+    	//float a = lefty;
+    	float A= lefty -righty;//y2-y1
+    	float B= imageThreshold.cols-1; //x1-x2
+    	float C= -A*(imageThreshold.cols-1)-B*righty; //-A*x1-B*y1
     	if (this->debug)
     	{
     		cv::line(drawing,cv::Point(imageThreshold.cols-1,righty),cv::Point(0,lefty),cv::Scalar(200,200,0),2);
     	}    	
-    	lRight.data.push_back(m);
-    	lRight.data.push_back(a);
+    	lRight.data.push_back(A);
+    	lRight.data.push_back(B);
+    	lRight.data.push_back(C);
 	}
 
 	if (left.size()>0)
@@ -193,14 +197,18 @@ cv::Mat LinesDetector::segmentationLines(cv::Mat image, std_msgs::Float32MultiAr
 		cv::fitLine(left,lineL, CV_DIST_L2, 0, 0.01,0.01);
 		float lefty = (-lineL[2]*lineL[1]/lineL[0])+lineL[3];
     	float righty = ((imageThreshold.cols-lineL[2])*lineL[1]/lineL[0])+lineL[3];
-    	float m =( righty - lefty)/(imageThreshold.cols-1);
-    	float a = lefty;
+    	//float m =( righty - lefty)/(imageThreshold.cols-1);
+    	//float a = lefty;
+    	float A= lefty -righty;//y2-y1
+    	float B= imageThreshold.cols-1; //x1-x2
+    	float C= -A*(imageThreshold.cols-1)-B*righty; //-A*x1-B*y1
     	if (this->debug)
     	{
     		cv::line(drawing,cv::Point(imageThreshold.cols-1,righty),cv::Point(0,lefty),cv::Scalar(0,200,200),2);
     	}    	
-    	lLeft.data.push_back(m);
-    	lLeft.data.push_back(a);
+		lRight.data.push_back(A);
+    	lRight.data.push_back(B);
+    	lRight.data.push_back(C);
 	}
 
 
