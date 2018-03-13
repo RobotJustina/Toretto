@@ -17,9 +17,10 @@ class lane_extractor {
     double gapLen;
     int lowValThr, highValThr;
     int canny_thr_low, canny_thr_high;
+    std_msgs::Float32MultiArray msg_direction;
   public:
     lane_extractor( int hough_thr,double minLen, double gapLen, int lowValThr,int highValThr, int canny_thr_low, int canny_thr_high);
-    cv::Mat extract_lane_angle_hough(cv::Mat image);
+    std_msgs::Float32MultiArray extract_right_lane_angle_hough(cv::Mat &image);
 };
 
 

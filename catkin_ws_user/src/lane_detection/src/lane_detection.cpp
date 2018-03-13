@@ -11,9 +11,10 @@ lane_extractor::lane_extractor( int hough_thr,double minLen, double gapLen, int 
         this->highValThr=highValThr;
         this->canny_thr_low=canny_thr_low;
         this->canny_thr_high=canny_thr_high;
+
 }
 
-cv::Mat lane_extractor::extract_lane_angle_hough(cv::Mat image)
+std_msgs::Float32MultiArray lane_extractor::extract_right_lane_angle_hough(cv::Mat &image)
 {
         int cols=image.cols;
         int rows=image.rows;
@@ -30,7 +31,7 @@ cv::Mat lane_extractor::extract_lane_angle_hough(cv::Mat image)
         cv::split(hsv,chan_hsv);
         cv::inRange(chan_hsv[2], lowValThr,highValThr, binarized);
         cv::Mat border;
-        cv::Canny( binarized, border,50,50*2);
+        cv::Canny( binarized, border,canny_thr_low,canny_thr_high);
         //cv::cvtColor(cropped_img,gray_img,cv::COLOR_BGR2GRAY );
         //cv::blur(gray_img,gray_img,cv::Size(11,11));
 
@@ -63,15 +64,20 @@ cv::Mat lane_extractor::extract_lane_angle_hough(cv::Mat image)
         if(puntos.size()>0)
         {
                 cv::fitLine(puntos,lineR, CV_DIST_WELSCH, 0, 0.01,0.01);
-                cv::Point2f ini(cols/2,rows/2);
+                cv::Point2f ini(lineR[2],lineR[3]);
                 cv::Point2f dir(lineR[0],lineR[1]);
-                cv::Point2f fin(ini+200*dir);
+                cv::Point2f fin(ini+100*dir);
                 cv::line(image,ini,fin, cv::Scalar(255,0,0),5);
+                msg_direction.data.clear();
+                for(int i=0; i<4; i++)
+                {
+                        msg_direction.data.push_back(lineR[i]);
+                }
 
         } //Fits a stright line to Points
 
         //cv::cvtColor(border,border, cv::COLOR_GRAY2BGR);
-        return image;
+        return msg_direction;
 
 
 }

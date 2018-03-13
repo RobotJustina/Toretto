@@ -31,7 +31,7 @@ int main(int argc, char** argv)
 
         ros::Publisher angle_pub_r = nh.advertise<std_msgs::Float32MultiArray>("right",100);
         ros::Publisher angle_pub_l = nh.advertise<std_msgs::Float32MultiArray>("left",100);
-        //std_msgs::Float32 msg_angle;
+
         ros::Rate loop_rate(15);
 
         int hough_thr;
@@ -60,11 +60,15 @@ int main(int argc, char** argv)
                         //std::cout << "Image Received" << '\n';
                         image_flag = false;
 
-                        std_msgs::Float32MultiArray angle_r, angle_l;
-                        cv::Mat mod =extractor.extract_lane_angle_hough(Image);
-                        sensor_msgs::ImagePtr msg=cv_bridge::CvImage(std_msgs::Header(),"bgr8",mod).toImageMsg();
+                        std_msgs::Float32MultiArray angle_r;
+                        angle_r=extractor.extract_right_lane_angle_hough(Image);
+                        sensor_msgs::ImagePtr msg=cv_bridge::CvImage(std_msgs::Header(),"bgr8",Image).toImageMsg();
 
                         pub.publish(msg);
+                        if(angle_r.data.size()>0)
+                        {
+                          angle_pub_r.publish(angle_r);
+                        }
                 }
                 ros::spinOnce();
                 loop_rate.sleep();
