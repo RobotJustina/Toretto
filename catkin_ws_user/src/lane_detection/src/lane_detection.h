@@ -7,8 +7,24 @@
 #include <geometry_msgs/Pose.h>
 #include <nav_msgs/Path.h>
 #include <std_msgs/Float32.h>
+#include <std_msgs/Float32MultiArray.h>
+
+
+class lane_extractor {
+  private:
+    int hough_thr;
+    double minLen;
+    double gapLen;
+    int lowValThr, highValThr;
+    int canny_thr_low, canny_thr_high;
+  public:
+    lane_extractor( int hough_thr,double minLen, double gapLen, int lowValThr,int highValThr, int canny_thr_low, int canny_thr_high);
+    cv::Mat extract_lane_angle_hough(cv::Mat image);
+};
+
 
 cv::Mat extract_lane(cv::Mat image,  int lowValThr,int highValThr,std::vector<geometry_msgs::PoseStamped> &poses_right, std::vector<geometry_msgs::PoseStamped> &poses_left);
+cv::Mat extract_lane_angle(cv::Mat image,  int lowValThr,int highValThr,std_msgs::Float32MultiArray &angle_right, std_msgs::Float32MultiArray &angle_left);
 float calculate_lane_angle(std::vector<geometry_msgs::PoseStamped> &poses);
 cv::Point getAverageCenterLanePosition(std::vector<geometry_msgs::PoseStamped> &poses);
 void draw_angle_arrows(cv::Mat &image, cv::Point origin, int tam, float theta);

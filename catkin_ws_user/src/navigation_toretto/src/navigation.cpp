@@ -9,13 +9,14 @@
 #include <std_msgs/Bool.h>
 #include <math.h>
 #include "std_msgs/Int32MultiArray.h"
+#include <std_msgs/Float32MultiArray.h>
 #include "nav_msgs/Path.h"
 #include <time.h>
 
 #define PI 3.14159265
 #define E 2.7182818284590
 #define Steering_max = 0.57
-
+#define RAD2ANGLE 180/M_PI
 using namespace std;
 
 sensor_msgs::LaserScan laser;
@@ -51,13 +52,36 @@ ros::Publisher light_fr_pub;
 
 int right_lane_target;
 
+
+float navigation_angle(float theta)
+{
+        float error =(M_PI-theta);
+        float ctrl_law = kp*error+M_PI;
+        //ctrl law commands -inf,inf rads
+        //steering controls 0-180. Shifting 90 degeress
+        float steering_angle=ctrl_law*180/M_PI;
+        //saturation
+
+        std::cout << "Unsaturated Steering :" <<steering_angle<< '\n';
+        if (steering_angle>170)
+        {
+                steering_angle=170;
+        }
+        else if (steering_angle<10)
+        {
+                steering_angle=10;
+        }
+
+        return steering_angle;
+}
+
 //P controller
-float navigation(float x){
+float navigation_pixel(float x){
         //x is the distane from the lane average center to the image middle
         float error =(x-right_lane_target);
         float ctrl_law = kp*error+90;
         //ctrl law commands -inf,inf rads
-         //steering controls 0-180. Shifting 90 degeress
+        //steering controls 0-180. Shifting 90 degeress
 
         //saturation
         std::cout << "Unsaturated control law:" << ctrl_law<< '\n';
@@ -71,22 +95,6 @@ float navigation(float x){
         }
 
         return ctrl_law;
-        /*
-            err_theta = theta_i1 - theta_i;
-
-            V= Vmax*pow(E,((pow(err_theta,2)/ 2* alfa))*-1);
-
-            cout << "t: " << theta_i1 << "\n";
-            cout << "V: " << V << "\n";
-
-            vx = Vmax * cos(theta_i1);
-            vy = Vmax * sin(theta_i1);
-
-            y_i1 = vy + y_i1;
-            x_i1 = vx + x_i1;
-
-            cout << "xi: " << x_i1 << "\n";
-         */
 }
 
 
@@ -105,7 +113,36 @@ void giro(float theta)
 
 }
 
-void Callback_path(const nav_msgs::Path& path)
+
+void Callback_path_angle(const std_msgs::Float32MultiArray& angle)
+{
+
+        if(evasion) {
+                cout <<"Evasión \n";
+        }
+
+        else{
+                //get average of points.
+                if (angle.data.size() > 0)
+                {
+                        float theta = atan2(angle.data[1],angle.data[0]);
+                        cout << "Mesured angle: " << theta << " rads \n";
+                        cout << "\t Mesured angle: " << theta*RAD2ANGLE << " degs \n";
+
+                        float steer=navigation_angle(theta);
+
+                        cout << "Steering: " << steer << "\n";
+                        steering.data = steer;
+                        steering_pub.publish(steering);
+                        // usleep(250000);
+                }
+
+                //time_i=clock()-time_i;
+                //cout << "Time E: " << (float)time_i/CLOCKS_PER_SEC << "\n";
+        }
+}
+
+void Callback_path_pixel(const nav_msgs::Path & path)
 {
         //time_f=clock()-time_f;
         //cout << "Time J: " << (float)time_f/CLOCKS_PER_SEC << "\n";
@@ -141,7 +178,7 @@ void Callback_path(const nav_msgs::Path& path)
                         cout << "x_i prom: "<< x_i << "\n";
                         cout << "y_i prom: "<< y_i << "\n";
 
-                        theta= navigation(x_i);
+                        theta= navigation_pixel(x_i);
 
                         cout << "theta: " << theta << "\n";
                         steering.data = theta;
@@ -233,7 +270,7 @@ int main(int argc, char** argv)
         steering_pub = n.advertise<std_msgs::Int16>("/manual_control/steering", 1);
         light_fr_pub = n.advertise<std_msgs::String>("/manual_control/lights", 1);
 
-        ros::Subscriber position_subscriber = n.subscribe("/right", 1, Callback_path);
+        ros::Subscriber position_subscriber = n.subscribe("/right", 1, Callback_path_angle);
         ros::Subscriber object_subscriber = n.subscribe("/object_detection/speed", 1, Callback_object);
         ros::Subscriber objectL_subscriber = n.subscribe("/object_detection/left", 1, Callback_objectL);
         ros::Subscriber objectR_subscriber = n.subscribe("/object_detection/right", 1, Callback_objectR);
@@ -243,7 +280,7 @@ int main(int argc, char** argv)
         ros::Subscriber cross_subscriber = n.subscribe("/cross", 1, Callback_cross);
 
         n.param<float>("kp",kp,0.5);
-        n.param<int>("right_lane_target",right_lane_target,400); //x position where right lane is desired.
+        //  n.param<int>("right_lane_target",right_lane_target,400); //x position where right lane is desired.
 
         //topic advertises center of lane line, if you offset by a constant value
         //You can get the center.

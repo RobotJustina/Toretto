@@ -1,9 +1,9 @@
 <launch>
-  <param name="calib_file" value="/home/jesus/robo_ws/homoMat4.yaml" />
+  <param name="calib_file" value="/home/jesus/robo_ws/Matrix2.yaml" />
   <param name="value_thr_low" value="170"/>
   <param name="value_thr_high" value="180" />
 
-  <node pkg="rosbag" type="play" name="player" output="screen" args="/home/jesus/robo_ws/pistaBioMar2018-1.bag"/>
+  <node pkg="rosbag" type="play" name="player" output="screen" args="/home/jesus/robo_ws/model_car_pista_casco_poli.bag"/>
 
     <node pkg="lane_detection" type="lane_detection_node" name="lines_node" output="screen">
       <remap from="image" to="/app/camera/rgb/image_raw"/>

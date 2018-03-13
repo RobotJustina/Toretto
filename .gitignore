@@ -12,3 +12,5 @@ catkin_ws_user/odroid-install/
 catkin_ws_user/src/CMakeLists.txt
 catkin_ws_user/.catkin_tools/
 *.tar.bz2
+
+matReader.py
