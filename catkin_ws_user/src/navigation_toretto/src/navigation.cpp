@@ -16,7 +16,8 @@
 #define PI 3.14159265
 #define E 2.7182818284590
 #define Steering_max = 0.57
-#define RAD2ANGLE 180/M_PI
+#define RAD2DEG 180/M_PI
+#define DEG2RAD M_PI/180
 using namespace std;
 
 sensor_msgs::LaserScan laser;
@@ -51,18 +52,20 @@ ros::Publisher steering_pub;
 ros::Publisher light_fr_pub;
 
 int right_lane_target;
+float angle_ref; //regulate around this
 
 
 float navigation_angle(float theta)
 {
-        float error =(M_PI-theta);
-        float ctrl_law = kp*error+M_PI;
+        float error =(angle_ref-theta);
+        float ctrl_law = -kp*error+M_PI/2;
         //ctrl law commands -inf,inf rads
         //steering controls 0-180. Shifting 90 degeress
         float steering_angle=ctrl_law*180/M_PI;
         //saturation
 
-        std::cout << "Unsaturated Steering :" <<steering_angle<< '\n';
+        std::cout << "Control law: " <<ctrl_law <<"\n";
+        std::cout << "Unsaturated Steering:" <<steering_angle<< '\n';
         if (steering_angle>170)
         {
                 steering_angle=170;
@@ -126,8 +129,8 @@ void Callback_path_angle(const std_msgs::Float32MultiArray& angle)
                 if (angle.data.size() > 0)
                 {
                         float theta = atan2(angle.data[1],angle.data[0]);
-                        cout << "Mesured angle: " << theta << " rads \n";
-                        cout << "\t Mesured angle: " << theta*RAD2ANGLE << " degs \n";
+                        cout << "***Mesured angle: " << theta << " rads \n";
+                        cout << "Mesured angle: " << theta*RAD2DEG << " degs \n";
 
                         float steer=navigation_angle(theta);
 
@@ -280,6 +283,7 @@ int main(int argc, char** argv)
         ros::Subscriber cross_subscriber = n.subscribe("/cross", 1, Callback_cross);
 
         n.param<float>("kp",kp,0.5);
+        n.param<float>("angle_ref", angle_ref,40*DEG2RAD);
         //  n.param<int>("right_lane_target",right_lane_target,400); //x position where right lane is desired.
 
         //topic advertises center of lane line, if you offset by a constant value
