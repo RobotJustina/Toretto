@@ -90,12 +90,39 @@ void LinesDetector::transformMatrix(cv::Mat img)
 		key=cv::waitKey(1);
 	}
 
-	cv::FileStorage fs("Matrix.yaml", cv::FileStorage::WRITE);
+	cv::FileStorage fs("/root/catkin_ws_user/Matrix.yaml", cv::FileStorage::WRITE);
 	fs<<"Homography"<<tMatrix;
 	fs<<"tSize"<<transfSize;
 	fs.release();  
 
 
+}
+
+void LinesDetector::linesVector(std::vector<cv::Point2f> p,std_msgs::Float32MultiArray &l, int cols, cv::Mat &drawing ,cv::Scalar color)
+{
+	cv::Vec4f line;
+	cv::fitLine(p,line, CV_DIST_WELSCH, 0, 0.01,0.01);
+	//float lefty = (-lineR[2]*lineR[1]/lineR[0])+lineR[3];
+    //float righty = ((cols-lineR[2])*lineR[1]/lineR[0])+lineR[3];
+    //float m =( righty - lefty)/(imageThreshold.cols-1);
+    //float a = lefty;
+    int x0 = line[2];
+    int y0 = line[3];
+	int x1 = x0+100*line[0];
+	int y1 = y0+100*line[1];
+    int A= y1-y0;//y2-y1
+    int B= x0-x1; //x1-x2
+    int C= -A*x0-B*y0; //-A*x1-B*y1
+    if (this->debug)
+    {
+    	cv::line(drawing,cv::Point(x0,y0),cv::Point(x1,y1),color,2);
+    	std::cout<<"[Point 1]: ["<<x0<<" X] ["<<y0<<" Y] "<<std::endl;
+    	std::cout<<"[Point 2]: ["<<x1<<" X] ["<<y1<<" Y] "<<std::endl;
+    	std::cout<<"[A]: ["<<A<<" [B]: "<<B<<" [C]: "<<C<<std::endl;
+    }    	
+    l.data.push_back(A);
+    l.data.push_back(B);
+    l.data.push_back(C);
 }
 
 cv::Mat LinesDetector::segmentationLines(cv::Mat image, std_msgs::Float32MultiArray &lRight,std_msgs::Float32MultiArray &lLeft)
@@ -135,8 +162,8 @@ cv::Mat LinesDetector::segmentationLines(cv::Mat image, std_msgs::Float32MultiAr
 
 	if (peaks.size()>0)
 	{
-		std::cout<<"derecha: "<<peaks[0]<<std::endl;
-		std::cout<<"mc antes: "<<mc.size()<<std::endl;
+		//std::cout<<"derecha: "<<peaks[0]<<std::endl;
+		//std::cout<<"mc antes: "<<mc.size()<<std::endl;
 
 		right.push_back(peaks[0]);
 		peaks.erase(peaks.begin());
@@ -144,7 +171,7 @@ cv::Mat LinesDetector::segmentationLines(cv::Mat image, std_msgs::Float32MultiAr
 		int cR=0;
 		for (int i = 0; i < mc.size(); ++i)
 		{
-			if (distance(right[cR],mc[i])<110*110)
+			if (distance(right[cR],mc[i])<150*150)
 			{
 				right.push_back(mc[i]);
 				mc.erase(mc.begin()+i);
@@ -158,8 +185,8 @@ cv::Mat LinesDetector::segmentationLines(cv::Mat image, std_msgs::Float32MultiAr
 	{
 
 		left.push_back(peaks[0]);
-		std::cout<<"izquierda: "<<peaks[0]<<std::endl;
-		std::cout<<"mc despues: "<<mc.size()<<std::endl;
+		//std::cout<<"izquierda: "<<peaks[0]<<std::endl;
+		//std::cout<<"mc despues: "<<mc.size()<<std::endl;
 		int cL=0;
 		for (int i = 0; i < mc.size(); ++i)
 		{
@@ -173,42 +200,12 @@ cv::Mat LinesDetector::segmentationLines(cv::Mat image, std_msgs::Float32MultiAr
 
 	if (right.size()>0)
 	{
-		cv::Vec4f lineR;
-		cv::fitLine(right,lineR, CV_DIST_WELSCH, 0, 0.01,0.01);
-		float lefty = (-lineR[2]*lineR[1]/lineR[0])+lineR[3];
-    	float righty = ((imageThreshold.cols-lineR[2])*lineR[1]/lineR[0])+lineR[3];
-    	//float m =( righty - lefty)/(imageThreshold.cols-1);
-    	//float a = lefty;
-    	float A= lefty -righty;//y2-y1
-    	float B= imageThreshold.cols-1; //x1-x2
-    	float C= -A*(imageThreshold.cols-1)-B*righty; //-A*x1-B*y1
-    	if (this->debug)
-    	{
-    		cv::line(drawing,cv::Point(imageThreshold.cols-1,righty),cv::Point(0,lefty),cv::Scalar(200,200,0),2);
-    	}    	
-    	lRight.data.push_back(A);
-    	lRight.data.push_back(B);
-    	lRight.data.push_back(C);
+		LinesDetector::linesVector(right,lRight,imageThreshold.cols,drawing,cv::Scalar(200,200,0));
 	}
 
 	if (left.size()>0)
 	{
-		cv::Vec4f lineL;
-		cv::fitLine(left,lineL, CV_DIST_L2, 0, 0.01,0.01);
-		float lefty = (-lineL[2]*lineL[1]/lineL[0])+lineL[3];
-    	float righty = ((imageThreshold.cols-lineL[2])*lineL[1]/lineL[0])+lineL[3];
-    	//float m =( righty - lefty)/(imageThreshold.cols-1);
-    	//float a = lefty;
-    	float A= lefty -righty;//y2-y1
-    	float B= imageThreshold.cols-1; //x1-x2
-    	float C= -A*(imageThreshold.cols-1)-B*righty; //-A*x1-B*y1
-    	if (this->debug)
-    	{
-    		cv::line(drawing,cv::Point(imageThreshold.cols-1,righty),cv::Point(0,lefty),cv::Scalar(0,200,200),2);
-    	}    	
-		lRight.data.push_back(A);
-    	lRight.data.push_back(B);
-    	lRight.data.push_back(C);
+		LinesDetector::linesVector(left,lLeft,imageThreshold.cols,drawing,cv::Scalar(0,200,200));
 	}
 
 
