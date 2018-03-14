@@ -9,7 +9,7 @@ cv::Mat transf;
 
 void imageCallback(const sensor_msgs::ImageConstPtr& msg)
 {
-  try{
+    //try{
      Image = cv_bridge::toCvShare(msg, "bgr8")->image;
      /*cv::imshow("image", Image); 
 
@@ -24,10 +24,10 @@ void imageCallback(const sensor_msgs::ImageConstPtr& msg)
         std::cout<<"image saved...."<<std::endl;
      }*/
      image = true;
-    }catch ( cv_bridge::Exception& e)
-  {
-    ROS_ERROR("Could not convert from '%s' to 'bgr8'.", msg->encoding.c_str());
-  }
+     //}catch ( cv_bridge::Exception& e)
+     //{
+     //ROS_ERROR("Could not convert from '%s' to 'bgr8'.", msg->encoding.c_str());
+     //}
 } 
 
 int main(int argc, char** args)
@@ -44,7 +44,7 @@ int main(int argc, char** args)
   ros::Publisher rLine_pub= nh.advertise<std_msgs::Float32MultiArray>("rightLine",1000);
   ros::Publisher lLine_pub= nh.advertise<std_msgs::Float32MultiArray>("leftLine",1000);
 
-  ros::Rate loop_rate(5);
+  ros::Rate loop_rate(60);
   std::string argumento(args[1]);
   LinesDetector lines = LinesDetector(argumento == "debug","hola");
   nav_msgs::Path msg_path;
@@ -53,7 +53,7 @@ int main(int argc, char** args)
   
   cv::Mat transfMatrix;
   cv::FileStorage fs("/root/catkin_ws_user/Matrix.yaml", cv::FileStorage::READ);
-  //cv::FileStorage fs("/home/haime/Toretto/catkin_ws_user/Matrix.yaml", cv::FileStorage::READ);
+  //cv::FileStorage fs("/home/justina/Toretto/catkin_ws_user/Matrix.yaml", cv::FileStorage::READ);
   if (!fs.isOpened())
   {
    		std::cout<<"No Matrix"<<std::endl;
@@ -69,7 +69,7 @@ int main(int argc, char** args)
   fs.release();
   
   while (ros::ok()) {
-    
+      
     if (image)
     {
       cv::Rect rect(0,240,640,240);
@@ -92,6 +92,8 @@ int main(int argc, char** args)
       //cv::imshow("transformed", transformed); 
       
       cv::Mat img = lines.segmentationLines(transformed, right,left);
+      //cv::Mat img = lines.segmentationLines(resizeImage, right,left);
+      std::cout << "Time testing version"<< std::endl;
       // cv::Mat img = lines.segmentationLines(Image, poses);
       //cv::Mat line = lines.linesToPoints(img);
       
@@ -116,6 +118,17 @@ int main(int argc, char** args)
       image= false;
 
     }
+      
+      /*
+      if(image)
+      {
+	  image = false;
+	  std_msgs::Float32MultiArray right;
+	  std_msgs::Float32MultiArray left;
+	  lLine_pub.publish(left);
+	  rLine_pub.publish(right);
+	  std::cout << "Simple version"<< std::endl;
+      }*/
     ros::spinOnce();
     loop_rate.sleep();
   }

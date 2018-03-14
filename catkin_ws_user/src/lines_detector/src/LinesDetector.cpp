@@ -131,7 +131,8 @@ cv::Mat LinesDetector::segmentationLines(cv::Mat image, std_msgs::Float32MultiAr
 {	
 	
 	cv::Mat imageThreshold;
-	cv::inRange(image,cv::Scalar(172,172,172),cv::Scalar(255,255,255),imageThreshold);
+	//cv::inRange(image,cv::Scalar(172,172,172),cv::Scalar(255,255,255),imageThreshold);
+	cv::inRange(image,cv::Scalar(0,0,0),cv::Scalar(100,100,100),imageThreshold);
 	std::vector<cv::Point2f> peaks = LinesDetector::peakHistrogram(imageThreshold);
 
 	for (int i = 1; i < 12; ++i)

@@ -13,7 +13,7 @@ void callback_right_line(const std_msgs::Float32MultiArray::ConstPtr& msg)
     float C = msg->data[2];
     //La imagen homografeada es de 640x700
     float angle_error = atan(B/A);
-    float dist_error = (fabs(A*160 + B*120 +C)/sqrt(A*A + B*B) - 110)/110;
+    float dist_error = (fabs(A*160 + B*120 +C)/sqrt(A*A + B*B) - 90)/120;;
     steering = (int16_t)(100 + Kp*dist_error);
     std::cout << "Found line: " << A << "\t" << B << "\t" << C << std::endl;
     std::cout << "Angle error= " << angle_error << std::endl;
