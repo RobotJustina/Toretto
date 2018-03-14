@@ -46,7 +46,7 @@ int main(int argc, char** args)
 
   ros::Rate loop_rate(5);
   std::string argumento(args[1]);
-  LinesDetector lines = LinesDetector(argumento == "debug");
+  LinesDetector lines = LinesDetector(argumento == "debug","hola");
   nav_msgs::Path msg_path;
 
 
@@ -72,10 +72,13 @@ int main(int argc, char** args)
     
     if (image)
     {
+      cv::Rect rect(0,240,640,240);
+      cv::Mat resizeImage= Image(rect);
 
+      //cv::resize(Image, resizeImage, cv::Size(resizeImage.rows,resizeImage.cols), )
       if (argumento == "transform")
       {
-        lines.transformMatrix(Image);
+        lines.transformMatrix(resizeImage);
         return 0;
       }
       cv::Mat transformed;
@@ -85,7 +88,7 @@ int main(int argc, char** args)
 
       
 
-      cv::warpPerspective(Image, transformed, transfMatrix, transfSize, cv::INTER_LINEAR, cv::BORDER_CONSTANT, cv::Scalar(127, 127, 127) );
+      cv::warpPerspective(resizeImage, transformed, transfMatrix, transfSize, cv::INTER_LINEAR, cv::BORDER_CONSTANT, cv::Scalar(127, 127, 127) );
       //cv::imshow("transformed", transformed); 
       
       cv::Mat img = lines.segmentationLines(transformed, right,left);
@@ -95,6 +98,7 @@ int main(int argc, char** args)
       if (argumento=="debug")
       {
         cv::imshow("image", Image); 
+        cv::imshow("Resize image", resizeImage); 
         cv::waitKey(1);
       }     
       

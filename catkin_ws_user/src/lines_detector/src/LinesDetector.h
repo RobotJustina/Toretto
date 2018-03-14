@@ -18,8 +18,9 @@ class LinesDetector
 public:
 	int flagInverted; 
 	bool debug;
+	std::string path;
 
-	LinesDetector(bool debug);
+	LinesDetector(bool debug,std::string path);
 	cv::Mat segmentationLines(cv::Mat image, std_msgs::Float32MultiArray &lRight,std_msgs::Float32MultiArray &lLeft);
 	void transformMatrix(cv::Mat img);
 
