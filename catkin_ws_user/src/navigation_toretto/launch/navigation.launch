@@ -1,4 +1,8 @@
 <launch>
- <node pkg="navigation_toretto" type="navigation_toretto" name="navigation_toretto" output="screen">
+  <param name="kp" value="0.1"/>
+  <param name="angle_ref" value="0.698132"/>
+
+  <node pkg="navigation_toretto" type="navigation_toretto" name="navigation_toretto" output="screen">
+
    </node>
 </launch>

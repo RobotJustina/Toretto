@@ -1,0 +1,21 @@
+<launch>
+  <param name="kp" value="0.1"/>
+  <param name="calib_file" value="/root/catkin_ws_user/homoMat4.yaml" />
+  <param name="value_thr_low" value="150"/>
+  <param name="value_thr_high" value="180" />
+
+  <!-- <include file="$(find motor_communication)/launch/motor_odroid.launch"/>
+    <include file="$(find send_steering_light)/launch/servo_light_odroid.launch"/>
+    <include file="$(find auto_stop)/launch/auto_stop.launch"/>
+    <include file="$(find rplidar_ros)/launch/rplidar.launch"/> -->
+
+
+   <node pkg="lane_detection" type="lane_detection_node" name="lines_node" output="screen">
+     <remap from="image" to="/app/camera/rgb/image_raw"/>
+   </node>
+
+   <node pkg="navigation_toretto" type="navigation_toretto" name="navigation_toretto" output="screen">
+
+    </node>
+
+</launch>

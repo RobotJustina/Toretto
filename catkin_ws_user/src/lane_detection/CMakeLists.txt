@@ -23,5 +23,7 @@ include_directories(
 )
 
 add_executable(lane_detection_node src/lane_detection.cpp src/lane_detection.h src/lane_detection_node.cpp)
-
 target_link_libraries(lane_detection_node ${OpenCV_LIBRARIES} ${catkin_LIBRARIES})
+
+add_executable(lane_hough_node src/lane_detection_hough.cpp src/lane_detection.h src/lane_detection.cpp)
+target_link_libraries(lane_hough_node ${OpenCV_LIBRARIES} ${catkin_LIBRARIES})

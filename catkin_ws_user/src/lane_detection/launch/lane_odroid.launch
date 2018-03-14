@@ -1,12 +1,12 @@
 <launch>
-  <param name="calib_file" value="/root/catkin_ws_user/homoMat4.yaml" />
-
+  <param name="calib_file" value="/root/catkin_ws_user/Matrix.yaml" />
+  <param name="value_thr_low" value="150"/>
+  <param name="value_thr_high" value="200" />
     <node pkg="lane_detection" type="lane_detection_node" name="lines_node" output="screen">
       <remap from="image" to="/app/camera/rgb/image_raw"/>
    </node>
 
-
-   <node pkg="image_view" type="image_view" name="image_viewer" output="screen">
+   <!-- <node pkg="image_view" type="image_view" name="image_viewer" output="screen">
      <remap from="image" to="/lines"/>
-  </node>
+  </node> -->
 </launch>

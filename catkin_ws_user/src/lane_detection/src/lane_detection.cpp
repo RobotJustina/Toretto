@@ -1,18 +1,87 @@
-#define BOXES 8
+#define BOXES 12
 #define MAX_VAL_IN_PIXEL 255
 #include "lane_detection.h"
 
-
-void draw_angle_arrows(cv::Mat &image, cv::Mat fase, int tam, cv::Point localizacion)
+lane_extractor::lane_extractor( int hough_thr,double minLen, double gapLen, int lowValThr,int highValThr, int canny_thr_low, int canny_thr_high)
 {
-        cv::circle(image, localizacion, 5, cv::Scalar(255,0,0),5);
-        //Draw angle lines
-        float theta =fase.at<float>(localizacion)-M_PI/2;
-        float fin_lin_x=localizacion.x+tam*cos(theta);
-        float fin_lin_y=localizacion.y+tam*sin(theta);
-        cv::Point fin_lin(fin_lin_x,fin_lin_y);
-        cv::line(image, localizacion, fin_lin, cv::Scalar(0,200,0),5);
+        this->hough_thr=hough_thr;
+        this->minLen=minLen;
+        this->gapLen=gapLen;
+        this->lowValThr=lowValThr;
+        this->highValThr=highValThr;
+        this->canny_thr_low=canny_thr_low;
+        this->canny_thr_high=canny_thr_high;
+
 }
+
+std_msgs::Float32MultiArray lane_extractor::extract_right_lane_angle_hough(cv::Mat &image)
+{
+        int cols=image.cols;
+        int rows=image.rows;
+        cv::Point roi_corner(cols/2,rows*2/3);
+        cv::Size roi_size(cols/2-1,rows/3-1);
+        cv::Rect roi(roi_corner,roi_size);
+
+        cv::Mat cropped_img(image,roi);
+
+        cv::Mat hsv;
+        cv::cvtColor(cropped_img, hsv, cv::COLOR_BGR2HSV);
+        cv::blur(hsv,hsv,cv::Size(11,11));
+        cv::Mat chan_hsv[3],binarized;
+        cv::split(hsv,chan_hsv);
+        cv::inRange(chan_hsv[2], lowValThr,highValThr, binarized);
+        cv::Mat border;
+        cv::Canny( binarized, border,canny_thr_low,canny_thr_high);
+        //cv::cvtColor(cropped_img,gray_img,cv::COLOR_BGR2GRAY );
+        //cv::blur(gray_img,gray_img,cv::Size(11,11));
+
+        std::vector<cv::Vec4i> lines;
+        cv::HoughLinesP(border, lines,1,CV_PI/180, hough_thr, minLen, gapLen);
+        for (int i=0; i<lines.size(); i++)
+        {
+                std::cout<<"Number of lines: "<< lines.size()<<std::endl;
+                cv::Point ini(lines[i][0],lines[i][1]);
+                cv::Point fin(lines[i][2],lines[i][3]);
+                cv::line(image,ini+roi_corner,fin+roi_corner,cv::Scalar(0,250,0),3);
+        }
+
+        //Order points before fitting
+        std::vector<cv::Point> puntos;
+
+        for(int i =0; i<lines.size(); i++)
+        {
+                cv::Point temp;
+                temp.x=lines[i][0];
+                temp.y=lines[i][1];
+                puntos.push_back(temp);
+
+                temp.x=lines[i][2];
+                temp.y=lines[i][3];
+                puntos.push_back(temp);
+        }
+        //fitline
+        cv::Vec4f lineR;
+        if(puntos.size()>0)
+        {
+                cv::fitLine(puntos,lineR, CV_DIST_WELSCH, 0, 0.01,0.01);
+                cv::Point2f ini(lineR[2],lineR[3]);
+                cv::Point2f dir(lineR[0],lineR[1]);
+                cv::Point2f fin(ini+100*dir);
+                cv::line(image,ini,fin, cv::Scalar(255,0,0),5);
+                msg_direction.data.clear();
+                for(int i=0; i<4; i++)
+                {
+                        msg_direction.data.push_back(lineR[i]);
+                }
+
+        } //Fits a stright line to Points
+
+        //cv::cvtColor(border,border, cv::COLOR_GRAY2BGR);
+        return msg_direction;
+
+
+}
+
 
 void draw_angle_arrows(cv::Mat &image, cv::Point origin, int tam, float theta)
 {
@@ -24,7 +93,8 @@ void draw_angle_arrows(cv::Mat &image, cv::Point origin, int tam, float theta)
 }
 
 
-cv::Mat extract_lane(cv::Mat image,  int lowValThr,int highValThr,std::vector<geometry_msgs::PoseStamped> &poses_right, std::vector<geometry_msgs::PoseStamped> &poses_left)
+
+cv::Mat extract_lane_angle(cv::Mat image,  int lowValThr,int highValThr,std_msgs::Float32MultiArray &angle_right, std_msgs::Float32MultiArray &angle_left)
 {
         int cols=image.cols;
         int rows=image.rows;
@@ -46,13 +116,15 @@ cv::Mat extract_lane(cv::Mat image,  int lowValThr,int highValThr,std::vector<ge
         // std::cout << cols <<" "<<rows<< std::endl;
         int thr_val_per_box = rows/(cols/2)*(255*0.7); //Threshold to prnue noise
 
+        std::vector<cv::Point2f> left, right;
         //Gradients
-        cv::Mat dev_x,dev_y, fase;
-        cv::Sobel(chan_hsv[2], dev_x, 5, 1,0 );
-        cv::Sobel(chan_hsv[2], dev_y, 5, 0,1 );
-        cv::phase(dev_x,dev_y, fase);
+        // cv::Mat dev_x,dev_y, fase;
+        // cv::Sobel(chan_hsv[2], dev_x, 5, 1,0 );
+        // cv::Sobel(chan_hsv[2], dev_y, 5, 0,1 );
+        // cv::phase(dev_x,dev_y, fase);
 
         // Right side
+
         for(int i=0; i<BOXES; i++)
         {
                 cv::Rect micro_roi_der;
@@ -84,10 +156,7 @@ cv::Mat extract_lane(cv::Mat image,  int lowValThr,int highValThr,std::vector<ge
                 else
                 {
                         cv::Point abs_loc=locale+micro_roi_corner;
-                        pose_now.pose.position.x=abs_loc.x;
-                        pose_now.pose.position.y=abs_loc.y;
-                        pose_now.pose.position.z=0;
-                        poses_right.push_back(pose_now);
+                        right.push_back(abs_loc);
                         cv::circle(image, abs_loc, 5, cv::Scalar(0,255,0),5);
                         //draw_angle_arrows(image,fase,100,abs_loc);
 
@@ -131,57 +200,37 @@ cv::Mat extract_lane(cv::Mat image,  int lowValThr,int highValThr,std::vector<ge
                 else
                 {
                         cv::Point abs_loc=locale+micro_roi_corner;
-                        pose_now.pose.position.x=abs_loc.x;
-                        pose_now.pose.position.y=abs_loc.y;
-                        pose_now.pose.position.z=0;
-                        poses_left.push_back(pose_now);
+                        left.push_back(abs_loc);
                         cv::circle(image, abs_loc, 5, cv::Scalar(255,0,0),5);
-
-
-
-                        //  draw_angle_arrows(image,fase,100,abs_loc);
-
-
+                        //draw_angle_arrows(image,fase,100,abs_loc);
                 }
-
-
         }
 
+        cv::Vec4f lineR, lineL;
+        if(right.size()>0)
+        {
+                cv::fitLine(right,lineR, CV_DIST_WELSCH, 0, 0.01,0.01); //Fits a stright line to Points
+                cv::Point2f ini(lineR[2],lineR[3]);
+                cv::Point2f dir(lineR[0],lineR[1]);
+                cv::Point2f fin(ini+200*dir);
+                cv::line(image,ini,fin, cv::Scalar(255,0,0),5);
+                angle_right.data.push_back(lineR[0]);
+                angle_right.data.push_back(lineR[1]);
+                angle_right.data.push_back(lineR[2]);
+                angle_right.data.push_back(lineR[3]);
 
-
-
+        }
+        if(left.size()>0)
+        {
+                cv::fitLine(left,lineL, CV_DIST_WELSCH, 0, 0.01,0.01); //Fits a stright line to Points
+                cv::Point2f ini(lineL[2],lineL[3]);
+                cv::Point2f dir(lineL[0],lineL[1]);
+                cv::Point2f fin(ini+200*dir);
+                cv::line(image,ini,fin, cv::Scalar(0,255,0),5);
+                angle_left.data.push_back(lineL[0]);
+                angle_left.data.push_back(lineL[1]);
+                angle_left.data.push_back(lineL[2]);
+                angle_left.data.push_back(lineL[3]);
+        }
         return image;
-}
-
-float calculate_lane_angle(std::vector<geometry_msgs::PoseStamped> &poses)
-{
-        float theta =0;
-        for (int i=1; i<poses.size(); i++)
-        {
-                float x =poses[i].pose.position.x;
-                float y =poses[i].pose.position.y;
-
-                float x_i =poses[i-1].pose.position.x;
-                float y_i =poses[i-1].pose.position.y;
-
-                theta +=atan2( (y-y_i),(x-x_i));
-        }
-        return theta/poses.size();
-}
-
-cv::Point getAverageCenterLanePosition(std::vector<geometry_msgs::PoseStamped> &poses)
-{
-
-        float center_x =0;
-        float center_y =0;
-        int n = poses.size();
-        for (int i=0; i<poses.size(); i++)
-        {
-                 center_x +=poses[i].pose.position.x;
-                 center_y +=poses[i].pose.position.y;
-
-
-        }
-        cv::Point center(center_x/n,center_y/n);
-        return center;
 }
