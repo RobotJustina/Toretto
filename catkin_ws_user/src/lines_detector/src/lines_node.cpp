@@ -52,7 +52,8 @@ int main(int argc, char** args)
 
   
   cv::Mat transfMatrix;
-  cv::FileStorage fs("/home/haime/toretto_ws/Matrix.yaml", cv::FileStorage::READ);
+  cv::FileStorage fs("/root/catkin_ws_user/Matrix.yaml", cv::FileStorage::READ);
+  //cv::FileStorage fs("/home/haime/Toretto/catkin_ws_user/Matrix.yaml", cv::FileStorage::READ);
   if (!fs.isOpened())
   {
    		std::cout<<"No Matrix"<<std::endl;
@@ -100,12 +101,12 @@ int main(int argc, char** args)
      
       if (right.data.size()>1)
       {
-        //std::cout<<"y="<<right.data[0]<<"*X+"<<right.data[1]<<std::endl;
+        //std::cout<<"[right]: ["<<right.data[0]<<" X] ["<<right.data[1]<<" Y] ["<<right.data[2]<<" C]"<<std::endl;
         rLine_pub.publish(right);
       }
       if (left.data.size()>1)
       {
-        //std::cout<<"y="<<right.data[0]<<"*X+"<<right.data[1]<<std::endl;
+        //std::cout<<"[left]: ["<<left.data[0]<<" X] ["<<left.data[1]<<" Y] ["<<left.data[2]<<" C]"<<std::endl;
         lLine_pub.publish(left);
       }
       image= false;

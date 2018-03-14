@@ -28,5 +28,7 @@ private:
 	float distance(cv::Point2f point1,cv::Point2f point2);
 	float distanceX(cv::Point2f point1,cv::Point2f point2);
 	std::vector<cv::Point2f> peakHistrogram(cv::Mat image);
+	void linesVector(std::vector<cv::Point2f> p,std_msgs::Float32MultiArray &l, int cols, cv::Mat &drawing,cv::Scalar color);
+
 		
 };
