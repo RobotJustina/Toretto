@@ -54,6 +54,7 @@ int main(int argc, char** args)
   cv::Mat transfMatrix;
   cv::FileStorage fs("/root/catkin_ws_user/Matrix.yaml", cv::FileStorage::READ);
   //cv::FileStorage fs("/home/justina/Toretto/catkin_ws_user/Matrix.yaml", cv::FileStorage::READ);
+  //cv::FileStorage fs("/home/haime/Toretto/catkin_ws_user/Matrix.yaml", cv::FileStorage::READ);
   if (!fs.isOpened())
   {
    		std::cout<<"No Matrix"<<std::endl;
@@ -93,7 +94,7 @@ int main(int argc, char** args)
       
       cv::Mat img = lines.segmentationLines(transformed, right,left);
       //cv::Mat img = lines.segmentationLines(resizeImage, right,left);
-      std::cout << "Time testing version"<< std::endl;
+      //std::cout << "Time testing version"<< std::endl;
       // cv::Mat img = lines.segmentationLines(Image, poses);
       //cv::Mat line = lines.linesToPoints(img);
       

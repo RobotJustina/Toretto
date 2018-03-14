@@ -132,17 +132,20 @@ cv::Mat LinesDetector::segmentationLines(cv::Mat image, std_msgs::Float32MultiAr
 	
 	cv::Mat imageThreshold;
 	//cv::inRange(image,cv::Scalar(172,172,172),cv::Scalar(255,255,255),imageThreshold);
-	cv::inRange(image,cv::Scalar(0,0,0),cv::Scalar(100,100,100),imageThreshold);
+	cv::inRange(image,cv::Scalar(0,0,0),cv::Scalar(115,115,115),imageThreshold);
 	std::vector<cv::Point2f> peaks = LinesDetector::peakHistrogram(imageThreshold);
+
+	morphologyEx( imageThreshold, imageThreshold, cv::MORPH_CLOSE, getStructuringElement(cv::MORPH_CROSS, cv::Size(5,5))  ,cv::Point(-1,-1), 7);
 
 	for (int i = 1; i < 12; ++i)
 	{
 		line(imageThreshold,cv::Point(0,i*20 ), cv::Point(image.cols,i*20),cv::Scalar(0,0,0),2);
 	}
 	
+
 	std::vector<std::vector<cv::Point> > contours;
 	
-	cv::findContours( imageThreshold, contours,  CV_RETR_EXTERNAL , CV_CHAIN_APPROX_SIMPLE, cv::Point(0, 0) );
+	cv::findContours( imageThreshold, contours,  CV_RETR_EXTERNAL , CV_CHAIN_APPROX_SIMPLE, cv::Point(0, 0));
 	cv::Mat drawing = cv::Mat::zeros( imageThreshold.size(), CV_8UC3 );
   	
 
@@ -174,7 +177,7 @@ cv::Mat LinesDetector::segmentationLines(cv::Mat image, std_msgs::Float32MultiAr
 		int cR=0;
 		for (int i = 0; i < mc.size(); ++i)
 		{
-			if (distance(right[cR],mc[i])<150*150)
+			if (distance(right[cR],mc[i])<60*60)
 			{
 				right.push_back(mc[i]);
 				mc.erase(mc.begin()+i);
@@ -193,7 +196,7 @@ cv::Mat LinesDetector::segmentationLines(cv::Mat image, std_msgs::Float32MultiAr
 		int cL=0;
 		for (int i = 0; i < mc.size(); ++i)
 		{
-			if (distanceX(left[cL],mc[i])<30 && distanceX(right[0],mc[i])>30)
+			if (distanceX(left[cL],mc[i])<30 && distanceX(right[0],mc[i])>60)
 			{
 				left.push_back(mc[i]);
 				++cL;
@@ -201,14 +204,14 @@ cv::Mat LinesDetector::segmentationLines(cv::Mat image, std_msgs::Float32MultiAr
 		}
 	}
 
-	if (right.size()>0)
+	if (right.size()>4)
 	{
 		LinesDetector::linesVector(right,lRight,imageThreshold.cols,drawing,cv::Scalar(200,200,0));
 
     	std::cout<<"[A]: ["<<lRight.data[0]<<" [B]: "<<lRight.data[1]<<" [C]: "<<lRight.data[2]<<std::endl;
 	}
 
-	if (left.size()>0)
+	if (left.size()>2)
 	{
 		LinesDetector::linesVector(left,lLeft,imageThreshold.cols,drawing,cv::Scalar(0,200,200));
 	}
@@ -263,7 +266,7 @@ std::vector<cv::Point2f> LinesDetector::peakHistrogram(cv::Mat image)
 				MAX = histo[i];
 				p=i;
 			}
-			if (((histo[i+1]==0 || i+2> histo.size()-1)) && MAX>10)
+			if (((histo[i+1]==0 || i+2> histo.size()-1)) && MAX>15)
 			{
 				peaks.push_back(cv::Point2f(p,image.rows));
 			}
