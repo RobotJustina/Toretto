@@ -1,9 +1,9 @@
 <launch>
-  <param name="hough_thr" value="50  "/>
-  <param name="min_lin_len" value="40" />
-  <param name="max_gap_len" value="10" />
-  <param name="value_thr_low" value="170"/>
-  <param name="value_thr_high" value="180" />
+  <param name="hough_thr" value="30  "/>
+  <param name="min_lin_len" value="20" />
+  <param name="max_gap_len" value="20" />
+  <param name="value_thr_low" value="0"/>
+  <param name="value_thr_high" value="100" />
   <param name="canny_thr_low" value="50" />
   <param name="canny_thr_high" value="100" />
 

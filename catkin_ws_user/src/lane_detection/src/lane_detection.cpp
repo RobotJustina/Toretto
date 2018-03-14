@@ -64,15 +64,20 @@ std_msgs::Float32MultiArray lane_extractor::extract_right_lane_angle_hough(cv::M
         if(puntos.size()>0)
         {
                 cv::fitLine(puntos,lineR, CV_DIST_WELSCH, 0, 0.01,0.01);
+                lineR[2]+=roi_corner.x; lineR[3]+=roi_corner.y;
                 cv::Point2f ini(lineR[2],lineR[3]);
+                //ini=ini+roi_corner;
                 cv::Point2f dir(lineR[0],lineR[1]);
                 cv::Point2f fin(ini+100*dir);
                 cv::line(image,ini,fin, cv::Scalar(255,0,0),5);
                 msg_direction.data.clear();
-                for(int i=0; i<4; i++)
-                {
-                        msg_direction.data.push_back(lineR[i]);
-                }
+
+                float A=1/lineR[0];
+                float B=-1/lineR[1];
+                float C=-lineR[2]/lineR[0]+lineR[3]/lineR[1];
+                msg_direction.data.push_back(A);
+                msg_direction.data.push_back(B);
+                msg_direction.data.push_back(C);
 
         } //Fits a stright line to Points
 
