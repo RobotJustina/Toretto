@@ -2,7 +2,8 @@
 #include "std_msgs/Float32MultiArray.h"
 #include "std_msgs/Int16.h"
 
-#define Kp 50
+#define Kp 50.0/100.0
+#define Ka 3.0
 
 int16_t steering;
 
@@ -13,8 +14,8 @@ void callback_right_line(const std_msgs::Float32MultiArray::ConstPtr& msg)
     float C = msg->data[2];
     //La imagen homografeada es de 640x700
     float angle_error = atan(B/A);
-    float dist_error = (fabs(A*160 + B*120 +C)/sqrt(A*A + B*B) - 90)/120;;
-    steering = (int16_t)(100 + Kp*dist_error);
+    float dist_error = (fabs(A*160 + B*120 +C)/sqrt(A*A + B*B) - 90);
+    steering = (int16_t)(100 + Kp*dist_error + Ka * angle_error * 10);
     std::cout << "Found line: " << A << "\t" << B << "\t" << C << std::endl;
     std::cout << "Angle error= " << angle_error << std::endl;
 }
