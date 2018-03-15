@@ -32,7 +32,7 @@ int main(int argc, char** argv)
         ros::Publisher angle_pub_r = nh.advertise<std_msgs::Float32MultiArray>("right",100);
         ros::Publisher angle_pub_l = nh.advertise<std_msgs::Float32MultiArray>("left",100);
 
-        ros::Rate loop_rate(15);
+        ros::Rate loop_rate(60);
 
         int hough_thr;
         double min_lin_len,max_gap_len;
@@ -53,22 +53,47 @@ int main(int argc, char** argv)
                                  value_thr_high,canny_thr_low,canny_thr_high);
         std::cout<<"Starting processing"<<std::endl;
 
+        std::string filepath;
+        nh.param<std::string>("calib_file",filepath,"Matrix2.yaml"); //Set file path_pub
+
+        cv::Mat transfMatrix;
+
+
+        cv::FileStorage fs(filepath, cv::FileStorage::READ);
+        if (!fs.isOpened())
+        {
+                std::cout<<"No Mat @"<<filepath<<std::endl;
+                return 0;
+        }else
+        {
+                std::cout<<"***********Mat FOUND @ "<<filepath<<"***********"<<std::endl;
+        }
+        fs["Homography"] >> transfMatrix;
+        cv::Size transfSize;
+        fs["tSize"] >> transfSize;
+        fs.release();
+
         int i= 0;
         while (ros::ok()) {
                 if (image_flag)
                 {
-                        //std::cout << "Image Received" << '\n';
-                        image_flag = false;
 
+                        ros::Time strt_time = ros::Time::now();
+                        image_flag = false;
                         std_msgs::Float32MultiArray angle_r;
-                        angle_r=extractor.extract_right_lane_angle_hough(Image);
+                        cv::Mat trans;
+                        cv::warpPerspective(Image, trans, transfMatrix, transfSize, cv::INTER_LINEAR, cv::BORDER_REPLICATE, cv::Scalar(127, 127, 127) );
+                        angle_r=extractor.extract_right_lane_angle_hough(trans);
                         sensor_msgs::ImagePtr msg=cv_bridge::CvImage(std_msgs::Header(),"bgr8",Image).toImageMsg();
 
                         pub.publish(msg);
                         if(angle_r.data.size()>0)
                         {
-                          angle_pub_r.publish(angle_r);
+                                angle_pub_r.publish(angle_r);
                         }
+
+                        ros::Duration timing=strt_time-ros::Time::now();
+                        std::cout << timing << '\n';
                 }
                 ros::spinOnce();
                 loop_rate.sleep();
