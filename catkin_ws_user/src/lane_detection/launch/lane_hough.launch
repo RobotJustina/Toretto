@@ -6,6 +6,7 @@
   <param name="value_thr_high" value="100" />
   <param name="canny_thr_low" value="50" />
   <param name="canny_thr_high" value="100" />
+  <param name="calib_file" value="/root/catkin_ws_user/Matrix.yaml" />
 
     <node pkg="lane_detection" type="lane_hough_node" name="lane_hough_node" output="screen">
       <remap from="image" to="/app/camera/rgb/image_raw"/>

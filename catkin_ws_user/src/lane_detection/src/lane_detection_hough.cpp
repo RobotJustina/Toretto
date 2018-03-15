@@ -77,14 +77,16 @@ int main(int argc, char** argv)
         while (ros::ok()) {
                 if (image_flag)
                 {
+                        cv::Rect rect(0,240,640,240);
+                        cv::Mat resizeImage= Image(rect);
 
                         ros::Time strt_time = ros::Time::now();
                         image_flag = false;
                         std_msgs::Float32MultiArray angle_r;
                         cv::Mat trans;
-                        cv::warpPerspective(Image, trans, transfMatrix, transfSize, cv::INTER_LINEAR, cv::BORDER_REPLICATE, cv::Scalar(127, 127, 127) );
+                        cv::warpPerspective(resizeImage, trans, transfMatrix, transfSize, cv::INTER_LINEAR, cv::BORDER_REPLICATE, cv::Scalar(127, 127, 127) );
                         angle_r=extractor.extract_right_lane_angle_hough(trans);
-                        sensor_msgs::ImagePtr msg=cv_bridge::CvImage(std_msgs::Header(),"bgr8",Image).toImageMsg();
+                        sensor_msgs::ImagePtr msg=cv_bridge::CvImage(std_msgs::Header(),"bgr8",trans).toImageMsg();
 
                         pub.publish(msg);
                         if(angle_r.data.size()>0)
@@ -92,8 +94,8 @@ int main(int argc, char** argv)
                                 angle_pub_r.publish(angle_r);
                         }
 
-                        ros::Duration timing=strt_time-ros::Time::now();
-                        std::cout << timing << '\n';
+                        ros::Duration timing=ros::Time::now()-strt_time;
+                        std::cout << timing.toSec() << '\n';
                 }
                 ros::spinOnce();
                 loop_rate.sleep();
