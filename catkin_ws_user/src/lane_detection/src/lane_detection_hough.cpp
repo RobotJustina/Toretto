@@ -29,8 +29,8 @@ int main(int argc, char** argv)
         image_transport::ImageTransport itp(nh);
         image_transport::Publisher pub = itp.advertise("lines",1);
 
-        ros::Publisher angle_pub_r = nh.advertise<std_msgs::Float32MultiArray>("right",100);
-        ros::Publisher angle_pub_l = nh.advertise<std_msgs::Float32MultiArray>("left",100);
+        ros::Publisher angle_pub_r = nh.advertise<std_msgs::Float32MultiArray>("/rightLine",100);
+        ros::Publisher angle_pub_l = nh.advertise<std_msgs::Float32MultiArray>("leftLine",100);
 
         ros::Rate loop_rate(60);
 

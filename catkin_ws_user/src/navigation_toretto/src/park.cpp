@@ -106,7 +106,7 @@ int main(int argc, char** argv)
         float vu_r,vu_l, vu_m;
         int max_steer_left, max_steer_right;
         n.param<float>("vu_r",vu_r,2.35);
-        n.param<float>("vu_l",vu_r,2.2);
+        n.param<float>("vu_l",vu_l,2.2);
         n.param<float>("vu_r",vu_m,0.8);
         n.param<int>("max_steer_left",max_steer_left,10);
         n.param<int>("max_steer_right",max_steer_right,170);
@@ -126,23 +126,25 @@ int main(int argc, char** argv)
                         msg_speed.data=-200;
                         speeds_pub.publish(msg_speed);
 
-                        msg_steering.data = 90;
-                        steering_pub.publish(msg_steering);
-                        // msg_steering.data= steering_call;
+                        // msg_steering.data = 90;
                         // steering_pub.publish(msg_steering);
+                        msg_steering.data= steering_call;
+                        steering_pub.publish(msg_steering);
 
                         if (objectR)
                         {
 
                                 state=2;
-                                printf("Obj detected right\n" );
+
                         }
 
                         break;
                 case 2:
                         printf("[State: %d] Object @ right\n", state);
-                        cout << "objectR: "<< objectR << " \n";
-                        if (!objectR)
+                        msg_steering.data= steering_call;
+                        steering_pub.publish(msg_steering);
+
+                          if (!objectR)
                         {
                                 state=3;
                         }
@@ -150,6 +152,9 @@ int main(int argc, char** argv)
                         break;
                 case 3:
                         printf("[State: %d] Space detected right\n", state);
+                        msg_steering.data= steering_call;
+                        steering_pub.publish(msg_steering);
+
                         if (objectR)
                         {
                                 msg_speed.data=0;
@@ -164,7 +169,7 @@ int main(int argc, char** argv)
                 case 4:
                         printf("[State: %d] Object @ right, Space ended\n", state);
                         vu=vu_r;
-                        msg_steering.data=170; //-50 orig
+                        msg_steering.data=max_steer_right; //-50 orig
                         steering_pub.publish(msg_steering);
                         cout << "Pub Steering :" << msg_steering.data << "\n";
                         msg_speed.data=100;
@@ -187,7 +192,7 @@ int main(int argc, char** argv)
                         printf("[State: %d] Changing reverse angle  \n", state);
 
                         vu=vu_l;
-                        msg_steering.data=10; //290 orig
+                        msg_steering.data=max_steer_left; //290 orig
                         steering_pub.publish(msg_steering);
                         cout << "Pub Steering :" << msg_steering.data << "\n";
                         msg_speed.data=100;

@@ -3,8 +3,15 @@
   <param name="vu_l" value="2.2" />
   <param name="vu_m" value="0.8"/>
   <param name="max_steer_left" value="10" />
-  <param name="max_steer_right" value="180"/>
+  <param name="max_steer_right" value="170"/>
 
+ <node pkg="laser_scan" type="laser_scan" name="laser_scan" output="log">
+     </node>
+
+
+  <node pkg="lines_detector" type="lines_node" name="lines_detector" args="lines /root/catkin_ws_user/Matrix.yaml" output="log">
+          </node>
  <node pkg="navigation_toretto" type="park_toretto" name="park_toretto" output="screen">
    </node>
+
 </launch>
