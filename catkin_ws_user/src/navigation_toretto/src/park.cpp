@@ -23,7 +23,7 @@ std_msgs::Int16 msg_steering;
 std_msgs::Int16 msg_speed;
 std_msgs::Int16 speed_obj;
 
-int16_t steering;
+int16_t steering_call;
 
 bool object=false,objectR=false,objectL=false; //object detected
 float l_obj=0, r_obj=0;
@@ -39,7 +39,7 @@ void callback_right_line(const std_msgs::Float32MultiArray::ConstPtr& msg)
         //La imagen homografeada es de 640x700
         float angle_error = atan(B/A);
         float dist_error = (fabs(A*160 + B*120 +C)/sqrt(A*A + B*B) - 90);
-        steering = (int16_t)(100 + Kp*dist_error + Ka * angle_error * 10);
+        steering_call = (int16_t)(100 + Kp*dist_error + Ka * angle_error * 10);
         std::cout << "Found line: " << A << "\t" << B << "\t" << C << std::endl;
         std::cout << "Angle error= " << angle_error << std::endl;
 }
@@ -103,6 +103,13 @@ int main(int argc, char** argv)
         ros::Subscriber objectL_subscriber = n.subscribe("/object_detection/left", 1, Callback_objectL);
         ros::Subscriber objectR_subscriber = n.subscribe("/object_detection/right", 1, Callback_objectR);
 
+        float vu_r,vu_l, vu_m;
+        int max_steer_left, max_steer_right;
+        n.param<float>("vu_r",vu_r,2.35);
+        n.param<float>("vu_l",vu_r,2.2);
+        n.param<float>("vu_r",vu_m,0.8);
+        n.param<int>("max_steer_left",max_steer_left,10);
+        n.param<int>("max_steer_right",max_steer_right,170);
         while (ros::ok())
         {
                 ros::Rate loop_rate(10);
@@ -117,9 +124,13 @@ int main(int argc, char** argv)
                 case 1:
                         std::cout << "[State: 1] Cruising" << '\n';
                         msg_speed.data=-200;
-                        msg_steering.data = 90;
                         speeds_pub.publish(msg_speed);
+
+                        msg_steering.data = 90;
                         steering_pub.publish(msg_steering);
+                        // msg_steering.data= steering_call;
+                        // steering_pub.publish(msg_steering);
+
                         if (objectR)
                         {
 
@@ -152,7 +163,7 @@ int main(int argc, char** argv)
 
                 case 4:
                         printf("[State: %d] Object @ right, Space ended\n", state);
-                        vu=2.35;
+                        vu=vu_r;
                         msg_steering.data=170; //-50 orig
                         steering_pub.publish(msg_steering);
                         cout << "Pub Steering :" << msg_steering.data << "\n";
@@ -173,9 +184,9 @@ int main(int argc, char** argv)
                         break;
 
                 case 5:
-                        printf("[State: %d] Changin reverse angle  \n", state);
+                        printf("[State: %d] Changing reverse angle  \n", state);
 
-                        vu=2.2;
+                        vu=vu_l;
                         msg_steering.data=10; //290 orig
                         steering_pub.publish(msg_steering);
                         cout << "Pub Steering :" << msg_steering.data << "\n";
@@ -198,7 +209,7 @@ int main(int argc, char** argv)
                 case 6:
                         printf("[State: %d] Reverse stopped \n", state);
                         printf("\tComencing advance\n");
-                        vu=0.8;
+                        vu=vu_m;
                         msg_steering.data=90;         //120 orig
                         steering_pub.publish(msg_steering);
                         cout << "Pub Steering :" << msg_steering.data << "\n";
@@ -220,14 +231,14 @@ int main(int argc, char** argv)
 
                 case 7:
                         printf("[State: %d] End park \n", state);
-                        msg_speed.data=00;
+                        msg_speed.data=0;
                         speeds_pub.publish(msg_speed);
                         sleep(3);
                         break;
                 default:
 
                         cout << "Error undefined state"<< "\n";
-                        msg_speed.data=00;
+                        msg_speed.data=0;
                         speeds_pub.publish(msg_speed);
                         break;
                 }

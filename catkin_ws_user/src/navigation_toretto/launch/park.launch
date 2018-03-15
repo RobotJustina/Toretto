@@ -1,4 +1,10 @@
 <launch>
+  <param name="vu_r" value="2.35"/>
+  <param name="vu_l" value="2.2" />
+  <param name="vu_m" value="0.8"/>
+  <param name="max_steer_left" value="10" />
+  <param name="max_steer_right" value="180"/>
+
  <node pkg="navigation_toretto" type="park_toretto" name="park_toretto" output="screen">
    </node>
 </launch>

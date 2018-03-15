@@ -281,6 +281,9 @@ int main(int argc, char** argv)
     ros::Subscriber objectL_subscriber = n.subscribe("/object_detection/left", 1, Callback_objectL);
     ros::Subscriber objectR_subscriber = n.subscribe("/object_detection/right", 1, Callback_objectR);
 
+    float vu=0;
+     
+
     while (ros::ok())
     {
         ros::Rate loop_rate(10);
