@@ -1,0 +1,4 @@
+<launch>
+ <node pkg="laser_scan" type="laser_scan" name="laser_scan" output="screen">
+   </node>
+</launch>
