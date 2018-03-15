@@ -58,11 +58,14 @@ void Callback_objectR(const std_msgs::Float32::ConstPtr& msg)
 {
 
 
-        if(msg->data < 0.50) {
+        if(msg->data < 0.40) {
                 objectR=true;
         }
+        else{
+                objectR=false;
+        }
         r_obj = msg->data;
-        cout << "object right "<<r_obj << "\n";
+        //cout << "object right "<<r_obj << "\n";
 
 }
 
@@ -74,8 +77,11 @@ void Callback_objectL(const std_msgs::Float32::ConstPtr& msg)
         if(msg->data < 0.25) {
                 objectL=true;
         }
+        else{
+                objectL=false;
+        }
         l_obj = msg->data;
-        cout << "object left "<<l_obj << "\n";
+        //cout << "object left "<<l_obj << "\n";
 }
 
 
@@ -96,9 +102,12 @@ int main(int argc, char** argv)
         ros::Subscriber object_subscriber = n.subscribe("/object_detection/speed", 1, Callback_object);
         ros::Subscriber objectL_subscriber = n.subscribe("/object_detection/left", 1, Callback_objectL);
         ros::Subscriber objectR_subscriber = n.subscribe("/object_detection/right", 1, Callback_objectR);
-        ros::Rate loop_rate(10);
+
         while (ros::ok())
         {
+                ros::Rate loop_rate(10);
+                float vu=0;
+                float time_s=0, t_100=3.4;
                 switch (state) {
 
                 case 0:
@@ -109,14 +118,19 @@ int main(int argc, char** argv)
                         std::cout << "[State: 1] Cruising" << '\n';
                         msg_speed.data=-200;
                         msg_steering.data = 90;
+                        speeds_pub.publish(msg_speed);
+                        steering_pub.publish(msg_steering);
                         if (objectR)
                         {
+
                                 state=2;
+                                printf("Obj detected right\n" );
                         }
 
                         break;
                 case 2:
-                        printf("[State: %s] Object @ right\n", state);
+                        printf("[State: %d] Object @ right\n", state);
+                        cout << "objectR: "<< objectR << " \n";
                         if (!objectR)
                         {
                                 state=3;
@@ -124,7 +138,7 @@ int main(int argc, char** argv)
 
                         break;
                 case 3:
-                        printf("[State: %s] Space detected right\n", state);
+                        printf("[State: %d] Space detected right\n", state);
                         if (objectR)
                         {
                                 msg_speed.data=0;
@@ -137,25 +151,91 @@ int main(int argc, char** argv)
 
 
                 case 4:
-                        printf("[State: %s] Object @ right, Space ended\n", state);
-                        msg_steering.data=140; //-50 orig
+                        printf("[State: %d] Object @ right, Space ended\n", state);
+                        vu=2.35;
+                        msg_steering.data=170; //-50 orig
                         steering_pub.publish(msg_steering);
                         cout << "Pub Steering :" << msg_steering.data << "\n";
-                        state = 19;
+                        msg_speed.data=100;
+                        speeds_pub.publish(msg_speed);
+                        cout << "Pub speed :" << msg_speed.data << "\n";
+                        time_s=(t_100*100/msg_speed.data);
+                        time_s=time_s*vu;
+                        if (time_s < 0) {
+                                time_s=-1*time_s;
+                        }
+                        cout << "Time case 0: "<< time_s << "\n";
+                        sleep(time_s);
+                        msg_speed.data=00;
+                        speeds_pub.publish(msg_speed);
+                        sleep(1);
+                        state = 5;
+                        break;
+
+                case 5:
+                        printf("[State: %d] Changin reverse angle  \n", state);
+
+                        vu=2.2;
+                        msg_steering.data=10; //290 orig
+                        steering_pub.publish(msg_steering);
+                        cout << "Pub Steering :" << msg_steering.data << "\n";
+                        msg_speed.data=100;
+                        speeds_pub.publish(msg_speed);
+                        cout << "Pub speed :" << msg_speed.data << "\n";
+                        time_s=(t_100*100/msg_speed.data);
+                        time_s=time_s*vu;
+                        if (time_s < 0) {
+                                time_s=-1*time_s;
+                        }
+                        cout << "Time case 1: "<< time_s << "\n";
+                        sleep(time_s);
+                        msg_speed.data=00;
+                        speeds_pub.publish(msg_speed);
+                        sleep(1);
+                        state = 6;
+                        break;
+
+                case 6:
+                        printf("[State: %d] Reverse stopped \n", state);
+                        printf("\tComencing advance\n");
+                        vu=0.8;
+                        msg_steering.data=90;         //120 orig
+                        steering_pub.publish(msg_steering);
+                        cout << "Pub Steering :" << msg_steering.data << "\n";
+                        msg_speed.data=-100;
+                        speeds_pub.publish(msg_speed);
+                        cout << "Pub speed :" << msg_speed.data << "\n";
+
+                        time_s=(t_100*100/msg_speed.data);
+                        time_s=time_s*vu;
+                        if (time_s < 0) {
+                                time_s=-1*time_s;
+                        }
+                        cout << "Time case 2: "<< time_s << "\n";
+                        sleep(time_s);
+
+                        state = 7;
+                        break;
+
+
+                case 7:
+                        printf("[State: %d] End park \n", state);
+                        msg_speed.data=00;
+                        speeds_pub.publish(msg_speed);
+                        sleep(3);
                         break;
                 default:
 
                         cout << "Error undefined state"<< "\n";
                         msg_speed.data=00;
                         speeds_pub.publish(msg_speed);
-
                         break;
                 }
-                speeds_pub.publish(msg_speed);
-                steering_pub.publish(msg_steering);
+
+                ros::spinOnce();
                 loop_rate.sleep();
         }
-        msg_speed.data=00;
-        speeds_pub.publish(msg_speed);
+        // msg_speed.data=00;
+        // speeds_pub.publish(msg_speed);
 
 }
