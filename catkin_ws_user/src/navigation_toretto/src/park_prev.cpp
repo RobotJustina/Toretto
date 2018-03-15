@@ -1,7 +1,7 @@
 #include <ros/ros.h>
 #include <iostream>
 #include <std_msgs/String.h>
-#include <math.h>       
+#include <math.h>
 #include <sstream>
 #include <sensor_msgs/LaserScan.h>
 #include <std_msgs/Float32.h>
@@ -23,7 +23,7 @@ std_msgs::Int16 speed_obj;
 std_msgs::Int16 speed_rev;
 
 std_msgs::Int16 steering;
-std_msgs::String lights_fr; 
+std_msgs::String lights_fr;
 
 bool object=false,objectR=false,objectL=false, rev=false, park=false;
 
@@ -84,13 +84,13 @@ void Callback_path(const nav_msgs::Path& path)
 
 
     if (path.poses.size() > 25){
-            cout << "10 \n"; 
+            cout << "10 \n";
             for (int i=0; i< 25; i++){ //15
 
                 //cout << "x_i: " << path.poses[i].pose.position.x << "\n";
                 x_i += path.poses[i].pose.position.x;
                 y_i += path.poses[i].pose.position.y;
-        
+
                 //cout << "x_i: " << path.poses[i].pose.position.x << "\n";
                 //cout << "x_i: " << path.poses[i].pose.position.x << "\n";
                 /*if (abs(path.poses[i].pose.position.x - x_i1) > 200){
@@ -99,7 +99,7 @@ void Callback_path(const nav_msgs::Path& path)
                         cout << "x_i1: " << x_i1 << "\n";
                         limite++;
                     }
-                else{   
+                else{
                         x_i += path.poses[i].pose.position.x;
                         y_i += path.poses[i].pose.position.y;
                 }
@@ -116,7 +116,7 @@ void Callback_path(const nav_msgs::Path& path)
                 //cout << "Menos de 15 \n";
                 x_i += path.poses[i].pose.position.x;
                 y_i += path.poses[i].pose.position.y;
-        
+
                 //cout << "x_i: " << path.poses[i].pose.position.x << "\n";
                 //cout << "x_i: " << path.poses[i].pose.position.x << "\n";
                 /*if (abs(path.poses[i].pose.position.x - x_i1) > 200){
@@ -125,7 +125,7 @@ void Callback_path(const nav_msgs::Path& path)
                         cout << "x_i1: " << x_i1 << "\n";
                         limite++;
                     }
-                else{   
+                else{
                         x_i += path.poses[i].pose.position.x;
                         y_i += path.poses[i].pose.position.y;
                 }
@@ -143,13 +143,13 @@ void Callback_path(const nav_msgs::Path& path)
     y_i=299-y_i;
     x_i=x_i*0.7;
     //y_i=300-y_i;
-    
+
 
     cout << "x_i prom: "<< x_i << "\n";
     cout << "y_i prom: "<< y_i << "\n";
-    
+
     theta= navigation();
-    
+
 
     //steering_3=steering_2;
     //steering_2=steering_1;
@@ -157,9 +157,9 @@ void Callback_path(const nav_msgs::Path& path)
     //steering_prom_1=steering_prom;
     //steering_prom=(steering_1+steering_0)/2;
     en_1 = en;
-    
+
     if (theta > 0.05 || theta < -0.05){
-        
+
         cout << "theta: " << theta << "\n";
         steering_0=((170/0.57)*theta)+120;
         cout << "Steering 0: " << steering_0 << "\n";
@@ -185,21 +185,21 @@ void Callback_path(const nav_msgs::Path& path)
     if (abs(steering_0  - steering_1) > 200){
             cout << "gran cambio \n";
             steering_0=-40;
-        }   
- 
+        }
+
     //Control
     //en=steering_prom - steering_prom_1;
-    en=steering_0 - steering_1;    
+    en=steering_0 - steering_1;
     Rn=Kp*(en - en_1);
     steering.data=steering_1+Rn;
     //steering.data=steering_0;
 
 
     cout << "Rn: " << Rn << "\n";
-    //cout << "Steering 1: " << steering_1 << "\n";       
+    //cout << "Steering 1: " << steering_1 << "\n";
     //steering.data= (steering_0+steering_1)/2;
     cout << "Steering 0: " << steering_0 << "\n";
-    cout << "Steering 1: " << steering_1 << "\n";       
+    cout << "Steering 1: " << steering_1 << "\n";
 
     if (steering.data > 280){
             steering.data=280;
@@ -211,13 +211,13 @@ void Callback_path(const nav_msgs::Path& path)
 
     if (steering.data > 220 || steering.data < 30){
         steering.data=steering.data*0.85;
-    }  
+    }
 /*
     if (path.poses.size() < 5)
        {
-        
+
         steering.data=-40;
-        
+
        } */
     steering.data=((steering.data-170)*0.75)+170;
     cout << "Steering data: " << steering.data << "\n";
@@ -226,10 +226,10 @@ void Callback_path(const nav_msgs::Path& path)
     cout << "Steering data: " << steering.data << "\n";
     steering_pub.publish(steering);
     usleep(250000);
-    
+
     //time_i=clock()-time_i;
-    //cout << "Time E: " << (float)time_i/CLOCKS_PER_SEC << "\n";    
-                }     
+    //cout << "Time E: " << (float)time_i/CLOCKS_PER_SEC << "\n";
+                }
 }
 
 void Callback_object(const std_msgs::Int16::ConstPtr& msg)
@@ -237,42 +237,42 @@ void Callback_object(const std_msgs::Int16::ConstPtr& msg)
       cout << "object true" << "\n";
       object=true;
       speed_obj.data = msg->data ;
-                
+
 }
 
 
 void Callback_objectR(const std_msgs::Float32::ConstPtr& msg)
 {
       //cout << "object right true" << "\n";
-        
+
       if(msg->data < 0.50){
             objectR=true;
       }
       r_obj = msg->data ;
-                
+
 }
 
 
 void Callback_objectL(const std_msgs::Float32::ConstPtr& msg)
 {
       //cout << "object left true" << "\n";
-      
+
       if(msg->data < 0.25){
             objectL=true;
       }
       l_obj = msg->data ;
-                
+
 }
 
 int main(int argc, char** argv)
 {
-    ros::init(argc, argv, "navigation");       
-    ros::NodeHandle n;   
+    ros::init(argc, argv, "navigation");
+    ros::NodeHandle n;
     int nextstate = 0;
     i=0;
 
-   	ros::Subscriber position_subscriber = n.subscribe("/path", 1, Callback_path);
-    
+   	//ros::Subscriber position_subscriber = n.subscribe("/path", 1, Callback_path);
+
     speeds_pub = n.advertise<std_msgs::Int16>("/manual_control/speed", 1);
     steering_pub = n.advertise<std_msgs::Int16>("/manual_control/steering", 1);
     light_fr_pub = n.advertise<std_msgs::String>("/manual_control/lights", 1);
@@ -280,18 +280,18 @@ int main(int argc, char** argv)
     ros::Subscriber object_subscriber = n.subscribe("/object_detection/speed", 1, Callback_object);
     ros::Subscriber objectL_subscriber = n.subscribe("/object_detection/left", 1, Callback_objectL);
     ros::Subscriber objectR_subscriber = n.subscribe("/object_detection/right", 1, Callback_objectR);
-    
+
     while (ros::ok())
-    {    
-        ros::Rate loop_rate(10); 
-        ros::spinOnce(); 
+    {
+        ros::Rate loop_rate(10);
+        ros::spinOnce();
         float vu=0;
-    
+
         switch (nextstate){
 
             case 0:
                 cout << "Case init f \n";
-                
+
                 lights_fr.data="fr";
                 light_fr_pub.publish(lights_fr);
 
@@ -300,7 +300,7 @@ int main(int argc, char** argv)
                 speed.data=-200;
                 speeds_pub.publish(speed);
                 sleep(1);
-                ros::spinOnce(); 
+                ros::spinOnce();
                 speed.data=-200;
                 speeds_pub.publish(speed);
                 lights_fr.data="fr";
@@ -308,14 +308,14 @@ int main(int argc, char** argv)
                 lights_fr.data="ri";
                 light_fr_pub.publish(lights_fr);
                 sleep(1);
-                
+
                 nextstate=1;
                 break;
 
             case 1:
                 lights_fr.data="fr";
                 light_fr_pub.publish(lights_fr);
-                
+
                 cout << "Case 0 \n";
                 cout << "esp caja 0 \n";
                 if (objectR){
@@ -328,14 +328,14 @@ int main(int argc, char** argv)
                     }
                 else{
 
-                }    
-                break;    
+                }
+                break;
 
-            case 2:    
+            case 2:
                 cout << "Case 1 \n";
                 cout << "caja 1 \n";
                 cout << "objectR: "<< objectR << " \n";
-                
+
                 if (!objectR){
                     i++;
                     if(i > 3){
@@ -343,14 +343,14 @@ int main(int argc, char** argv)
                     i=0;
                     }
                 }
-                objectR=false;    
+                objectR=false;
                 break;
 
-            case 3:    
+            case 3:
                 cout << "Case 2 \n";
                 cout << "esp caja 1 \n";
                 if (objectR){
-                    objectR=false;  
+                    objectR=false;
                     speed.data=0;
                     speeds_pub.publish(speed);
                     ros::spinOnce(); /*
@@ -361,19 +361,19 @@ int main(int argc, char** argv)
                     if (time_s < 0){
                        time_s=time_s*-1;
                     }
-                    time_s=time_s*vu*1000000;    
+                    time_s=time_s*vu*1000000;
                     cout << "Time case 3: "<< time_s << "\n";
-                    speeds_pub.publish(speed);    
+                    speeds_pub.publish(speed);
                     usleep(time_s);
                     speed.data=0;
                     speeds_pub.publish(speed);*/
                     lights_fr.data="stop";
                     light_fr_pub.publish(lights_fr);
                     sleep(1);
-                    nextstate=4;                     
+                    nextstate=4;
                 }
                 break;
-            
+
             case 4:
 
                 park=true;
@@ -390,9 +390,9 @@ int main(int argc, char** argv)
                 light_fr_pub.publish(lights_fr);
                 lights_fr.data="fr";
                 light_fr_pub.publish(lights_fr);
-                                
+
                 cout << "Pub speed :" << steering.data << "\n";
-                
+
                 time_s=(t_100*100/speed.data);
                 time_s=time_s*vu;
                 if (time_s < 0){
@@ -403,11 +403,11 @@ int main(int argc, char** argv)
                 speed.data=0;
                 speeds_pub.publish(speed);
                 sleep(1);
-                
+
                 nextstate=5;
                 break;
 
-            case 5:    
+            case 5:
 
                 vu=2.2;
                 cout << "Case 5 \n";
@@ -426,11 +426,11 @@ int main(int argc, char** argv)
                 speed.data=0;
                 speeds_pub.publish(speed);
                 sleep(1);
-                
+
                 nextstate=6;
                 break;
 
-            case 6:    
+            case 6:
 
                 vu=0.8;
                 cout << "Case 6 \n";
@@ -440,25 +440,25 @@ int main(int argc, char** argv)
                 light_fr_pub.publish(lights_fr);
                 lights_fr.data="fr";
                 light_fr_pub.publish(lights_fr);
-                
+
                 sleep(1);
                 speed.data=-100;
                 speeds_pub.publish(speed);
                 time_s=(t_100*100/speed.data);
                 cout << "Time case 2: "<< time_s << "\n";
                 time_s=time_s*vu;
-                
+
                 if (time_s < 0){
                     time_s=time_s*-1;
                 }
 
                 cout << "Time case 2: "<< time_s << "\n";
                 sleep(time_s);
-                
+
                 nextstate=7;
                 break;
 
-            case 7:    
+            case 7:
 
                 cout << "End park \n";
                 speed.data=0;
@@ -466,12 +466,12 @@ int main(int argc, char** argv)
                 sleep(3);
                 lights_fr.data="diL";
                 light_fr_pub.publish(lights_fr);
-                
+
                 break;
-                
+
         }
        loop_rate.sleep();
     }
 
-    
+
 }
