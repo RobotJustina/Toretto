@@ -10,8 +10,7 @@
 #include "std_msgs/Float32MultiArray.h"
 #include "nav_msgs/Path.h"
 
-#define Kp 50.0/100.0
-#define Ka 3.0
+
 #define MAX_DIST_TO_OBJ 0.45
 
 #define PI 3.14159265
@@ -29,6 +28,9 @@ int16_t steering_call=90;
 bool object=false,objectR=false,objectL=false,objectF=false; //object detected
 float l_obj=0, r_obj=0, f_obj=0;
 
+
+float Kp_nav =50.0/100.0;
+float Ka_nav =3.0;
 void callback_right_line(const std_msgs::Float32MultiArray::ConstPtr& msg)
 {
         //From MARCOSOFT
@@ -40,7 +42,7 @@ void callback_right_line(const std_msgs::Float32MultiArray::ConstPtr& msg)
         //La imagen homografeada es de 640x700
         float angle_error = atan(B/A);
         float dist_error = (fabs(A*160 + B*120 +C)/sqrt(A*A + B*B) - 90);
-        steering_call = (int16_t)(100 + Kp*dist_error + Ka * angle_error * 10);
+        steering_call = (int16_t)(100 + Kp_nav*dist_error + Ka_nav * angle_error * 10);
         std::cout << "Found line: " << A << "\t" << B << "\t" << C << std::endl;
         std::cout << "Angle error= " << angle_error << std::endl;
 }
@@ -120,6 +122,7 @@ int main(int argc, char** argv)
         ros::Subscriber objectL_subscriber = n.subscribe("/object_detection/left", 1, Callback_objectL);
         ros::Subscriber objectR_subscriber = n.subscribe("/object_detection/right", 1, Callback_objectR);
 
+        float kp_park;
         float vu_r,vu_l, vu_m;
         int max_steer_left, max_steer_right, mid_steer_right;
         n.param<float>("vu_r",vu_r,2.35);
@@ -128,12 +131,15 @@ int main(int argc, char** argv)
         n.param<int>("max_steer_left",max_steer_left,10);
         n.param<int>("max_steer_right",max_steer_right,170);
         n.param<int>("mid_steer_right",mid_steer_right,130);
+        n.param<float>("kp_park",kp_park,2.0);
+        n.param<float>("Kp_nav",Kp_nav,50.0/100.0);
+        n.param<float>("Ka_nav",Ka_nav,3.0);
         while (ros::ok())
         {
                 ros::Rate loop_rate(10);
                 float vu=0;
                 float time_s=0, t_100=3.4;
-                int kp=1;
+
                 switch (state) {
 
                 case 0:
@@ -269,7 +275,7 @@ int main(int argc, char** argv)
                                 speeds_pub.publish(msg_speed);
                         }
 
-                        msg_steering.data=kp*(r_obj-0.13)+90; //90 deg offset
+                        msg_steering.data=kp_park*(r_obj-0.13)+90; //90 deg offset
                         steering_pub.publish(msg_steering);
 
                         break;

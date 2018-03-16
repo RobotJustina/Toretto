@@ -2,6 +2,8 @@
 #define MAX_VAL_IN_PIXEL 255
 #include "lane_detection.h"
 
+#define DEG2RAD M_PI/180
+
 lane_extractor::lane_extractor( int hough_thr,double minLen, double gapLen, int lowValThr,int highValThr, int canny_thr_low, int canny_thr_high)
 {
         this->hough_thr=hough_thr;
@@ -60,7 +62,18 @@ std_msgs::Float32MultiArray lane_extractor::extract_right_lane_hough(cv::Mat &im
                 cv::Point ini(lines[i][0],lines[i][1]);
                 cv::Point fin(lines[i][2],lines[i][3]);
                 //cv::line(image,ini+roi_corner,fin+roi_corner,cv::Scalar(0,250,0),3);
-                cv::line(image,ini+roi_corner,fin+roi_corner,cv::Scalar(0,0,250),3);
+                float angle=atan2(fin.y-ini.y,fin.x-ini.x);
+                //cv::line(image,ini+roi_corner,fin+roi_corner,cv::Scalar(0,250,0),3);
+                if ((angle<30*DEG2RAD) || (angle>150*DEG2RAD))
+                {
+                        lines.erase(lines.begin()+i);
+
+                }
+                else
+                {
+                        cv::line(image,ini+roi_corner,fin+roi_corner,cv::Scalar(0,0,250),3);
+                }
+
         }
 
         //Order points before fitting
@@ -150,8 +163,16 @@ std_msgs::Float32MultiArray lane_extractor::extract_left_lane_hough(cv::Mat &ima
 
                 cv::Point ini(lines[i][0],lines[i][1]);
                 cv::Point fin(lines[i][2],lines[i][3]);
+                float angle=atan2(fin.y-ini.y,fin.x-ini.x);
                 //cv::line(image,ini+roi_corner,fin+roi_corner,cv::Scalar(0,250,0),3);
-                cv::line(image,ini,fin,cv::Scalar(0,250,0),3);
+                if((angle<30*DEG2RAD) || (angle>150*DEG2RAD))
+                {
+                        lines.erase(lines.begin()+i);
+
+                }
+                else{
+                        cv::line(image,ini,fin,cv::Scalar(0,250,0),3);
+                }
         }
 
         //Order points before fitting
