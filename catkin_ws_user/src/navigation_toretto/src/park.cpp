@@ -110,7 +110,7 @@ int main(int argc, char** argv)
         n.param<float>("vu_m",vu_m,0.8);
         n.param<int>("max_steer_left",max_steer_left,10);
         n.param<int>("max_steer_right",max_steer_right,170);
-        n.param<int>("max_steer_right",mid_steer_right,130);
+        n.param<int>("mid_steer_right",mid_steer_right,130);
         while (ros::ok())
         {
                 ros::Rate loop_rate(10);
