@@ -20,6 +20,7 @@ LinesDetector::LinesDetector(bool debug, std::string path)
 {
 	this->debug=debug;
 	this->path=path;
+	this->prevPoint= cv::Point2f(-1.0,-1.0);
 }
 
 
@@ -60,10 +61,6 @@ void LinesDetector::transformMatrix(cv::Mat img)
 	line(temp,cv::Point(v[t].x,v[t].y), cv::Point(v[0].x,v[0].y),cv::Scalar(0,255,0),2);
 
 	std::vector< cv::Point2f> dstPoints; 
-	//dstPoints.push_back( cv::Point2f(v[3].x, v[0].y)); 
-	//dstPoints.push_back( cv::Point2f(v[2].x, v[1].y)); 
-	//dstPoints.push_back( cv::Point2f(v[2].x, v[2].y)); 
-	//dstPoints.push_back( cv::Point2f(v[3].x, v[3].y)); 
 
 	dstPoints.push_back( cv::Point2f(0, 0)); 
 	dstPoints.push_back( cv::Point2f(img.cols/2, 0)); 
@@ -91,23 +88,16 @@ void LinesDetector::transformMatrix(cv::Mat img)
 		key=cv::waitKey(1);
 	}
 
-	//cv::FileStorage fs("/root/catkin_ws_user/Matrix.yaml", cv::FileStorage::WRITE);
-	cv::FileStorage fs("/home/haime/Toretto/catkin_ws_user/Matrix.yaml", cv::FileStorage::WRITE);
+	cv::FileStorage fs(this->path, cv::FileStorage::WRITE);
 	fs<<"Homography"<<tMatrix;
 	fs<<"tSize"<<transfSize;
 	fs.release();  
-
-
 }
 
 void LinesDetector::linesVector(std::vector<cv::Point2f> p,std_msgs::Float32MultiArray &l, int cols, cv::Mat &drawing ,cv::Scalar color)
 {
 	cv::Vec4f line;
 	cv::fitLine(p,line, CV_DIST_WELSCH, 0, 0.01,0.01);
-	//float lefty = (-lineR[2]*lineR[1]/lineR[0])+lineR[3];
-    //float righty = ((cols-lineR[2])*lineR[1]/lineR[0])+lineR[3];
-    //float m =( righty - lefty)/(imageThreshold.cols-1);
-    //float a = lefty;
     int x0 = line[2];
     int y0 = line[3];
 	int x1 = x0+100*line[0];
@@ -118,9 +108,6 @@ void LinesDetector::linesVector(std::vector<cv::Point2f> p,std_msgs::Float32Mult
     if (this->debug)
     {
     	cv::line(drawing,cv::Point(x0,y0),cv::Point(x1,y1),color,2);
-    	//std::cout<<"[Point 1]: ["<<x0<<" X] ["<<y0<<" Y] "<<std::endl;
-    	//std::cout<<"[Point 2]: ["<<x1<<" X] ["<<y1<<" Y] "<<std::endl;
-    	//std::cout<<"[A]: ["<<A<<" [B]: "<<B<<" [C]: "<<C<<std::endl;
     }    	
     l.data.push_back(A);
     l.data.push_back(B);
@@ -131,11 +118,20 @@ cv::Mat LinesDetector::segmentationLines(cv::Mat image, std_msgs::Float32MultiAr
 {	
 	
 	cv::Mat imageThreshold;
-	//cv::inRange(image,cv::Scalar(172,172,172),cv::Scalar(255,255,255),imageThreshold);
-	cv::inRange(image,cv::Scalar(0,0,0),cv::Scalar(115,115,115),imageThreshold);
-	std::vector<cv::Point2f> peaks = LinesDetector::peakHistrogram(imageThreshold);
+	
 
-	morphologyEx( imageThreshold, imageThreshold, cv::MORPH_CLOSE, getStructuringElement(cv::MORPH_CROSS, cv::Size(5,5))  ,cv::Point(-1,-1), 7);
+	//cv::inRange(image,cv::Scalar(172,172,172),cv::Scalar(255,255,255),imageThreshold);
+	image=3*image-100; //contraste
+	cv::inRange(image,cv::Scalar(0,0,0),cv::Scalar(200,200,200),imageThreshold);
+	
+	//cv::Mat imageGray;
+	//cv::cvtColor(image,imageGray,CV_BGR2GRAY);
+	//imageGray=255 - imageGray;	
+	//cv::threshold(imageGray, imageThreshold, 240, 255, CV_THRESH_OTSU);
+
+	std::cout<<"xxxxxxxxxxxxxxxxxxxxxxxx Vive?"  <<"[prevPoint]" << this->prevPoint <<std::endl;
+	std::vector<cv::Point2f> peaks = LinesDetector::peakHistrogram(imageThreshold);
+	std::cout<<"xxxxxxxxxxxxxxxxxxxxxxxx Si Vive"  <<"[prevPoint]" << this->prevPoint <<std::endl;
 
 	for (int i = 1; i < 12; ++i)
 	{
@@ -204,14 +200,14 @@ cv::Mat LinesDetector::segmentationLines(cv::Mat image, std_msgs::Float32MultiAr
 		}
 	}
 
-	if (right.size()>4)
+	if (right.size()>2)
 	{
 		LinesDetector::linesVector(right,lRight,imageThreshold.cols,drawing,cv::Scalar(200,200,0));
 
     	std::cout<<"[A]: ["<<lRight.data[0]<<" [B]: "<<lRight.data[1]<<" [C]: "<<lRight.data[2]<<std::endl;
 	}
 
-	if (left.size()>2)
+	if (left.size()>1)
 	{
 		LinesDetector::linesVector(left,lLeft,imageThreshold.cols,drawing,cv::Scalar(0,200,200));
 	}
@@ -250,34 +246,67 @@ std::vector<cv::Point2f> LinesDetector::peakHistrogram(cv::Mat image)
 	std::vector<cv::Point2f> peaks;
 	int p=0;
 	bool peak=false;
-	for (int i = 0; i < histo.size()-1; ++i)
-	{
-		histo[i]/=255;
 
-		if (histo[i]==0)
-		{
-			peak=false;
-			p=0;
-			MAX=0;
-		}
-		else{
-			if (histo[i]>MAX)
-			{
-				MAX = histo[i];
-				p=i;
-			}
-			if (((histo[i+1]==0 || i+2> histo.size()-1)) && MAX>15)
-			{
-				peaks.push_back(cv::Point2f(p,image.rows));
-			}
-		}
-	}
 
-	 if (peaks.size()>0)
-	 {
-	 	std::sort(peaks.begin(),peaks.end(),compare);
-	 }
 	
+	if(this->prevPoint.x < 0 && this->prevPoint.y<0){
+		for (int i = 0; i < histo.size()-1; ++i)
+		{
+			//histo[i]/=255;
+			if (histo[i]==0)
+			{
+				peak=false;
+				p=0;
+				MAX=0;
+			}
+			else{
+				if (histo[i]>MAX)
+				{
+					MAX = histo[i];
+					p=i;
+				}
+				if (((histo[i+1]==0 || i+2> histo.size()-1)) && MAX>5*255)
+				{
+					peaks.push_back(cv::Point2f(p,image.rows));
+					this->prevPoint= cv::Point2f(p,image.rows);
+				}
+			}
+		}
+	}else{
+		
+		int th=20;
+		int init = (this->prevPoint.x-th>0)?this->prevPoint.x-th:0;
+		int endit = (this->prevPoint.x+th<histo.size()-1)?this->prevPoint.x+th:histo.size()-1;
+		for (int i = init; i < endit; ++i)
+		{
+			//histo[i]/=255;
+			if (histo[i]==0)
+			{
+				peak=false;
+				p=0;
+				MAX=0;
+			}
+			else{
+				if (histo[i]>MAX)
+				{
+					MAX = histo[i];
+					p=i;
+				}
+				if (((histo[i+1]==0 || i+2> endit)) && MAX>5)
+				{
+					peaks.push_back(cv::Point2f(p,image.rows));
+					this->prevPoint= cv::Point2f(p,image.rows);
+				}
+			}
+		}
+		
+	}
+	
+	if (peaks.size()>0)
+	{
+		std::sort(peaks.begin(),peaks.end(),compare);
+		//this->prevPoint=cv::Point2f(peaks[0].x,peaks[0].y);
+	}
 
 	if (peaks.size()>2)
 	{
@@ -292,7 +321,11 @@ std::vector<cv::Point2f> LinesDetector::peakHistrogram(cv::Mat image)
 		}
 	}
 	if (this->debug)
-	{
+	{	
+		for (int i = 0; i < histo.size()-1; ++i)
+		{
+		histo[i]/=255;
+		}
 		cv::Mat H= cv::Mat::zeros(image.size(),CV_8U);
 		for (int i = 0; i < peaks.size(); ++i)
 		{
@@ -304,6 +337,7 @@ std::vector<cv::Point2f> LinesDetector::peakHistrogram(cv::Mat image)
 		}
 		cv::imshow("points",H);
 	}
+
   	return peaks;
 }
 
@@ -316,5 +350,6 @@ float LinesDetector::distanceX(cv::Point2f point1,cv::Point2f point2)
 {
 	return abs(point1.x - point2.x);
 }
+
 
 

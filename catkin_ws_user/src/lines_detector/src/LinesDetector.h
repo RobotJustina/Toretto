@@ -19,6 +19,7 @@ public:
 	int flagInverted; 
 	bool debug;
 	std::string path;
+	cv::Point2f prevPoint;
 
 	LinesDetector(bool debug,std::string path);
 	cv::Mat segmentationLines(cv::Mat image, std_msgs::Float32MultiArray &lRight,std_msgs::Float32MultiArray &lLeft);

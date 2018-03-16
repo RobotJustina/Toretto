@@ -7,6 +7,8 @@ bool image = false;
 cv::Mat persp; 
 cv::Mat transf; 
 
+
+
 void imageCallback(const sensor_msgs::ImageConstPtr& msg)
 {
     //try{
@@ -40,35 +42,36 @@ int main(int argc, char** args)
   image_transport::ImageTransport itp(nh);
   sensor_msgs::ImagePtr msg ;
 
-  //ros::Publisher path_pub= nh.advertise<nav_msgs::Path>("path",1000);
+
   ros::Publisher rLine_pub= nh.advertise<std_msgs::Float32MultiArray>("rightLine",1000);
   ros::Publisher lLine_pub= nh.advertise<std_msgs::Float32MultiArray>("leftLine",1000);
 
   ros::Rate loop_rate(60);
   std::string argumento(args[1]);
-  LinesDetector lines = LinesDetector(argumento == "debug","hola");
-  nav_msgs::Path msg_path;
+  std::string path(args[2]);
+  std::cout<<"[Matrix location]: "<<path<<std::endl; 
+  LinesDetector lines = LinesDetector(argumento == "debug",path);
 
 
-  
   cv::Mat transfMatrix;
-  cv::FileStorage fs("/root/catkin_ws_user/Matrix.yaml", cv::FileStorage::READ);
-  //cv::FileStorage fs("/home/justina/Toretto/catkin_ws_user/Matrix.yaml", cv::FileStorage::READ);
-  //cv::FileStorage fs("/home/haime/Toretto/catkin_ws_user/Matrix.yaml", cv::FileStorage::READ);
-  if (!fs.isOpened())
-  {
-   		std::cout<<"No Matrix"<<std::endl;
-   		return 0;
-  }else
-  {
-  	std::cout<<"Si Matrix************************************"<<std::endl;
-  }
-  fs["Homography"] >> transfMatrix;
- 
   cv::Size transfSize;
-  fs["tSize"] >> transfSize; 
-  fs.release();
-  
+  if(argumento != "transform"){
+
+    cv::FileStorage fs(path, cv::FileStorage::READ);
+    if (!fs.isOpened())
+    {
+     		std::cout<<"No Matrix"<<std::endl;
+     		return 0;
+    }else
+    {
+    	std::cout<<"Si Matrix************************************"<<std::endl;
+    }
+    fs["Homography"] >> transfMatrix;
+    
+    fs["tSize"] >> transfSize; 
+    fs.release();
+  }
+
   while (ros::ok()) {
       
     if (image)
