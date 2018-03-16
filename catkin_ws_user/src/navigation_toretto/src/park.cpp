@@ -12,6 +12,7 @@
 
 #define Kp 50.0/100.0
 #define Ka 3.0
+#define MAX_DIST_TO_OBJ 0.45
 
 #define PI 3.14159265
 #define E 2.7182818284590
@@ -24,9 +25,9 @@ std_msgs::Int16 msg_speed;
 std_msgs::Int16 speed_obj;
 
 int16_t steering_call=90;
-
-bool object=false,objectR=false,objectL=false; //object detected
-float l_obj=0, r_obj=0;
+//TODO use local variables.
+bool object=false,objectR=false,objectL=false,objectF=false; //object detected
+float l_obj=0, r_obj=0, f_obj=0;
 
 void callback_right_line(const std_msgs::Float32MultiArray::ConstPtr& msg)
 {
@@ -56,9 +57,8 @@ void Callback_object(const std_msgs::Int16::ConstPtr& msg)
 
 void Callback_objectR(const std_msgs::Float32::ConstPtr& msg)
 {
-
-
-        if(msg->data < 0.40) {
+        if((msg->data < 0.40) && (msg->data >0.01)) //while node starts a few messages will be received with data=0 must ignore
+        {
                 objectR=true;
         }
         else{
@@ -85,6 +85,22 @@ void Callback_objectL(const std_msgs::Float32::ConstPtr& msg)
 }
 
 
+void Callback_objectF(const std_msgs::Float32::ConstPtr& msg)
+{
+        //cout << "object left true" << "\n";
+
+        if(msg->data < 0.25) {
+                objectF=true;
+        }
+        else{
+                objectF=false;
+        }
+        f_obj = msg->data;
+        //cout << "object left "<<l_obj << "\n";
+}
+
+
+
 
 int main(int argc, char** argv)
 {
@@ -99,7 +115,8 @@ int main(int argc, char** argv)
         ros::Publisher steering_pub = n.advertise<std_msgs::Int16>("/manual_control/steering", 1);
         ros::Publisher light_fr_pub = n.advertise<std_msgs::String>("/manual_control/lights", 1);
 
-        ros::Subscriber object_subscriber = n.subscribe("/object_detection/speed", 1, Callback_object);
+        //ros::Subscriber object_subscriber = n.subscribe("/object_detection/speed", 1, Callback_object);
+        ros::Subscriber objectF_subscriber = n.subscribe("/object_detection/front", 1, Callback_objectF);
         ros::Subscriber objectL_subscriber = n.subscribe("/object_detection/left", 1, Callback_objectL);
         ros::Subscriber objectR_subscriber = n.subscribe("/object_detection/right", 1, Callback_objectR);
 
@@ -116,6 +133,7 @@ int main(int argc, char** argv)
                 ros::Rate loop_rate(10);
                 float vu=0;
                 float time_s=0, t_100=3.4;
+                int kp=1;
                 switch (state) {
 
                 case 0:
@@ -145,7 +163,7 @@ int main(int argc, char** argv)
                         msg_steering.data= steering_call;
                         steering_pub.publish(msg_steering);
 
-                          if (!objectR)
+                        if (!objectR)
                         {
                                 state=3;
                         }
@@ -234,8 +252,28 @@ int main(int argc, char** argv)
                         state = 7;
                         break;
 
-
                 case 7:
+                        printf("[State: %d] Inside park space \n", state);
+                        printf("Adjusting\n" );
+                        //Ctrl
+
+                        if(f_obj<=MAX_DIST_TO_OBJ)
+                        {
+                                msg_speed.data=0;
+                                speeds_pub.publish(msg_speed);
+                                state=8;
+                        }
+                        else
+                        {
+                                msg_speed.data=-100;
+                                speeds_pub.publish(msg_speed);
+                        }
+
+                        msg_steering.data=kp*(r_obj-0.13)+90; //90 deg offset
+                        steering_pub.publish(msg_steering);
+
+                        break;
+                case 8:
                         printf("[State: %d] End park \n", state);
                         msg_speed.data=0;
                         speeds_pub.publish(msg_speed);
@@ -246,6 +284,8 @@ int main(int argc, char** argv)
                         cout << "Error undefined state"<< "\n";
                         msg_speed.data=0;
                         speeds_pub.publish(msg_speed);
+                        msg_steering.data=90;
+                        steering_pub.publish(msg_steering);
                         break;
                 }
 
