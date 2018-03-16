@@ -23,7 +23,7 @@ std_msgs::Int16 msg_steering;
 std_msgs::Int16 msg_speed;
 std_msgs::Int16 speed_obj;
 
-int16_t steering_call;
+int16_t steering_call=90;
 
 bool object=false,objectR=false,objectL=false; //object detected
 float l_obj=0, r_obj=0;
@@ -93,7 +93,7 @@ int main(int argc, char** argv)
         int state = 0;
         //int i=0;
 
-        //ros::Subscriber position_subscriber = n.subscribe("/path", 1, Callback_path);
+        ros::Subscriber position_subscriber = n.subscribe("/rightLine", 1, callback_right_line);
 
         ros::Publisher speeds_pub = n.advertise<std_msgs::Int16>("/manual_control/speed", 1);
         ros::Publisher steering_pub = n.advertise<std_msgs::Int16>("/manual_control/steering", 1);
@@ -104,12 +104,13 @@ int main(int argc, char** argv)
         ros::Subscriber objectR_subscriber = n.subscribe("/object_detection/right", 1, Callback_objectR);
 
         float vu_r,vu_l, vu_m;
-        int max_steer_left, max_steer_right;
+        int max_steer_left, max_steer_right, mid_steer_right;
         n.param<float>("vu_r",vu_r,2.35);
         n.param<float>("vu_l",vu_l,2.2);
-        n.param<float>("vu_r",vu_m,0.8);
+        n.param<float>("vu_m",vu_m,0.8);
         n.param<int>("max_steer_left",max_steer_left,10);
         n.param<int>("max_steer_right",max_steer_right,170);
+        n.param<int>("max_steer_right",mid_steer_right,130);
         while (ros::ok())
         {
                 ros::Rate loop_rate(10);
@@ -215,7 +216,7 @@ int main(int argc, char** argv)
                         printf("[State: %d] Reverse stopped \n", state);
                         printf("\tComencing advance\n");
                         vu=vu_m;
-                        msg_steering.data=90;         //120 orig
+                        msg_steering.data=mid_steer_right; //120 orig
                         steering_pub.publish(msg_steering);
                         cout << "Pub Steering :" << msg_steering.data << "\n";
                         msg_speed.data=-100;
