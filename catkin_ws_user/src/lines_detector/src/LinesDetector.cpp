@@ -121,17 +121,23 @@ cv::Mat LinesDetector::segmentationLines(cv::Mat image, std_msgs::Float32MultiAr
 	
 
 	//cv::inRange(image,cv::Scalar(172,172,172),cv::Scalar(255,255,255),imageThreshold);
-	image=3*image-100; //contraste
-	cv::inRange(image,cv::Scalar(0,0,0),cv::Scalar(200,200,200),imageThreshold);
+	//image=3*image-100; //contraste
+	//cv::inRange(image,cv::Scalar(0,0,0),cv::Scalar(100,100,100),imageThreshold);
 	
 	//cv::Mat imageGray;
 	//cv::cvtColor(image,imageGray,CV_BGR2GRAY);
 	//imageGray=255 - imageGray;	
-	//cv::threshold(imageGray, imageThreshold, 240, 255, CV_THRESH_OTSU);
+	
+	cv::Mat imageHSV(image.rows,image.cols,CV_8UC3);
+	std::cout<<"con HSV" <<std::endl;
+	std::vector<cv::Mat> hsv;
+	cv::cvtColor(image,imageHSV,CV_BGR2HSV_FULL);
+	cv::split(imageHSV,hsv);
+	cv::threshold(hsv[1], imageThreshold, 0, 255, CV_THRESH_OTSU);
 
-	std::cout<<"xxxxxxxxxxxxxxxxxxxxxxxx Vive?"  <<"[prevPoint]" << this->prevPoint <<std::endl;
+	//std::cout<<"xxxxxxxxxxxxxxxxxxxxxxxx Vive?"  <<"[prevPoint]" << this->prevPoint <<std::endl;
 	std::vector<cv::Point2f> peaks = LinesDetector::peakHistrogram(imageThreshold);
-	std::cout<<"xxxxxxxxxxxxxxxxxxxxxxxx Si Vive"  <<"[prevPoint]" << this->prevPoint <<std::endl;
+	//std::cout<<"xxxxxxxxxxxxxxxxxxxxxxxx Si Vive"  <<"[prevPoint]" << this->prevPoint <<std::endl;
 
 	for (int i = 1; i < 12; ++i)
 	{
@@ -230,6 +236,9 @@ cv::Mat LinesDetector::segmentationLines(cv::Mat image, std_msgs::Float32MultiAr
     	cv::imshow("transformed",image);
     	cv::imshow("thres",imageThreshold);
    		cv::imshow( "Draw", drawing );
+   		cv::imshow("H",hsv[0]);
+   		cv::imshow("S",hsv[1]);
+   		cv::imshow("V",hsv[2]);
 	}
 
 	return imageThreshold;
@@ -249,7 +258,7 @@ std::vector<cv::Point2f> LinesDetector::peakHistrogram(cv::Mat image)
 
 
 	
-	if(this->prevPoint.x < 0 && this->prevPoint.y<0){
+	if(this->prevPoint.x < 0 && this->prevPoint.y<0  ){
 		for (int i = 0; i < histo.size()-1; ++i)
 		{
 			//histo[i]/=255;
