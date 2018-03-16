@@ -14,7 +14,7 @@ lane_extractor::lane_extractor( int hough_thr,double minLen, double gapLen, int 
 
 }
 
-std_msgs::Float32MultiArray lane_extractor::extract_right_lane_hough(cv::Mat &image)
+std_msgs::Float32MultiArray lane_extractor::extract_right_lane_hough(cv::Mat &image, bool color = false)
 {
         //Extract lines from lane using hough transform
         //Return line equation: Ax+By+C=0 coefficents
@@ -31,12 +31,21 @@ std_msgs::Float32MultiArray lane_extractor::extract_right_lane_hough(cv::Mat &im
         cv::Rect roi(roi_corner,roi_size);
         cv::Mat cropped_img(image,roi);
 
-        cv::Mat gray_img;
-        cv::cvtColor(cropped_img, gray_img, cv::COLOR_BGR2GRAY);
-        cv::blur(gray_img,gray_img,cv::Size(11,11));
+        cv::Mat gray_img,hsv;
         cv::Mat binarized;
-        //cv::split(hsv,chan_hsv);
-        cv::inRange(gray_img, lowValThr,highValThr, binarized);
+        if (color)
+        {
+                cv::cvtColor(cropped_img, hsv, cv::COLOR_BGR2HSV);
+                cv::blur(hsv,hsv,cv::Size(11,11));
+                cv::Mat chan_hsv[3];
+                cv::split(hsv,chan_hsv);
+                cv::inRange(chan_hsv[1], lowValThr,highValThr, binarized);
+        }
+        else{
+                cv::cvtColor(cropped_img, gray_img, cv::COLOR_BGR2GRAY);
+                cv::blur(gray_img,gray_img,cv::Size(11,11));
+                cv::inRange(gray_img, lowValThr,highValThr, binarized);
+        }
         cv::Mat border;
         cv::Canny( binarized, border,canny_thr_low,canny_thr_high);
         //cv::cvtColor(cropped_img,gray_img,cv::COLOR_BGR2GRAY );
@@ -97,7 +106,7 @@ std_msgs::Float32MultiArray lane_extractor::extract_right_lane_hough(cv::Mat &im
 }
 
 
-std_msgs::Float32MultiArray lane_extractor::extract_left_lane_hough(cv::Mat &image)
+std_msgs::Float32MultiArray lane_extractor::extract_left_lane_hough(cv::Mat &image, bool color=false)
 {
         int cols=image.cols;
         int rows=image.rows;
@@ -112,12 +121,22 @@ std_msgs::Float32MultiArray lane_extractor::extract_left_lane_hough(cv::Mat &ima
         cv::Rect roi(roi_corner,roi_size);
         cv::Mat cropped_img(image,roi);
 
-        cv::Mat gray_img;
-        cv::cvtColor(cropped_img, gray_img, cv::COLOR_BGR2GRAY);
-        cv::blur(gray_img,gray_img,cv::Size(11,11));
+        cv::Mat gray_img,hsv;
         cv::Mat binarized;
-        //cv::split(hsv,chan_hsv);
-        cv::inRange(gray_img, lowValThr,highValThr, binarized);
+        if (color)
+        {
+                cv::cvtColor(cropped_img, hsv, cv::COLOR_BGR2HSV);
+                cv::blur(hsv,hsv,cv::Size(11,11));
+                cv::Mat chan_hsv[3];
+                cv::split(hsv,chan_hsv);
+                cv::inRange(chan_hsv[1], lowValThr,highValThr, binarized);
+        }
+        else{
+                cv::cvtColor(cropped_img, gray_img, cv::COLOR_BGR2GRAY);
+                cv::blur(gray_img,gray_img,cv::Size(11,11));
+                cv::inRange(gray_img, lowValThr,highValThr, binarized);
+        }
+
         cv::Mat border;
         cv::Canny( binarized, border,canny_thr_low,canny_thr_high);
         //cv::cvtColor(cropped_img,gray_img,cv::COLOR_BGR2GRAY );
