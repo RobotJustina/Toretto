@@ -27,7 +27,7 @@ int main(int argc, char** argv)
         image_transport::Subscriber sub = its.subscribe("image",1,imageCallback);
 
         image_transport::ImageTransport itp(nh);
-        image_transport::Publisher pub = itp.advertise("lines",1);
+        image_transport::Publisher pub = itp.advertise("lines",5);
 
         ros::Publisher angle_pub_r = nh.advertise<std_msgs::Float32MultiArray>("/rightLine",100);
         ros::Publisher angle_pub_l = nh.advertise<std_msgs::Float32MultiArray>("leftLine",100);
@@ -77,25 +77,30 @@ int main(int argc, char** argv)
         while (ros::ok()) {
                 if (image_flag)
                 {
-                        cv::Rect rect(0,240,640,240);
+                        cv::Rect rect(0,240,640,240); //lower half of image
                         cv::Mat resizeImage= Image(rect);
 
-                        ros::Time strt_time = ros::Time::now();
+                        //ros::Time strt_time = ros::Time::now();
                         image_flag = false;
-                        std_msgs::Float32MultiArray angle_r;
+                        std_msgs::Float32MultiArray line_r,line_l;
                         cv::Mat trans;
                         cv::warpPerspective(resizeImage, trans, transfMatrix, transfSize, cv::INTER_LINEAR, cv::BORDER_REPLICATE, cv::Scalar(127, 127, 127) );
-                        angle_r=extractor.extract_right_lane_angle_hough(trans);
+                        line_r=extractor.extract_right_lane_hough(trans);
+                        line_l=extractor.extract_left_lane_hough(trans);
                         sensor_msgs::ImagePtr msg=cv_bridge::CvImage(std_msgs::Header(),"bgr8",trans).toImageMsg();
 
                         pub.publish(msg);
-                        if(angle_r.data.size()>0)
+                        if(line_r.data.size()>0)
                         {
-                                angle_pub_r.publish(angle_r);
+                                angle_pub_r.publish(line_r);
+                        }
+                        if(line_l.data.size()>0)
+                        {
+                                angle_pub_r.publish(line_l);
                         }
 
-                        ros::Duration timing=ros::Time::now()-strt_time;
-                        std::cout << timing.toSec() << '\n';
+                        // ros::Duration timing=ros::Time::now()-strt_time;
+                        // std::cout << timing.toSec() << '\n';
                 }
                 ros::spinOnce();
                 loop_rate.sleep();

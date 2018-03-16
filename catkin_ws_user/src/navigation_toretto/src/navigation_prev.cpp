@@ -449,7 +449,7 @@ int main(int argc, char** argv)
                                 break;
                         case 3: //Evasion izq
                                 vu=2;
-                                steering.data=20;
+                                steering.data=max_steer_right://;20;
                                 steering_pub.publish(steering);
                                 speed.data=-100;
                                 speeds_pub.publish(speed);
