@@ -3,15 +3,18 @@
 #include "std_msgs/Int16.h"
 
 #define Kp 50.0/100.0
-#define Ka 3.0
+#define Ka 1.6
 
 int16_t steering;
 
 void callback_right_line(const std_msgs::Float32MultiArray::ConstPtr& msg)
 {
+    
     float A = msg->data[0];
     float B = msg->data[1];
     float C = msg->data[2];
+    if (A==0 && B==0)
+        return;
     //La imagen homografeada es de 640x700
     float angle_error = atan(B/A);
     float dist_error = (fabs(A*160 + B*120 +C)/sqrt(A*A + B*B) - 90);
