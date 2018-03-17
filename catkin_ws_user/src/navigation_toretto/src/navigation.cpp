@@ -180,15 +180,16 @@ int main(int argc, char** argv)
                         printf("[State: %d] Turning left\n", state);
                         msg_steering.data=max_steer_left;
                         steering_pub.publish(msg_steering);
+                        msg_speed.data=-100;
                         vu=1.9;
                         time_s=(t_100*100/msg_speed.data);
                         if (time_s < 0) {
-                                time_s=time_s* -1;
+                                time_s=-time_s;
                         }
                         time_s=time_s*vu*1000000;
                         cout << "Time evasion 1: "<< time_s << "\n";
                         usleep(time_s);
-                        msg_speed.data=-100;
+
                         speeds_pub.publish(msg_speed);
                         sleep(1);
                         state=3;
