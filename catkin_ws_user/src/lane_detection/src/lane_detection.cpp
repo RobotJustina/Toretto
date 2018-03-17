@@ -2,6 +2,8 @@
 #define MAX_VAL_IN_PIXEL 255
 #include "lane_detection.h"
 
+#define DEG2RAD M_PI/180
+
 lane_extractor::lane_extractor( int hough_thr,double minLen, double gapLen, int lowValThr,int highValThr, int canny_thr_low, int canny_thr_high)
 {
         this->hough_thr=hough_thr;
@@ -14,10 +16,10 @@ lane_extractor::lane_extractor( int hough_thr,double minLen, double gapLen, int 
 
 }
 
-std_msgs::Float32MultiArray lane_extractor::extract_right_lane_hough(cv::Mat &image)
+std_msgs::Float32MultiArray lane_extractor::extract_right_lane_hough(cv::Mat &image, bool color = false)
 {
         //Extract lines from lane using hough transform
-        //Return line equation: Ax+By+C=0 coefficents 
+        //Return line equation: Ax+By+C=0 coefficents
         int cols=image.cols;
         int rows=image.rows;
 
@@ -26,17 +28,26 @@ std_msgs::Float32MultiArray lane_extractor::extract_right_lane_hough(cv::Mat &im
         // cv::Rect roi(roi_corner,roi_size);
         // cv::Mat cropped_img(image,roi);
 
-        cv::Point roi_corner(cols/2,rows); //Right hand side of the image
-        cv::Size roi_size(cols/2,rows);
+        cv::Point roi_corner(cols/2,0); //Right hand side of the image
+        cv::Size roi_size(cols/2-1,rows-1);
         cv::Rect roi(roi_corner,roi_size);
         cv::Mat cropped_img(image,roi);
 
-        cv::Mat gray_img;
-        cv::cvtColor(cropped_img, gray_img, cv::COLOR_BGR2GRAY);
-        cv::blur(gray_img,gray_img,cv::Size(11,11));
+        cv::Mat gray_img,hsv;
         cv::Mat binarized;
-        //cv::split(hsv,chan_hsv);
-        cv::inRange(gray_img, lowValThr,highValThr, binarized);
+        if (color)
+        {
+                cv::cvtColor(cropped_img, hsv, cv::COLOR_BGR2HSV);
+                cv::blur(hsv,hsv,cv::Size(11,11));
+                cv::Mat chan_hsv[3];
+                cv::split(hsv,chan_hsv);
+                cv::inRange(chan_hsv[1], lowValThr,highValThr, binarized);
+        }
+        else{
+                cv::cvtColor(cropped_img, gray_img, cv::COLOR_BGR2GRAY);
+                cv::blur(gray_img,gray_img,cv::Size(11,11));
+                cv::inRange(gray_img, lowValThr,highValThr, binarized);
+        }
         cv::Mat border;
         cv::Canny( binarized, border,canny_thr_low,canny_thr_high);
         //cv::cvtColor(cropped_img,gray_img,cv::COLOR_BGR2GRAY );
@@ -51,7 +62,18 @@ std_msgs::Float32MultiArray lane_extractor::extract_right_lane_hough(cv::Mat &im
                 cv::Point ini(lines[i][0],lines[i][1]);
                 cv::Point fin(lines[i][2],lines[i][3]);
                 //cv::line(image,ini+roi_corner,fin+roi_corner,cv::Scalar(0,250,0),3);
-                cv::line(image,ini,fin,cv::Scalar(0,250,0),3);
+                float angle=atan2(fin.y-ini.y,fin.x-ini.x);
+                //cv::line(image,ini+roi_corner,fin+roi_corner,cv::Scalar(0,250,0),3);
+                if ((angle<30*DEG2RAD) || (angle>150*DEG2RAD))
+                {
+                        lines.erase(lines.begin()+i);
+
+                }
+                else
+                {
+                        cv::line(image,ini+roi_corner,fin+roi_corner,cv::Scalar(0,0,250),3);
+                }
+
         }
 
         //Order points before fitting
@@ -73,7 +95,7 @@ std_msgs::Float32MultiArray lane_extractor::extract_right_lane_hough(cv::Mat &im
         if(puntos.size()>0)
         {
                 cv::fitLine(puntos,lineR, CV_DIST_WELSCH, 0, 0.01,0.01);
-                //lineR[2]+=roi_corner.x; lineR[3]+=roi_corner.y;
+                lineR[2]+=roi_corner.x; lineR[3]+=roi_corner.y;
                 cv::Point2f ini(lineR[2],lineR[3]);
                 //ini=ini+roi_corner;
                 cv::Point2f dir(lineR[0],lineR[1]);
@@ -97,7 +119,7 @@ std_msgs::Float32MultiArray lane_extractor::extract_right_lane_hough(cv::Mat &im
 }
 
 
-std_msgs::Float32MultiArray lane_extractor::extract_left_lane_hough(cv::Mat &image)
+std_msgs::Float32MultiArray lane_extractor::extract_left_lane_hough(cv::Mat &image, bool color=false)
 {
         int cols=image.cols;
         int rows=image.rows;
@@ -107,17 +129,27 @@ std_msgs::Float32MultiArray lane_extractor::extract_left_lane_hough(cv::Mat &ima
         // cv::Rect roi(roi_corner,roi_size);
         // cv::Mat cropped_img(image,roi);
 
-        cv::Point roi_corner(0,rows); //left hand side of the image
-        cv::Size roi_size(cols/2,rows);
+        cv::Point roi_corner(0,0); //left hand side of the image
+        cv::Size roi_size(cols/2-1,rows-1);
         cv::Rect roi(roi_corner,roi_size);
         cv::Mat cropped_img(image,roi);
 
-        cv::Mat gray_img;
-        cv::cvtColor(cropped_img, gray_img, cv::COLOR_BGR2GRAY);
-        cv::blur(gray_img,gray_img,cv::Size(11,11));
+        cv::Mat gray_img,hsv;
         cv::Mat binarized;
-        //cv::split(hsv,chan_hsv);
-        cv::inRange(gray_img, lowValThr,highValThr, binarized);
+        if (color)
+        {
+                cv::cvtColor(cropped_img, hsv, cv::COLOR_BGR2HSV);
+                cv::blur(hsv,hsv,cv::Size(11,11));
+                cv::Mat chan_hsv[3];
+                cv::split(hsv,chan_hsv);
+                cv::inRange(chan_hsv[1], lowValThr,highValThr, binarized);
+        }
+        else{
+                cv::cvtColor(cropped_img, gray_img, cv::COLOR_BGR2GRAY);
+                cv::blur(gray_img,gray_img,cv::Size(11,11));
+                cv::inRange(gray_img, lowValThr,highValThr, binarized);
+        }
+
         cv::Mat border;
         cv::Canny( binarized, border,canny_thr_low,canny_thr_high);
         //cv::cvtColor(cropped_img,gray_img,cv::COLOR_BGR2GRAY );
@@ -131,8 +163,16 @@ std_msgs::Float32MultiArray lane_extractor::extract_left_lane_hough(cv::Mat &ima
 
                 cv::Point ini(lines[i][0],lines[i][1]);
                 cv::Point fin(lines[i][2],lines[i][3]);
+                float angle=atan2(fin.y-ini.y,fin.x-ini.x);
                 //cv::line(image,ini+roi_corner,fin+roi_corner,cv::Scalar(0,250,0),3);
-                cv::line(image,ini,fin,cv::Scalar(0,250,0),3);
+                if((angle<30*DEG2RAD) || (angle>150*DEG2RAD))
+                {
+                        lines.erase(lines.begin()+i);
+
+                }
+                else{
+                        cv::line(image,ini,fin,cv::Scalar(0,250,0),3);
+                }
         }
 
         //Order points before fitting
@@ -150,21 +190,21 @@ std_msgs::Float32MultiArray lane_extractor::extract_left_lane_hough(cv::Mat &ima
                 puntos.push_back(temp);
         }
         //fitline
-        cv::Vec4f lineR;
+        cv::Vec4f lineL;
         if(puntos.size()>0)
         {
-                cv::fitLine(puntos,lineR, CV_DIST_WELSCH, 0, 0.01,0.01);
-                //lineR[2]+=roi_corner.x; lineR[3]+=roi_corner.y;
-                cv::Point2f ini(lineR[2],lineR[3]);
+                cv::fitLine(puntos,lineL, CV_DIST_WELSCH, 0, 0.01,0.01);
+                lineL[2]+=roi_corner.x; lineL[3]+=roi_corner.y;
+                cv::Point2f ini(lineL[2],lineL[3]);
                 //ini=ini+roi_corner;
-                cv::Point2f dir(lineR[0],lineR[1]);
+                cv::Point2f dir(lineL[0],lineL[1]);
                 cv::Point2f fin(ini+100*dir);
-                cv::line(image,ini,fin, cv::Scalar(255,0,0),5);
+                cv::line(image,ini,fin, cv::Scalar(230,0,0),5);
                 msg_direction.data.clear();
 
-                float A=1/lineR[0];
-                float B=-1/lineR[1];
-                float C=-lineR[2]/lineR[0]+lineR[3]/lineR[1];
+                float A=1/lineL[0];
+                float B=-1/lineL[1];
+                float C=-lineL[2]/lineL[0]+lineL[3]/lineL[1];
                 msg_direction.data.push_back(A);
                 msg_direction.data.push_back(B);
                 msg_direction.data.push_back(C);

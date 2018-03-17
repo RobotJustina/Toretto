@@ -32,29 +32,23 @@ void Callback_laser(const sensor_msgs::LaserScan::ConstPtr& msg)
 
         if(laser_ranges[0] < 10)
                 obs_1=laser_ranges[0];
-        else
-                obs_1=10;
         if(laser_ranges[1] < 10)
                 obs_2=laser_ranges[1];
-        else
-                obs_2=10;
         if(laser_ranges[359] < 10)
                 obs_3=laser_ranges[359];
-        else
-                obs_3=10;
 
-        if(laser_ranges[358] < 10)
-                obs_4=laser_ranges[358];
-        else
-                obs_4=10;
-        if(laser_ranges[2] < 10)
-                obs_5=laser_ranges[2];
-        else
-                obs_5=10;
-        if(laser_ranges[357] < 10)
-                obs_6=laser_ranges[357];
-        else
-                obs_6=10;
+        // if(laser_ranges[358] < 10)
+        //         obs_4=laser_ranges[358];
+        // // else
+        // //         obs_4=10;
+        // if(laser_ranges[2] < 10)
+        //         obs_5=laser_ranges[2];
+        // // else
+        // //         obs_5=10;
+        // if(laser_ranges[357] < 10)
+        //         obs_6=laser_ranges[357];
+        // // else
+        //         obs_6=10;
 
 
         if(laser_ranges[268] < 10)
@@ -102,18 +96,21 @@ int main(int argc, char** argv)
         ros::Publisher speeds_pub = n.advertise<std_msgs::Int16>("/object_detection/speed", 1);
         ros::Publisher objectL_pub = n.advertise<std_msgs::Float32>("/object_detection/left", 1);
         ros::Publisher objectR_pub = n.advertise<std_msgs::Float32>("/object_detection/right", 1);
+        ros::Publisher objectF_pub = n.advertise<std_msgs::Float32>("/object_detection/front",1);
 
+        std_msgs::Float32 obsF;
 
         while (ros::ok())
         {
                 ros::Rate loop_rate(10);
                 obs=(obs_1+obs_2+obs_3)/3;
+                obsF.data=obs;
                 obsL.data=(obsL_0+obsL_1+obsL_2)/3;
                 obsR.data=(obsR_0+obsR_1+obsR_2)/3;
 
                 cout << "obsR: " << obsR.data << "\n";
                 cout << "obsL: " << obsL.data << "\n";
-                cout << "obs: " << obs << "\n";
+                cout << "obsF: " << obs << "\n";
 
                 ros::spinOnce();
 
@@ -143,6 +140,9 @@ int main(int argc, char** argv)
                         objectL_pub.publish(obsL);
                 }
 
+                if (obsF.data <1) {
+                    objectF_pub.publish(obsF);
+                }
                 loop_rate.sleep();
         }
 }

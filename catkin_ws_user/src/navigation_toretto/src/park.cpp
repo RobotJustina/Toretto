@@ -10,8 +10,8 @@
 #include "std_msgs/Float32MultiArray.h"
 #include "nav_msgs/Path.h"
 
-#define Kp 50.0/100.0
-#define Ka 3.0
+
+#define MAX_DIST_TO_OBJ 0.45
 
 #define PI 3.14159265
 #define E 2.7182818284590
@@ -24,10 +24,13 @@ std_msgs::Int16 msg_speed;
 std_msgs::Int16 speed_obj;
 
 int16_t steering_call=90;
+//TODO use local variables.
+bool object=false,objectR=false,objectL=false,objectF=false; //object detected
+float l_obj=0, r_obj=0, f_obj=0;
 
-bool object=false,objectR=false,objectL=false; //object detected
-float l_obj=0, r_obj=0;
 
+float Kp_nav =50.0/100.0;
+float Ka_nav =3.0;
 void callback_right_line(const std_msgs::Float32MultiArray::ConstPtr& msg)
 {
         //From MARCOSOFT
@@ -39,7 +42,7 @@ void callback_right_line(const std_msgs::Float32MultiArray::ConstPtr& msg)
         //La imagen homografeada es de 640x700
         float angle_error = atan(B/A);
         float dist_error = (fabs(A*160 + B*120 +C)/sqrt(A*A + B*B) - 90);
-        steering_call = (int16_t)(100 + Kp*dist_error + Ka * angle_error * 10);
+        steering_call = (int16_t)(100 + Kp_nav*dist_error + Ka_nav * angle_error * 10);
         std::cout << "Found line: " << A << "\t" << B << "\t" << C << std::endl;
         std::cout << "Angle error= " << angle_error << std::endl;
 }
@@ -56,9 +59,8 @@ void Callback_object(const std_msgs::Int16::ConstPtr& msg)
 
 void Callback_objectR(const std_msgs::Float32::ConstPtr& msg)
 {
-
-
-        if(msg->data < 0.40) {
+        if((msg->data < 0.40) && (msg->data >0.01)) //while node starts a few messages will be received with data=0 must ignore
+        {
                 objectR=true;
         }
         else{
@@ -85,6 +87,22 @@ void Callback_objectL(const std_msgs::Float32::ConstPtr& msg)
 }
 
 
+void Callback_objectF(const std_msgs::Float32::ConstPtr& msg)
+{
+        //cout << "object left true" << "\n";
+
+        if(msg->data < 0.25) {
+                objectF=true;
+        }
+        else{
+                objectF=false;
+        }
+        f_obj = msg->data;
+        //cout << "object left "<<l_obj << "\n";
+}
+
+
+
 
 int main(int argc, char** argv)
 {
@@ -99,10 +117,12 @@ int main(int argc, char** argv)
         ros::Publisher steering_pub = n.advertise<std_msgs::Int16>("/manual_control/steering", 1);
         ros::Publisher light_fr_pub = n.advertise<std_msgs::String>("/manual_control/lights", 1);
 
-        ros::Subscriber object_subscriber = n.subscribe("/object_detection/speed", 1, Callback_object);
+        //ros::Subscriber object_subscriber = n.subscribe("/object_detection/speed", 1, Callback_object);
+        ros::Subscriber objectF_subscriber = n.subscribe("/object_detection/front", 1, Callback_objectF);
         ros::Subscriber objectL_subscriber = n.subscribe("/object_detection/left", 1, Callback_objectL);
         ros::Subscriber objectR_subscriber = n.subscribe("/object_detection/right", 1, Callback_objectR);
 
+        float kp_park;
         float vu_r,vu_l, vu_m;
         int max_steer_left, max_steer_right, mid_steer_right;
         n.param<float>("vu_r",vu_r,2.35);
@@ -111,11 +131,15 @@ int main(int argc, char** argv)
         n.param<int>("max_steer_left",max_steer_left,10);
         n.param<int>("max_steer_right",max_steer_right,170);
         n.param<int>("mid_steer_right",mid_steer_right,130);
+        n.param<float>("kp_park",kp_park,2.0);
+        n.param<float>("Kp_nav",Kp_nav,50.0/100.0);
+        n.param<float>("Ka_nav",Ka_nav,3.0);
         while (ros::ok())
         {
                 ros::Rate loop_rate(10);
                 float vu=0;
                 float time_s=0, t_100=3.4;
+
                 switch (state) {
 
                 case 0:
@@ -145,7 +169,7 @@ int main(int argc, char** argv)
                         msg_steering.data= steering_call;
                         steering_pub.publish(msg_steering);
 
-                          if (!objectR)
+                        if (!objectR)
                         {
                                 state=3;
                         }
@@ -234,8 +258,28 @@ int main(int argc, char** argv)
                         state = 7;
                         break;
 
-
                 case 7:
+                        printf("[State: %d] Inside park space \n", state);
+                        printf("Adjusting\n" );
+                        //Ctrl
+
+                        if(f_obj<=MAX_DIST_TO_OBJ)
+                        {
+                                msg_speed.data=0;
+                                speeds_pub.publish(msg_speed);
+                                state=8;
+                        }
+                        else
+                        {
+                                msg_speed.data=-100;
+                                speeds_pub.publish(msg_speed);
+                        }
+
+                        msg_steering.data=kp_park*(r_obj-0.13)+90; //90 deg offset
+                        steering_pub.publish(msg_steering);
+
+                        break;
+                case 8:
                         printf("[State: %d] End park \n", state);
                         msg_speed.data=0;
                         speeds_pub.publish(msg_speed);
@@ -246,6 +290,8 @@ int main(int argc, char** argv)
                         cout << "Error undefined state"<< "\n";
                         msg_speed.data=0;
                         speeds_pub.publish(msg_speed);
+                        msg_steering.data=90;
+                        steering_pub.publish(msg_steering);
                         break;
                 }
 
