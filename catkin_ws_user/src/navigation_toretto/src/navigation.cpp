@@ -188,7 +188,7 @@ int main(int argc, char** argv)
                         time_s=time_s*vu*1000000;
                         cout << "Time evasion 1: "<< time_s << "\n";
                         usleep(time_s);
-                        msg_speed.data=0;
+                        msg_speed.data=-100;
                         speeds_pub.publish(msg_speed);
                         sleep(1);
                         state=3;
@@ -207,7 +207,7 @@ int main(int argc, char** argv)
                         time_s=time_s*vu*1000000;
                         cout << "Time evasion 2: "<< time_s << "\n";
                         usleep(time_s);
-                        msg_speed.data=0;
+
                         speeds_pub.publish(msg_speed);
                         sleep(1);
                         state=4;
@@ -239,7 +239,7 @@ int main(int argc, char** argv)
                         cout << "Time evasion 1: "<< time_s << "\n";
                         ros::spinOnce();
                         usleep(time_s);
-                        msg_speed.data=0;
+                        msg_speed.data=-100;
                         speeds_pub.publish(msg_speed);
                         sleep(1);
                         state=7;
@@ -262,7 +262,7 @@ int main(int argc, char** argv)
                         time_s=time_s*vu*1000000;
 
                         usleep(time_s);
-                        msg_speed.data=0;
+                        msg_speed.data=-100;
                         speeds_pub.publish(msg_speed);
                         sleep(1);
                         state=8;
