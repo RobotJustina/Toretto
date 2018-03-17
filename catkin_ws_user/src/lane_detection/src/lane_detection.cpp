@@ -55,7 +55,7 @@ std_msgs::Float32MultiArray lane_extractor::extract_right_lane_hough(cv::Mat &im
 
         std::vector<cv::Vec4i> lines;
         cv::HoughLinesP(border, lines,1,CV_PI/180, hough_thr, minLen, gapLen);
-        std::cout<<"Number of lines: "<< lines.size()<<std::endl;
+        std::cout<<"Number of lines Right: "<< lines.size()<<std::endl;
         for (int i=0; i<lines.size(); i++)
         {
 
@@ -64,7 +64,7 @@ std_msgs::Float32MultiArray lane_extractor::extract_right_lane_hough(cv::Mat &im
                 //cv::line(image,ini+roi_corner,fin+roi_corner,cv::Scalar(0,250,0),3);
                 float angle=atan2(fin.y-ini.y,fin.x-ini.x);
                 //cv::line(image,ini+roi_corner,fin+roi_corner,cv::Scalar(0,250,0),3);
-                if ((angle<30*DEG2RAD) || (angle>150*DEG2RAD))
+                if ((angle<20*DEG2RAD) || (angle>160*DEG2RAD))
                 {
                         lines.erase(lines.begin()+i);
 
@@ -157,7 +157,7 @@ std_msgs::Float32MultiArray lane_extractor::extract_left_lane_hough(cv::Mat &ima
 
         std::vector<cv::Vec4i> lines;
         cv::HoughLinesP(border, lines,1,CV_PI/180, hough_thr, minLen, gapLen);
-        std::cout<<"Number of lines: "<< lines.size()<<std::endl;
+        std::cout<<"Number of lines left: "<< lines.size()<<std::endl;
         for (int i=0; i<lines.size(); i++)
         {
 
@@ -165,7 +165,7 @@ std_msgs::Float32MultiArray lane_extractor::extract_left_lane_hough(cv::Mat &ima
                 cv::Point fin(lines[i][2],lines[i][3]);
                 float angle=atan2(fin.y-ini.y,fin.x-ini.x);
                 //cv::line(image,ini+roi_corner,fin+roi_corner,cv::Scalar(0,250,0),3);
-                if((angle<30*DEG2RAD) || (angle>150*DEG2RAD))
+                if((angle<20*DEG2RAD) || (angle>160*DEG2RAD))
                 {
                         lines.erase(lines.begin()+i);
 

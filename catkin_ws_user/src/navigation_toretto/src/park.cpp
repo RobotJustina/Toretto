@@ -11,7 +11,8 @@
 #include "nav_msgs/Path.h"
 
 
-#define MAX_DIST_TO_OBJ 0.45
+#define MAX_DIST_TO_OBJ 0.40
+#define MAX_DIST_TO_SIDEWALK 0.15
 
 #define PI 3.14159265
 #define E 2.7182818284590
@@ -275,7 +276,7 @@ int main(int argc, char** argv)
                                 speeds_pub.publish(msg_speed);
                         }
 
-                        msg_steering.data=kp_park*(r_obj-0.13)+90; //90 deg offset
+                        msg_steering.data=kp_park*(r_obj-MAX_DIST_TO_SIDEWALK)+90; //90 deg offset
                         steering_pub.publish(msg_steering);
 
                         break;

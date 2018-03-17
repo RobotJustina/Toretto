@@ -1,8 +1,20 @@
 <launch>
-  <param name="kp" value="0.1"/>
-  <param name="angle_ref" value="0.698132"/>
+  <param name="vu_r" value="2.45"/>
+  <param name="vu_l" value="2.0" />
+  <param name="vu_m" value="0.9"/>
+  <param name="max_steer_left" value="10" />
+  <param name="max_steer_right" value="170"/>
+  <param name="mid_steer_right" value="170"/>
+  <param name="kp_park" value="7.5"/>
 
-  <node pkg="navigation_toretto" type="navigation_toretto" name="navigation_toretto" output="screen">
+    <node pkg="laser_scan" type="laser_scan" name="laser_scan" output="log">
+        </node>
 
-   </node>
+    <!-- <node pkg="lane_detection" type="lane_hough_node" name="lane_hough_node" output="screen">
+      <remap from="image" to="/app/camera/rgb/image_raw"/> -->
+
+      <node pkg="navigation_toretto" type="navigation_toretto" name="navigation_toretto" output="screen">
+        </node>
+
+   
 </launch>
