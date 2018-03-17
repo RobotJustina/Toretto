@@ -83,11 +83,14 @@ int main(int argc, char** argv)
                         //ros::Time strt_time = ros::Time::now();
                         image_flag = false;
                         std_msgs::Float32MultiArray line_r,line_l;
-                        cv::Mat trans;
+                        cv::Mat trans,edges,viz;
                         cv::warpPerspective(resizeImage, trans, transfMatrix, transfSize, cv::INTER_LINEAR, cv::BORDER_REPLICATE, cv::Scalar(127, 127, 127) );
-                        line_r=extractor.extract_right_lane_hough(trans,true);
-                        line_l=extractor.extract_left_lane_hough(trans,true);
-                        sensor_msgs::ImagePtr msg=cv_bridge::CvImage(std_msgs::Header(),"bgr8",trans).toImageMsg();
+                        extractor.get_borders(trans,edges,true);
+                        cv:cvtColor(edges,viz,cv::COLOR_GRAY2BGR);
+                        line_r=extractor.extract_right_lane_hough(edges,viz);
+                        line_l=extractor.extract_left_lane_hough(edges,viz);
+                        cv::addWeighted(viz, 0.5, trans, 0.5, 0, viz);
+                        sensor_msgs::ImagePtr msg=cv_bridge::CvImage(std_msgs::Header(),"bgr8",viz).toImageMsg();
 
                         pub.publish(msg);
                         if(line_r.data.size()>0)

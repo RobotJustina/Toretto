@@ -20,8 +20,9 @@ int canny_thr_low, canny_thr_high;
 std_msgs::Float32MultiArray msg_direction;
 public:
 lane_extractor( int hough_thr,double minLen, double gapLen, int lowValThr,int highValThr, int canny_thr_low, int canny_thr_high);
-std_msgs::Float32MultiArray extract_right_lane_hough(cv::Mat &image,bool color);
-std_msgs::Float32MultiArray extract_left_lane_hough(cv::Mat &image,bool color);
+std_msgs::Float32MultiArray extract_right_lane_hough(cv::Mat &image,cv::Mat &viz);
+std_msgs::Float32MultiArray extract_left_lane_hough(cv::Mat &image,cv::Mat &viz);
+void get_borders(cv::Mat &image, cv::Mat &edges ,bool color);
 };
 
 
