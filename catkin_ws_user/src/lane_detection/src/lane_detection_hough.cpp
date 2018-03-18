@@ -73,7 +73,7 @@ int main(int argc, char** argv)
         fs["tSize"] >> transfSize;
         fs.release();
 
-        int i= 0;
+
         while (ros::ok()) {
                 if (image_flag)
                 {

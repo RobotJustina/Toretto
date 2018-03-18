@@ -18,23 +18,23 @@ lane_extractor::lane_extractor( int hough_thr,double minLen, double gapLen, int 
 
 void lane_extractor::get_borders(cv::Mat &image, cv::Mat &edges, bool color = false)
 {
-  cv::Mat gray_img,hsv;
-  cv::Mat binarized;
-  if (color)
-  {
-          cv::cvtColor(image, hsv, cv::COLOR_BGR2HSV);
-          cv::blur(hsv,hsv,cv::Size(7,7));
-          cv::Mat chan_hsv[3];
-          cv::split(hsv,chan_hsv);
-          cv::inRange(chan_hsv[1], lowValThr,highValThr, binarized);
-  }
-  else{
-          cv::cvtColor(image, gray_img, cv::COLOR_BGR2GRAY);
-          cv::blur(gray_img,gray_img,cv::Size(11,11));
-          cv::inRange(gray_img, lowValThr,highValThr, binarized);
-  }
+        cv::Mat gray_img,hsv;
+        cv::Mat binarized;
+        if (color)
+        {
+                cv::cvtColor(image, hsv, cv::COLOR_BGR2HSV);
+                cv::blur(hsv,hsv,cv::Size(7,7));
+                cv::Mat chan_hsv[3];
+                cv::split(hsv,chan_hsv);
+                cv::inRange(chan_hsv[1], lowValThr,highValThr, binarized);
+        }
+        else{
+                cv::cvtColor(image, gray_img, cv::COLOR_BGR2GRAY);
+                cv::blur(gray_img,gray_img,cv::Size(11,11));
+                cv::inRange(gray_img, lowValThr,highValThr, binarized);
+        }
 
-  cv::Canny( binarized, edges,canny_thr_low,canny_thr_high);
+        cv::Canny( binarized, edges,canny_thr_low,canny_thr_high);
 }
 
 std_msgs::Float32MultiArray lane_extractor::extract_right_lane_hough(cv::Mat &edges, cv::Mat &viz)
