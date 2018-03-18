@@ -20,13 +20,14 @@ void imageCallback(const sensor_msgs::ImageConstPtr& msg)
 
 int main(int argc, char** argv)
 {
-        ros::init(argc, argv, "cross_publisher");
+        ros::init(argc, argv, "cross_node");
+        ros::NodeHandle nh_priv("~");
         ros::NodeHandle nh;
         image_transport::ImageTransport its(nh);
-        image_transport::Subscriber sub = its.subscribe("app/camera/rgb/image_raw",1,imageCallback);
+        image_transport::Subscriber sub = its.subscribe("/app/camera/rgb/image_raw",1,imageCallback);
 
         image_transport::ImageTransport itp(nh);
-        image_transport::Publisher pub = itp.advertise("crossImg",1);
+        image_transport::Publisher pub = itp.advertise("crossImg",5);
         sensor_msgs::ImagePtr msg;
 
         ros::Publisher cross_pub= nh.advertise<std_msgs::Bool>("cross",1000);
@@ -38,15 +39,15 @@ int main(int argc, char** argv)
         int value_thr_low, value_thr_high;
         int canny_thr_low, canny_thr_high;
 
-        nh.param<int>("value_thr_low",value_thr_low,170);
-        nh.param<int>("value_thr_high",value_thr_high,190);
+        nh_priv.param<int>("value_thr_low",value_thr_low,170);
+        nh_priv.param<int>("value_thr_high",value_thr_high,190);
 
-        nh.param<int>("hough_thr",hough_thr,50);
-        nh.param<double>("min_lin_len",min_lin_len,30);
-        nh.param<double>("max_gap_len",max_gap_len,10);
+        nh_priv.param<int>("hough_thr",hough_thr,50);
+        nh_priv.param<double>("min_lin_len",min_lin_len,30);
+        nh_priv.param<double>("max_gap_len",max_gap_len,10);
 
-        nh.param<int>("canny_thr_low",canny_thr_low,50);
-        nh.param<int>("canny_thr_high",canny_thr_high,100);
+        nh_priv.param<int>("canny_thr_low",canny_thr_low,50);
+        nh_priv.param<int>("canny_thr_high",canny_thr_high,100);
 
         CrossDetector cross = CrossDetector(hough_thr,min_lin_len,max_gap_len,value_thr_low,
                                             value_thr_high,canny_thr_low,canny_thr_high);
@@ -75,7 +76,7 @@ int main(int argc, char** argv)
                 if (image)
                 {
                         bool crss= false;
-                        cv::Rect rect(0,240,640,240); //lower half of image
+                        cv::Rect rect(0,360,640,120); //lower 1/4 of image
                         cv::Mat resizeImage= Image(rect);
                         cv::Mat img_cross,edges;
                         cross.get_borders(resizeImage,edges, true);

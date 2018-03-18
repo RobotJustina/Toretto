@@ -72,7 +72,7 @@ void Callback_objectR(const std_msgs::Float32::ConstPtr& msg)
 
 void Callback_cross(const std_msgs::Bool::ConstPtr& msg)
 {
-        cout << "Cross" << "\n";
+        //cout << "Cross" << "\n";
 
         if(msg->data == true) {
                 cross=true;
@@ -102,7 +102,7 @@ void Callback_objectF(const std_msgs::Float32::ConstPtr& msg)
 {
         //cout << "object left true" << "\n";
 
-        if((msg->data < 0.60) && (msg->data >0.01)) {
+        if((msg->data < 0.75) && (msg->data >0.01)) {
                 objectF=true;
         }
         else{
@@ -117,10 +117,10 @@ int main(int argc, char** argv)
 {
         ros::init(argc, argv, "navigation");
         ros::NodeHandle n;
-        int state = 0;
-        int j=0;
+
 
         ros::Subscriber position_subscriber = n.subscribe("/rightLine", 1, callback_right_line);
+        ros::Subscriber cross_subscriber = n.subscribe("/cross", 1, Callback_cross);
 
         ros::Publisher speeds_pub = n.advertise<std_msgs::Int16>("/manual_control/speed", 1);
         ros::Publisher steering_pub = n.advertise<std_msgs::Int16>("/manual_control/steering", 1);
@@ -147,6 +147,9 @@ int main(int argc, char** argv)
         n.param<float>("vu_r1",vu_r1,2);
         n.param<float>("vu_r2",vu_r2,1.6);
         n.param<float>("vu_l2",vu_l2,0.7);
+
+        int state = 0;
+        int j=0;
         while (ros::ok())
         {
                 ros::Rate loop_rate(10);
@@ -183,7 +186,34 @@ int main(int argc, char** argv)
                                 }
 
                         }
-                        else{
+
+                        else if(cross)
+                        {
+                                printf("[State: %d] Found crosssing @ front, waiting\n", state);
+                                msg_speed.data=0;
+                                speeds_pub.publish(msg_speed);
+                                cout << "j: " << j << "\n";
+                                if(!objectF)
+                                {
+                                        j++;
+
+                                }
+                                else{
+                                        j=0;
+                                }
+
+                                if (j>=40)
+                                {
+
+                                        state=11;
+
+                                        j=0;
+                                        // std::cout << "Waited:  " <<j<< '\n';
+                                        // std::cout << j << '\n';
+                                }
+
+                        }
+                        else {
                                 msg_speed.data=cruise_speed;
                                 speeds_pub.publish(msg_speed);
                                 cout << "Speed: " << msg_speed.data <<"\n";
@@ -191,12 +221,8 @@ int main(int argc, char** argv)
                                 msg_steering.data= steering_call;
                                 steering_pub.publish(msg_steering);
 
-                                if(cross)
-                                {
-                                        //HEre goes code to handle intersection
-                                }
-
                         }
+
                         break;
 
                 case 2: //turn left to overtake obstacle
@@ -308,6 +334,38 @@ int main(int argc, char** argv)
                         msg_steering.data= steering_call;
                         steering_pub.publish(msg_steering);
                         state=0;
+                        break;
+
+                case 11:
+                        printf("[State: %d] Crossing follow line again\n", state);
+                        msg_steering.data= steering_call;
+                        steering_pub.publish(msg_steering);
+                        msg_speed.data=cruise_speed;
+                        speeds_pub.publish(msg_speed);
+                        if(!cross) {
+                                state=12; //crossing crossed return to cruising
+                        }
+                        break;
+                case 12:
+                        printf("[State: %d] Inside crossing\n", state);
+                        msg_steering.data= steering_call;
+                        steering_pub.publish(msg_steering);
+                        msg_speed.data=cruise_speed;
+                        speeds_pub.publish(msg_speed);
+
+                        if(cross) {
+                                state=13;                 //crossing crossed return to cruising
+                        }
+                        break;
+                case 13:
+                        printf("[State: %d] Exiting crossing\n", state);
+                        msg_steering.data= steering_call;
+                        steering_pub.publish(msg_steering);
+                        msg_speed.data=cruise_speed;
+                        speeds_pub.publish(msg_speed);
+                        if(!cross) {
+                                state=1;         //crossing crossed return to cruising
+                        }
                         break;
                 default:
 

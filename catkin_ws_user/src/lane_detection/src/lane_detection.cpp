@@ -70,7 +70,7 @@ std_msgs::Float32MultiArray lane_extractor::extract_right_lane_hough(cv::Mat &ed
                 cv::Point fin(lines[i][2],lines[i][3]);
                 //cv::line(image,ini+roi_corner,fin+roi_corner,cv::Scalar(0,250,0),3);
                 float m=atan2(fin.y-ini.y,fin.x-ini.x);
-                std::cout<<m*RAD2DEG<<std::endl;
+              //  std::cout<<m*RAD2DEG<<std::endl;
 
                 m=fabs(m);
                 //cv::line(image,ini+roi_corner,fin+roi_corner,cv::Scalar(0,250,0),3);
@@ -159,7 +159,7 @@ std_msgs::Float32MultiArray lane_extractor::extract_left_lane_hough(cv::Mat &edg
                 cv::Point ini(lines[i][0],lines[i][1]);
                 cv::Point fin(lines[i][2],lines[i][3]);
                 float m=atan2(fin.y-ini.y,fin.x-ini.x);
-                std::cout<<m*RAD2DEG<<std::endl;
+                //std::cout<<m*RAD2DEG<<std::endl;
 
                 m=fabs(m);
                 //cv::line(image,ini+roi_corner,fin+roi_corner,cv::Scalar(0,250,0),3);
