@@ -30,7 +30,7 @@ int main(int argc, char** argv)
         image_transport::Publisher pub = itp.advertise("lines",5);
 
         ros::Publisher angle_pub_r = nh.advertise<std_msgs::Float32MultiArray>("/rightLine",100);
-        ros::Publisher angle_pub_l = nh.advertise<std_msgs::Float32MultiArray>("leftLine",100);
+        ros::Publisher angle_pub_l = nh.advertise<std_msgs::Float32MultiArray>("/leftLine",100);
 
         ros::Rate loop_rate(60);
 
@@ -51,8 +51,6 @@ int main(int argc, char** argv)
 
         lane_extractor extractor(hough_thr,min_lin_len,max_gap_len,value_thr_low,
                                  value_thr_high,canny_thr_low,canny_thr_high);
-        std::cout<<"Starting processing"<<std::endl;
-
         std::string filepath;
         nh.param<std::string>("calib_file",filepath,"Matrix2.yaml"); //Set file path_pub
 
@@ -72,6 +70,9 @@ int main(int argc, char** argv)
         cv::Size transfSize;
         fs["tSize"] >> transfSize;
         fs.release();
+
+        std::cout<<"Starting processing"<<std::endl;
+
 
 
         while (ros::ok()) {
@@ -99,7 +100,7 @@ int main(int argc, char** argv)
                         }
                         if(line_l.data.size()>0)
                         {
-                                angle_pub_r.publish(line_l);
+                                angle_pub_l.publish(line_l);
                         }
 
                         // ros::Duration timing=ros::Time::now()-strt_time;

@@ -1,4 +1,6 @@
 #include "CrossDetector.h"
+#define DEG2RAD M_PI/180
+#define RAD2DEG 180/M_PI
 
 CrossDetector::CrossDetector( int hough_thr,double minLen, double gapLen, int lowValThr,int highValThr, int canny_thr_low, int canny_thr_high)
 {
@@ -53,16 +55,21 @@ void CrossDetector::segmentationCross(cv::Mat edges, cv::Mat &imageCross,  bool 
 								std::vector< cv::Vec4i > linePoints;
 								cv::HoughLinesP( edges, linePoints, 1, CV_PI/180, hough_thr, minLen, gapLen);
 
-								for (int i = 0; i <linePoints.size(); ++i)
+								cross=false;
+								int hor_cnt=0;
+								for (int i = 0; i <linePoints.size(); i++)
 								{
 
 																cv::Vec4i l= linePoints[i];
-																double m = (double)(l[1]-l[3])/(double)(l[0]-l[2]);
+																float m = atan2(l[1]-l[3],l[0]-l[2]);
 
-																if (m < 0.09 && m > -0.09 )
+																//std::cout<<m*RAD2DEG<<std::endl;
+																m=fabs(m);
+																if ((m < 5.14*DEG2RAD) || (m> 170 *DEG2RAD))
 																{
 																								cv::line(imageCross, cv::Point(l[0], l[1]),cv::Point(l[2], l[3]), cv::Scalar(0,51,255),3);
 																								cross=true;
+																								hor_cnt++;
 																}
 																else
 																{
@@ -71,7 +78,9 @@ void CrossDetector::segmentationCross(cv::Mat edges, cv::Mat &imageCross,  bool 
 
 
 								}
-								std::cout<<"Found "<< linePoints.size()<<" horizontal lines"<<std::endl;
+
+
+								std::cout<<"Found "<< hor_cnt<<" horizontal lines"<<std::endl;
 								//cv::imshow("img",imageCross);
 								//cv::imshow("img2",imageGray);
 								//cv::imshow("img3",imageThreshold);

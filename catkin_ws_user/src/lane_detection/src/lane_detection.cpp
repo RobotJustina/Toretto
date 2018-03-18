@@ -1,7 +1,7 @@
 #define BOXES 12
 #define MAX_VAL_IN_PIXEL 255
 #include "lane_detection.h"
-
+#define RAD2DEG 180/M_PI
 #define DEG2RAD M_PI/180
 
 lane_extractor::lane_extractor( int hough_thr,double minLen, double gapLen, int lowValThr,int highValThr, int canny_thr_low, int canny_thr_high)
@@ -58,44 +58,50 @@ std_msgs::Float32MultiArray lane_extractor::extract_right_lane_hough(cv::Mat &ed
         //cv::blur(gray_img,gray_img,cv::Size(11,11));
 
         std::vector<cv::Vec4i> lines;
+        std::vector<cv::Point> puntos;
         cv::HoughLinesP(cropped_img, lines,1,CV_PI/180, hough_thr, minLen, gapLen);
 
         std::cout<<"Number of lines Right: "<< lines.size()<<std::endl;
+        int ver_cnt=0;
         for (int i=0; i<lines.size(); i++)
         {
 
                 cv::Point ini(lines[i][0],lines[i][1]);
                 cv::Point fin(lines[i][2],lines[i][3]);
                 //cv::line(image,ini+roi_corner,fin+roi_corner,cv::Scalar(0,250,0),3);
-                float angle=atan2(fin.y-ini.y,fin.x-ini.x);
+                float m=atan2(fin.y-ini.y,fin.x-ini.x);
+                std::cout<<m*RAD2DEG<<std::endl;
+
+                m=fabs(m);
                 //cv::line(image,ini+roi_corner,fin+roi_corner,cv::Scalar(0,250,0),3);
-                if ((angle<20*DEG2RAD) || (angle>160*DEG2RAD))
+                if ((m > 20*DEG2RAD) && (m< 160 *DEG2RAD))
                 {
-                        lines.erase(lines.begin()+i);
+                        //lines.erase(lines.begin()+i); does not work no idea why, vector is unchanged
+                        cv::line(viz,ini+roi_corner,fin+roi_corner,cv::Scalar(0,0,250),3);
+                        puntos.push_back(ini);
+                        puntos.push_back(fin);
 
                 }
                 else
                 {
-                        cv::line(viz,ini+roi_corner,fin+roi_corner,cv::Scalar(0,0,250),3);
+                        continue;
                 }
 
         }
 
         //Order points before fitting
-        std::vector<cv::Point> puntos;
-
-        for(int i =0; i<lines.size(); i++)
-        {
-                cv::Point temp;
-                temp.x=lines[i][0];
-                temp.y=lines[i][1];
-                puntos.push_back(temp);
-
-                temp.x=lines[i][2];
-                temp.y=lines[i][3];
-                puntos.push_back(temp);
-        }
-        //fitline
+        // for(int i =0; i<lines.size(); i++)
+        // {
+        //         cv::Point temp;
+        //         temp.x=lines[i][0];
+        //         temp.y=lines[i][1];
+        //         puntos.push_back(temp);
+        //
+        //         temp.x=lines[i][2];
+        //         temp.y=lines[i][3];
+        //         puntos.push_back(temp);
+        // }
+        // //fitline
         cv::Vec4f lineR;
         if(puntos.size()>0)
         {
@@ -144,6 +150,7 @@ std_msgs::Float32MultiArray lane_extractor::extract_left_lane_hough(cv::Mat &edg
         //cv::blur(gray_img,gray_img,cv::Size(11,11));
 
         std::vector<cv::Vec4i> lines;
+        std::vector<cv::Point> puntos;
         cv::HoughLinesP(cropped_img, lines,1,CV_PI/180, hough_thr, minLen, gapLen);
         std::cout<<"Number of lines left: "<< lines.size()<<std::endl;
         for (int i=0; i<lines.size(); i++)
@@ -151,33 +158,36 @@ std_msgs::Float32MultiArray lane_extractor::extract_left_lane_hough(cv::Mat &edg
 
                 cv::Point ini(lines[i][0],lines[i][1]);
                 cv::Point fin(lines[i][2],lines[i][3]);
-                float angle=atan2(fin.y-ini.y,fin.x-ini.x);
-                //cv::line(image,ini+roi_corner,fin+roi_corner,cv::Scalar(0,250,0),3);
-                if((angle<20*DEG2RAD) || (angle>160*DEG2RAD))
-                {
-                        lines.erase(lines.begin()+i);
+                float m=atan2(fin.y-ini.y,fin.x-ini.x);
+                std::cout<<m*RAD2DEG<<std::endl;
 
+                m=fabs(m);
+                //cv::line(image,ini+roi_corner,fin+roi_corner,cv::Scalar(0,250,0),3);
+                if ((m > 20*DEG2RAD)  && (m< 160 *DEG2RAD))
+                {
+                        //lines.erase(lines.begin()+i); does not work either
+                        cv::line(viz,ini,fin,cv::Scalar(0,250,0),3);
+                        puntos.push_back(ini);
+                        puntos.push_back(fin);
                 }
                 else{
-                        cv::line(viz,ini,fin,cv::Scalar(0,250,0),3);
+                      continue;
                 }
         }
 
         //Order points before fitting
-        std::vector<cv::Point> puntos;
-
-        for(int i =0; i<lines.size(); i++)
-        {
-                cv::Point temp;
-                temp.x=lines[i][0];
-                temp.y=lines[i][1];
-                puntos.push_back(temp);
-
-                temp.x=lines[i][2];
-                temp.y=lines[i][3];
-                puntos.push_back(temp);
-        }
-        //fitline
+        // for(int i =0; i<lines.size(); i++)
+        // {
+        //         cv::Point temp;
+        //         temp.x=lines[i][0];
+        //         temp.y=lines[i][1];
+        //         puntos.push_back(temp);
+        //
+        //         temp.x=lines[i][2];
+        //         temp.y=lines[i][3];
+        //         puntos.push_back(temp);
+        // }
+        // //fitline
         cv::Vec4f lineL;
         if(puntos.size()>0)
         {
