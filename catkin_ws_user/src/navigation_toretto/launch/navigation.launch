@@ -1,6 +1,6 @@
 <launch>
   <param name="vu_l1" value="1.9"/>
-  <param name="vu_r1" value="1.8" />
+  <param name="vu_r1" value="1.95" />
   <param name="vu_r2" value="2.2"/>
   <param name="vu_l2" value="0.7"/>
 
