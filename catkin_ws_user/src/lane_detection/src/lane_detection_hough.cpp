@@ -74,6 +74,22 @@ int main(int argc, char** argv)
         std::cout<<"Starting processing"<<std::endl;
 
 
+        bool color=false;
+        if (argc>1)
+        {
+                if(std::string(argv[1])=="color")
+                {
+                        color=true;
+                }
+                std::cout << "Processing: " << argv[1]<< " "<< color <<'\n';
+
+        }
+        else
+        {
+                std::cout << "Usage lane_hough_node color||bw" << '\n';
+        }
+
+
 
         while (ros::ok()) {
                 if (image_flag)
@@ -86,8 +102,8 @@ int main(int argc, char** argv)
                         std_msgs::Float32MultiArray line_r,line_l;
                         cv::Mat trans,edges,viz;
                         cv::warpPerspective(resizeImage, trans, transfMatrix, transfSize, cv::INTER_LINEAR, cv::BORDER_REPLICATE, cv::Scalar(127, 127, 127) );
-                        extractor.get_borders(trans,edges,true);
-                        cv:cvtColor(edges,viz,cv::COLOR_GRAY2BGR);
+                        extractor.get_borders(trans,edges,color);
+                        cv::cvtColor(edges,viz,cv::COLOR_GRAY2BGR);
                         line_r=extractor.extract_right_lane_hough(edges,viz);
                         line_l=extractor.extract_left_lane_hough(edges,viz);
                         cv::addWeighted(viz, 0.5, trans, 0.5, 0, viz);
