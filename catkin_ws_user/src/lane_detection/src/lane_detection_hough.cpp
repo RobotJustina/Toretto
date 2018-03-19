@@ -39,6 +39,7 @@ int main(int argc, char** argv)
         int value_thr_low, value_thr_high;
         int canny_thr_low, canny_thr_high;
 
+        bool color; //select between hav for color segmentation and bw intensity segmentation
         nh.param<int>("value_thr_low",value_thr_low,170);
         nh.param<int>("value_thr_high",value_thr_high,190);
 
@@ -48,6 +49,8 @@ int main(int argc, char** argv)
 
         nh.param<int>("canny_thr_low",canny_thr_low,50);
         nh.param<int>("canny_thr_high",canny_thr_high,100);
+
+        nh.param<bool>("color_detection",color,false);
 
         lane_extractor extractor(hough_thr,min_lin_len,max_gap_len,value_thr_low,
                                  value_thr_high,canny_thr_low,canny_thr_high);
@@ -72,23 +75,7 @@ int main(int argc, char** argv)
         fs.release();
 
         std::cout<<"Starting processing"<<std::endl;
-
-
-        bool color=false;
-        if (argc>1)
-        {
-                if(std::string(argv[1])=="color")
-                {
-                        color=true;
-                }
-                std::cout << "Processing: " << argv[1]<< " "<< color <<'\n';
-
-        }
-        else
-        {
-                std::cout << "Usage lane_hough_node color||bw" << '\n';
-        }
-
+        std::cout << "Processing color: " << color <<'\n';
 
 
         while (ros::ok()) {
