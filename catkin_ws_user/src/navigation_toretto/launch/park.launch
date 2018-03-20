@@ -6,14 +6,18 @@
   <param name="max_steer_right" value="170"/>
   <param name="mid_steer_right" value="160"/>
   <param name="kp_park" value="7.5"/>
-  <!-- <param name="hough_thr" value="30  "/>
-  <param name="min_lin_len" value="20" />
-  <param name="max_gap_len" value="20" />
-  <param name="value_thr_low" value="0"/>
-  <param name="value_thr_high" value="100" />
-  <param name="canny_thr_low" value="50" />
-  <param name="canny_thr_high" value="100" />
-  <param name="calib_file" value="/root/catkin_ws_user/Matrix.yaml" /> -->
+  <arg name="K_dist"       default="0.5"/>
+  <arg name="K_angle"      default="30.0"/>
+  <arg name="K_brake"      default="1.0"/>
+  <arg name="max_speed"    default="500"/>
+  <arg name="turn_speed"   default="200"/>
+  <arg name="dist_to_lane" default="90"/>
+  <param name="K_dist" value="$(arg K_dist)"/>
+  <param name="K_angle" value="$(arg K_angle)"/>
+  <param name="K_brake" value="$(arg K_brake)"/>
+  <param name="max_speed" value="$(arg max_speed)"/>
+  <param name="turn_speed" value="$(arg turn_speed)"/>
+  <param name="dist_to_lane" value="$(arg dist_to_lane)"/>
 
  <node pkg="laser_scan" type="laser_scan" name="laser_scan" output="log">
      </node>

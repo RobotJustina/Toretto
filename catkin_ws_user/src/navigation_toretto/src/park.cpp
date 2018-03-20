@@ -24,8 +24,6 @@ std_msgs::Int16 msg_steering;
 std_msgs::Int16 msg_speed;
 std_msgs::Int16 speed_obj;
 
-int16_t steering_call=90;
-
 bool object=false,objectR=false,objectL=false,objectF=false; //object detected
 bool shutdown=false;
 float l_obj=0, r_obj=0, f_obj=0;
@@ -38,7 +36,7 @@ int max_speed  = 800;
 int turn_speed = 400;
 int dist_to_lane = 90;
 
-int16_t steering = 100;;
+int16_t steering = 90;;
 int16_t speed = 0;
 
 void callback_right_line(const std_msgs::Float32MultiArray::ConstPtr& msg)
@@ -191,7 +189,7 @@ int main(int argc, char** argv)
 
                         // msg_steering.data = 90;
                         // steering_pub.publish(msg_steering);
-                        msg_steering.data= steering_call;
+                        msg_steering.data= steering;
                         steering_pub.publish(msg_steering);
 
                         if (objectR)
@@ -204,7 +202,7 @@ int main(int argc, char** argv)
                         break;
                 case 2:
                         printf("[State: %d] Object @ right\n", state);
-                        msg_steering.data= steering_call;
+                        msg_steering.data= steering;
                         steering_pub.publish(msg_steering);
 
                         if (!objectR)
@@ -215,7 +213,7 @@ int main(int argc, char** argv)
                         break;
                 case 3:
                         printf("[State: %d] Space detected right\n", state);
-                        msg_steering.data= steering_call;
+                        msg_steering.data= steering;
                         steering_pub.publish(msg_steering);
 
                         if (objectR)
@@ -336,7 +334,6 @@ int main(int argc, char** argv)
                 ros::spinOnce();
                 loop_rate.sleep();
         }
-        // msg_speed.data=00;
-        // speeds_pub.publish(msg_speed);
+        return 0;
 
 }

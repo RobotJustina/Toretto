@@ -24,7 +24,6 @@ std_msgs::Int16 msg_steering;
 std_msgs::Int16 msg_speed;
 std_msgs::Int16 speed_obj;
 
-int16_t steering_call=90;
 
 bool objectF=false,objectR=false,objectL=false; //object detected
 bool cross=false;
@@ -38,7 +37,7 @@ int max_speed  = 800;
 int turn_speed = 400;
 int dist_to_lane = 90;
 
-int16_t steering = 100;;
+int16_t steering = 90;;
 int16_t speed = 0;
 
 void callback_right_line(const std_msgs::Float32MultiArray::ConstPtr& msg)
@@ -250,8 +249,7 @@ int main(int argc, char** argv)
                                 speeds_pub.publish(msg_speed);
                                 cout << "Speed: " << msg_speed.data <<"\n";
                                 //Use line tracking to steer
-                                msg_steering.data= steering_call;
-                                steering_pub.publish(msg_steering);
+                                                                steering_pub.publish(msg_steering);
 
                         }
 
@@ -298,8 +296,7 @@ int main(int argc, char** argv)
                         break;
                 case 4: //we are now in the left lane
                         printf("[State: %d] On left lane, following line, looking for obstacle\n", state);
-                        msg_steering.data= steering_call;
-                        steering_pub.publish(msg_steering);
+                                                steering_pub.publish(msg_steering);
                         msg_speed.data=speed;
                         speeds_pub.publish(msg_speed);
 
@@ -310,8 +307,7 @@ int main(int argc, char** argv)
                         break;
                 case 5:         //we are now in the left lane
                         printf("[State: %d] On left line, Found obstacle right\n", state);
-                        msg_steering.data= steering_call;
-                        steering_pub.publish(msg_steering);
+                                                steering_pub.publish(msg_steering);
                         msg_speed.data=speed;
                         speeds_pub.publish(msg_speed);
                         if (!objectR)
@@ -363,15 +359,13 @@ int main(int argc, char** argv)
                         break;
                 case 8:
                         printf("[State: %d] On right line, following line again\n", state);
-                        msg_steering.data= steering_call;
-                        steering_pub.publish(msg_steering);
+                                                steering_pub.publish(msg_steering);
                         state=0;
                         break;
 
                 case 11:
                         printf("[State: %d] Crossing follow line again\n", state);
-                        msg_steering.data= steering_call;
-                        steering_pub.publish(msg_steering);
+                                                steering_pub.publish(msg_steering);
                         msg_speed.data=speed;
                         speeds_pub.publish(msg_speed);
                         if(!cross) {
@@ -380,8 +374,7 @@ int main(int argc, char** argv)
                         break;
                 case 12:
                         printf("[State: %d] Inside crossing\n", state);
-                        msg_steering.data= steering_call;
-                        steering_pub.publish(msg_steering);
+                                                steering_pub.publish(msg_steering);
                         msg_speed.data=speed;
                         speeds_pub.publish(msg_speed);
 
@@ -391,8 +384,7 @@ int main(int argc, char** argv)
                         break;
                 case 13:
                         printf("[State: %d] Exiting crossing\n", state);
-                        msg_steering.data= steering_call;
-                        steering_pub.publish(msg_steering);
+                                                steering_pub.publish(msg_steering);
                         msg_speed.data=cruise_speed;
                         speeds_pub.publish(msg_speed);
                         if(!cross) {
