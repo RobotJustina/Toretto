@@ -4,7 +4,7 @@
   <param name="vu_m" value="0.9"/>
   <param name="max_steer_left" value="10" />
   <param name="max_steer_right" value="170"/>
-  <param name="mid_steer_right" value="170"/>
+  <param name="mid_steer_right" value="160"/>
   <param name="kp_park" value="7.5"/>
   <!-- <param name="hough_thr" value="30  "/>
   <param name="min_lin_len" value="20" />

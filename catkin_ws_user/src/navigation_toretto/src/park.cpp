@@ -27,6 +27,7 @@ std_msgs::Int16 speed_obj;
 int16_t steering_call=90;
 //TODO use local variables.
 bool object=false,objectR=false,objectL=false,objectF=false; //object detected
+bool shutdown=false;
 float l_obj=0, r_obj=0, f_obj=0;
 
 
@@ -102,6 +103,16 @@ void Callback_objectF(const std_msgs::Float32::ConstPtr& msg)
         //cout << "object left "<<l_obj << "\n";
 }
 
+void Callback_stop(const std_msgs::Int16::ConstPtr& msg)
+{
+        if(msg->data==1)
+        {
+                printf("!!!!!!Requesting shutdown!!!!!\n");
+                shutdown=true;
+        }
+}
+
+
 
 
 
@@ -118,10 +129,12 @@ int main(int argc, char** argv)
         ros::Publisher steering_pub = n.advertise<std_msgs::Int16>("/manual_control/steering", 1);
         ros::Publisher light_fr_pub = n.advertise<std_msgs::String>("/manual_control/lights", 1);
 
-        //ros::Subscriber object_subscriber = n.subscribe("/object_detection/speed", 1, Callback_object);
+        ros::Subscriber stop_subscriber = n.subscribe("/manual_control/stop", 1, Callback_stop);
         ros::Subscriber objectF_subscriber = n.subscribe("/object_detection/front", 1, Callback_objectF);
         ros::Subscriber objectL_subscriber = n.subscribe("/object_detection/left", 1, Callback_objectL);
         ros::Subscriber objectR_subscriber = n.subscribe("/object_detection/right", 1, Callback_objectR);
+
+
 
         float kp_park;
         float vu_r,vu_l, vu_m;
@@ -140,6 +153,15 @@ int main(int argc, char** argv)
                 ros::Rate loop_rate(10);
                 float vu=0;
                 float time_s=0, t_100=3.4;
+
+                if (shutdown)
+                {
+                        printf("Shutdown\n" );
+                        msg_speed.data=0;
+                        speeds_pub.publish(msg_speed);
+                        break;
+                }
+
 
                 switch (state) {
 
