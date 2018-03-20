@@ -26,10 +26,12 @@ std_msgs::Int16 speed_obj;
 
 int16_t steering_call=90;
 
-bool object=false,objectR=false,objectL=false; //object detected
+bool objectF=false,objectR=false,objectL=false; //object detected
 bool cross=false;
-float l_obj=0, r_obj=0;
+float l_obj=0, r_obj=0, f_obj=0;
 
+float Kp_nav =50.0/100.0;
+float Ka_nav =3.0;
 void callback_right_line(const std_msgs::Float32MultiArray::ConstPtr& msg)
 {
         //From MARCOSOFT
@@ -41,15 +43,15 @@ void callback_right_line(const std_msgs::Float32MultiArray::ConstPtr& msg)
         //La imagen homografeada es de 640x700
         float angle_error = atan(B/A);
         float dist_error = (fabs(A*160 + B*120 +C)/sqrt(A*A + B*B) - 90);
-        steering_call = (int16_t)(100 + Kp*dist_error + Ka * angle_error * 10);
+        steering_call = (int16_t)(100 + Kp_nav*dist_error + Ka_nav * angle_error * 10);
         std::cout << "Found line: " << A << "\t" << B << "\t" << C << std::endl;
         std::cout << "Angle error= " << angle_error << std::endl;
 }
 
+
 void Callback_object(const std_msgs::Int16::ConstPtr& msg)
 {
-        cout << "object true" << "\n";
-        object=true;
+        //cout << "object true" << "\n";
         speed_obj.data = msg->data;
 
 }
@@ -57,22 +59,20 @@ void Callback_object(const std_msgs::Int16::ConstPtr& msg)
 
 void Callback_objectR(const std_msgs::Float32::ConstPtr& msg)
 {
-
-
-        if(msg->data < 0.40) {
+        if((msg->data < 0.40) && (msg->data >0.01)) {
                 objectR=true;
         }
         else{
                 objectR=false;
         }
         r_obj = msg->data;
-        //cout << "object right "<<r_obj << "\n";
+        cout << "object right "<<r_obj << "\n";
 
 }
 
 void Callback_cross(const std_msgs::Bool::ConstPtr& msg)
 {
-        cout << "Cross" << "\n";
+        //cout << "Cross" << "\n";
 
         if(msg->data == true) {
                 cross=true;
@@ -98,15 +98,29 @@ void Callback_objectL(const std_msgs::Float32::ConstPtr& msg)
         //cout << "object left "<<l_obj << "\n";
 }
 
+void Callback_objectF(const std_msgs::Float32::ConstPtr& msg)
+{
+        //cout << "object left true" << "\n";
+
+        if((msg->data < 0.75) && (msg->data >0.01)) {
+                objectF=true;
+        }
+        else{
+                objectF=false;
+        }
+        f_obj = msg->data;
+        //cout << "object left "<<l_obj << "\n";
+}
+
 
 int main(int argc, char** argv)
 {
         ros::init(argc, argv, "navigation");
         ros::NodeHandle n;
-        int state = 0;
-        int j=0;
+
 
         ros::Subscriber position_subscriber = n.subscribe("/rightLine", 1, callback_right_line);
+        ros::Subscriber cross_subscriber = n.subscribe("/cross", 1, Callback_cross);
 
         ros::Publisher speeds_pub = n.advertise<std_msgs::Int16>("/manual_control/speed", 1);
         ros::Publisher steering_pub = n.advertise<std_msgs::Int16>("/manual_control/steering", 1);
@@ -115,15 +129,27 @@ int main(int argc, char** argv)
         ros::Subscriber object_subscriber = n.subscribe("/object_detection/speed", 1, Callback_object);
         ros::Subscriber objectL_subscriber = n.subscribe("/object_detection/left", 1, Callback_objectL);
         ros::Subscriber objectR_subscriber = n.subscribe("/object_detection/right", 1, Callback_objectR);
+        ros::Subscriber objectF_subscriber = n.subscribe("/object_detection/front", 1, Callback_objectF);
 
-        float vu_r,vu_l, vu_m;
         int max_steer_left, max_steer_right, mid_steer_right;
-        n.param<float>("vu_r",vu_r,2.35);
-        n.param<float>("vu_l",vu_l,2.2);
-        n.param<float>("vu_m",vu_m,0.8);
+        int cruise_speed, turn_speed;
         n.param<int>("max_steer_left",max_steer_left,10);
         n.param<int>("max_steer_right",max_steer_right,170);
-        n.param<int>("mid_steer_right",mid_steer_right,130);
+        n.param<int>("max_steer_right",max_steer_right,170);
+        n.param<int>("cruise_speed",cruise_speed,-150);
+        n.param<int>("turn_speed",turn_speed,-100);
+        n.param<float>("Kp_nav",Kp_nav,50.0/100.0);
+        n.param<float>("Ka_nav",Ka_nav,3.0);
+
+        //vu means vuelta
+        float vu_l1,vu_r1,vu_r2, vu_l2;
+        n.param<float>("vu_l1",vu_l1,1.9);
+        n.param<float>("vu_r1",vu_r1,2);
+        n.param<float>("vu_r2",vu_r2,1.6);
+        n.param<float>("vu_l2",vu_l2,0.7);
+
+        int state = 0;
+        int j=0;
         while (ros::ok())
         {
                 ros::Rate loop_rate(10);
@@ -133,13 +159,13 @@ int main(int argc, char** argv)
                 switch (state) {
                 case 0:
                         std::cout << "[State: 0]  Config" << '\n';
-                        msg_speed.data=-350;
+                        msg_speed.data=cruise_speed;
                         speeds_pub.publish(msg_speed);
                         state=1;
                         break;
                 case 1:
                         std::cout << "[State: 1] Cruising" << '\n';
-                        if (object)
+                        if (objectF)
                         {
                                 printf("[State: %d] Object @ front\n", state);
                                 speeds_pub.publish(speed_obj);
@@ -160,20 +186,43 @@ int main(int argc, char** argv)
                                 }
 
                         }
-                        else{
-                                msg_speed.data=-350;
+
+                        else if(cross)
+                        {
+                                printf("[State: %d] Found crosssing @ front, waiting\n", state);
+                                msg_speed.data=0;
+                                speeds_pub.publish(msg_speed);
+                                cout << "j: " << j << "\n";
+                                if(!objectF)
+                                {
+                                        j++;
+
+                                }
+                                else{
+                                        j=0;
+                                }
+
+                                if (j>=40)
+                                {
+
+                                        state=11;
+
+                                        j=0;
+                                        // std::cout << "Waited:  " <<j<< '\n';
+                                        // std::cout << j << '\n';
+                                }
+
+                        }
+                        else {
+                                msg_speed.data=cruise_speed;
                                 speeds_pub.publish(msg_speed);
                                 cout << "Speed: " << msg_speed.data <<"\n";
                                 //Use line tracking to steer
                                 msg_steering.data= steering_call;
                                 steering_pub.publish(msg_steering);
 
-                                if(cross)
-                                {
-                                        //HEre goes code to handle intersection
-                                }
-
                         }
+
                         break;
 
                 case 2: //turn left to overtake obstacle
@@ -181,23 +230,24 @@ int main(int argc, char** argv)
                         msg_steering.data=max_steer_left;
                         steering_pub.publish(msg_steering);
                         msg_speed.data=-100;
-                        vu=1.9;
+                        vu=vu_l1;
                         time_s=(t_100*100/msg_speed.data);
                         if (time_s < 0) {
                                 time_s=-time_s;
                         }
+                        speeds_pub.publish(msg_speed);
                         time_s=time_s*vu*1000000;
                         cout << "Time evasion 1: "<< time_s << "\n";
                         usleep(time_s);
 
-                        speeds_pub.publish(msg_speed);
+
                         sleep(1);
                         state=3;
                         break;
 
                 case 3: //turn right to enter left lane
                         printf("[State: %d] Turning right\n", state);
-                        vu=2;
+                        vu=vu_r1;
                         msg_steering.data=max_steer_right; // orig 20
                         steering_pub.publish(msg_steering);
                         msg_speed.data=-100;
@@ -205,20 +255,33 @@ int main(int argc, char** argv)
                         if (time_s < 0) {
                                 time_s=time_s* -1;
                         }
+                        speeds_pub.publish(msg_speed);
                         time_s=time_s*vu*1000000;
                         cout << "Time evasion 2: "<< time_s << "\n";
                         usleep(time_s);
-
-                        speeds_pub.publish(msg_speed);
                         sleep(1);
                         state=4;
 
 
                         break;
                 case 4: //we are now in the left lane
-                        printf("[State: %d] Onleft line, following line\n", state);
+                        printf("[State: %d] On left lane, following line, looking for obstacle\n", state);
                         msg_steering.data= steering_call;
                         steering_pub.publish(msg_steering);
+                        msg_speed.data=cruise_speed;
+                        speeds_pub.publish(msg_speed);
+
+                        if (objectR)
+                        {
+                                state=5;
+                        }
+                        break;
+                case 5:         //we are now in the left lane
+                        printf("[State: %d] On left line, Found obstacle right\n", state);
+                        msg_steering.data= steering_call;
+                        steering_pub.publish(msg_steering);
+                        msg_speed.data=cruise_speed;
+                        speeds_pub.publish(msg_speed);
                         if (!objectR)
                         {
                                 state=6;
@@ -226,22 +289,20 @@ int main(int argc, char** argv)
                         break;
                 case 6: //objcect celar return to right lane
                         printf("[State: %d]Turning to right lane\n", state);
-                        vu=1.6;
+                        vu=vu_r2;
                         msg_steering.data=max_steer_right;
                         steering_pub.publish(msg_steering);
                         msg_speed.data=-100;
-                        speeds_pub.publish(msg_speed);
 
                         time_s=(t_100*100/msg_speed.data);
                         if (time_s < 0) {
                                 time_s=time_s* -1;
                         }
                         time_s=time_s*vu*1000000;
-                        cout << "Time evasion 1: "<< time_s << "\n";
-                        ros::spinOnce();
-                        usleep(time_s);
-                        msg_speed.data=-100;
                         speeds_pub.publish(msg_speed);
+
+                        cout << "Time evasion 3: "<< time_s << "\n";
+                        usleep(time_s);
                         sleep(1);
                         state=7;
 
@@ -249,8 +310,8 @@ int main(int argc, char** argv)
                         break;
                 case 7:
                         printf("[State: %d]Turning left to match right lane\n", state);
-                        vu=0.7;
-                        msg_steering.data=50;
+                        vu=vu_l2;
+                        msg_steering.data=max_steer_left;
                         steering_pub.publish(msg_steering);
                         msg_speed.data=-100;
                         speeds_pub.publish(msg_speed);
@@ -261,10 +322,10 @@ int main(int argc, char** argv)
                                 time_s=time_s* -1;
                         }
                         time_s=time_s*vu*1000000;
+                        cout << "Time evasion : "<< time_s << "\n";
 
                         usleep(time_s);
-                        msg_speed.data=-100;
-                        speeds_pub.publish(msg_speed);
+
                         sleep(1);
                         state=8;
                         break;
@@ -273,6 +334,38 @@ int main(int argc, char** argv)
                         msg_steering.data= steering_call;
                         steering_pub.publish(msg_steering);
                         state=0;
+                        break;
+
+                case 11:
+                        printf("[State: %d] Crossing follow line again\n", state);
+                        msg_steering.data= steering_call;
+                        steering_pub.publish(msg_steering);
+                        msg_speed.data=cruise_speed;
+                        speeds_pub.publish(msg_speed);
+                        if(!cross) {
+                                state=12; //crossing crossed return to cruising
+                        }
+                        break;
+                case 12:
+                        printf("[State: %d] Inside crossing\n", state);
+                        msg_steering.data= steering_call;
+                        steering_pub.publish(msg_steering);
+                        msg_speed.data=cruise_speed;
+                        speeds_pub.publish(msg_speed);
+
+                        if(cross) {
+                                state=13;                 //crossing crossed return to cruising
+                        }
+                        break;
+                case 13:
+                        printf("[State: %d] Exiting crossing\n", state);
+                        msg_steering.data= steering_call;
+                        steering_pub.publish(msg_steering);
+                        msg_speed.data=cruise_speed;
+                        speeds_pub.publish(msg_speed);
+                        if(!cross) {
+                                state=1;         //crossing crossed return to cruising
+                        }
                         break;
                 default:
 

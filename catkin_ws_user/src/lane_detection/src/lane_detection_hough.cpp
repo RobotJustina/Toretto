@@ -30,7 +30,7 @@ int main(int argc, char** argv)
         image_transport::Publisher pub = itp.advertise("lines",5);
 
         ros::Publisher angle_pub_r = nh.advertise<std_msgs::Float32MultiArray>("/rightLine",100);
-        ros::Publisher angle_pub_l = nh.advertise<std_msgs::Float32MultiArray>("leftLine",100);
+        ros::Publisher angle_pub_l = nh.advertise<std_msgs::Float32MultiArray>("/leftLine",100);
 
         ros::Rate loop_rate(60);
 
@@ -39,6 +39,7 @@ int main(int argc, char** argv)
         int value_thr_low, value_thr_high;
         int canny_thr_low, canny_thr_high;
 
+        bool color; //select between hav for color segmentation and bw intensity segmentation
         nh.param<int>("value_thr_low",value_thr_low,170);
         nh.param<int>("value_thr_high",value_thr_high,190);
 
@@ -49,10 +50,10 @@ int main(int argc, char** argv)
         nh.param<int>("canny_thr_low",canny_thr_low,50);
         nh.param<int>("canny_thr_high",canny_thr_high,100);
 
+        nh.param<bool>("color_detection",color,false);
+
         lane_extractor extractor(hough_thr,min_lin_len,max_gap_len,value_thr_low,
                                  value_thr_high,canny_thr_low,canny_thr_high);
-        std::cout<<"Starting processing"<<std::endl;
-
         std::string filepath;
         nh.param<std::string>("calib_file",filepath,"Matrix2.yaml"); //Set file path_pub
 
@@ -73,7 +74,10 @@ int main(int argc, char** argv)
         fs["tSize"] >> transfSize;
         fs.release();
 
-        int i= 0;
+        std::cout<<"Starting processing"<<std::endl;
+        std::cout << "Processing color: " << color <<'\n';
+
+
         while (ros::ok()) {
                 if (image_flag)
                 {
@@ -83,11 +87,14 @@ int main(int argc, char** argv)
                         //ros::Time strt_time = ros::Time::now();
                         image_flag = false;
                         std_msgs::Float32MultiArray line_r,line_l;
-                        cv::Mat trans;
+                        cv::Mat trans,edges,viz;
                         cv::warpPerspective(resizeImage, trans, transfMatrix, transfSize, cv::INTER_LINEAR, cv::BORDER_REPLICATE, cv::Scalar(127, 127, 127) );
-                        line_r=extractor.extract_right_lane_hough(trans,true);
-                        line_l=extractor.extract_left_lane_hough(trans,true);
-                        sensor_msgs::ImagePtr msg=cv_bridge::CvImage(std_msgs::Header(),"bgr8",trans).toImageMsg();
+                        extractor.get_borders(trans,edges,color);
+                        cv::cvtColor(edges,viz,cv::COLOR_GRAY2BGR);
+                        line_r=extractor.extract_right_lane_hough(edges,viz);
+                        line_l=extractor.extract_left_lane_hough(edges,viz);
+                        cv::addWeighted(viz, 0.5, trans, 0.5, 0, viz);
+                        sensor_msgs::ImagePtr msg=cv_bridge::CvImage(std_msgs::Header(),"bgr8",viz).toImageMsg();
 
                         pub.publish(msg);
                         if(line_r.data.size()>0)
@@ -96,7 +103,7 @@ int main(int argc, char** argv)
                         }
                         if(line_l.data.size()>0)
                         {
-                                angle_pub_r.publish(line_l);
+                                angle_pub_l.publish(line_l);
                         }
 
                         // ros::Duration timing=ros::Time::now()-strt_time;

@@ -114,7 +114,7 @@ int main(int argc, char** argv)
 
                 ros::spinOnce();
 
-                if (obs <= 1.25) {
+                if (obs <= 1.00) { //before 1.25
                         aux =(obs-dmin)*100;
                         if (aux <= 0)
                                 aux=0;
@@ -132,17 +132,22 @@ int main(int argc, char** argv)
 
                 }
 
-                if (obsR.data < 0.5) {
-                        objectR_pub.publish(obsR);
-                }
+                // if (obsR.data < 0.5) {
+                //         objectR_pub.publish(obsR);
+                // }
+                //
+                // if (obsL.data < 0.5) {
+                //         objectL_pub.publish(obsL);
+                // }
+                //
+                // if (obsF.data <1) {
+                //     objectF_pub.publish(obsF);
+                // }
 
-                if (obsL.data < 0.5) {
-                        objectL_pub.publish(obsL);
-                }
-
-                if (obsF.data <1) {
-                    objectF_pub.publish(obsF);
-                }
+                objectR_pub.publish(obsR);
+                objectL_pub.publish(obsL);
+                objectF_pub.publish(obsF);
+        
                 loop_rate.sleep();
         }
 }

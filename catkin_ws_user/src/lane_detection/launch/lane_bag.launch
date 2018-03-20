@@ -1,13 +1,19 @@
 <launch>
-  <param name="calib_file" value="/home/jesus/robo_ws/Matrix2.yaml" />
-  <param name="value_thr_low" value="170"/>
-  <param name="value_thr_high" value="180" />
+  <param name="hough_thr" value="30  "/>
+  <param name="min_lin_len" value="20" />
+  <param name="max_gap_len" value="20" />
+  <param name="value_thr_low" value="100"/>
+  <param name="value_thr_high" value="255" />
+  <param name="canny_thr_low" value="40" />
+  <param name="canny_thr_high" value="75" />
+  <param name="color_detection" value="true" />
+  <param name="calib_file" value="/home/jesus/robo_ws/homoMat4.yaml" />
 
-  <node pkg="rosbag" type="play" name="player" output="screen" args="/home/jesus/robo_ws/model_car_pista_casco_poli.bag"/>
-
-    <node pkg="lane_detection" type="lane_detection_node" name="lines_node" output="screen">
+    <node pkg="lane_detection" type="lane_hough_node" name="lane_hough_node"  output="screen">
       <remap from="image" to="/app/camera/rgb/image_raw"/>
    </node>
+
+  <node pkg="rosbag" type="play" name="player" output="screen" args="/home/jesus/robo_ws/model_car_pista_casco_poli.bag"/>
 
 
    <node pkg="image_view" type="image_view" name="image_viewer" output="screen">

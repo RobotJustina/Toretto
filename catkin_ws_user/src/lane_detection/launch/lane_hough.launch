@@ -2,11 +2,12 @@
   <param name="hough_thr" value="30  "/>
   <param name="min_lin_len" value="20" />
   <param name="max_gap_len" value="20" />
-  <param name="value_thr_low" value="150"/>
-  <param name="value_thr_high" value="250" />
-  <param name="canny_thr_low" value="50" />
-  <param name="canny_thr_high" value="100" />
+  <param name="value_thr_low" value="100"/>
+  <param name="value_thr_high" value="255" />
+  <param name="canny_thr_low" value="40" />
+  <param name="canny_thr_high" value="75" />
   <param name="calib_file" value="/root/catkin_ws_user/Matrix.yaml" />
+  <param name="color_detection" value="true" />
 
     <node pkg="lane_detection" type="lane_hough_node" name="lane_hough_node" output="screen">
       <remap from="image" to="/app/camera/rgb/image_raw"/>

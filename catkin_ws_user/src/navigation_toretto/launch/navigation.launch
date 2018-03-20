@@ -1,20 +1,35 @@
 <launch>
-  <param name="vu_r" value="2.45"/>
-  <param name="vu_l" value="2.0" />
-  <param name="vu_m" value="0.9"/>
+  <param name="vu_l1" value="1.9"/>
+  <param name="vu_r1" value="1.95" />
+  <param name="vu_r2" value="2.2"/>
+  <param name="vu_l2" value="0.7"/>
+
   <param name="max_steer_left" value="10" />
   <param name="max_steer_right" value="170"/>
-  <param name="mid_steer_right" value="170"/>
-  <param name="kp_park" value="7.5"/>
+  <param name="Kp_nav" value="0.5"/>
+  <param name="Ka_nav" value="4.0"/>
+  <param name="cruise_speed" value="-220"/>
+
+
+
 
     <node pkg="laser_scan" type="laser_scan" name="laser_scan" output="log">
         </node>
 
+        <node pkg="cross" type="cross_node" name="cross_node" output="log">
+          <param name="hough_thr" value="30  "/>
+          <param name="min_lin_len" value="20" />
+          <param name="max_gap_len" value="20" />
+          <param name="value_thr_low" value="100"/>
+          <param name="value_thr_high" value="255" />
+          <param name="canny_thr_low" value="40" />
+          <param name="canny_thr_high" value="75" />
+          </node>
     <!-- <node pkg="lane_detection" type="lane_hough_node" name="lane_hough_node" output="screen">
       <remap from="image" to="/app/camera/rgb/image_raw"/> -->
 
       <node pkg="navigation_toretto" type="navigation_toretto" name="navigation_toretto" output="screen">
         </node>
 
-   
+
 </launch>
