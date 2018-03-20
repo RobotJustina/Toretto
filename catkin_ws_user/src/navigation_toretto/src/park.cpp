@@ -25,28 +25,37 @@ std_msgs::Int16 msg_speed;
 std_msgs::Int16 speed_obj;
 
 int16_t steering_call=90;
-//TODO use local variables.
+
 bool object=false,objectR=false,objectL=false,objectF=false; //object detected
 bool shutdown=false;
 float l_obj=0, r_obj=0, f_obj=0;
 
 
-float Kp_nav =50.0/100.0;
-float Ka_nav =3.0;
+float K_dist  = 0.5;
+float K_angle = 16.0;
+float K_brake = 1.0;
+int max_speed  = 800;
+int turn_speed = 400;
+int dist_to_lane = 90;
+
+int16_t steering = 100;;
+int16_t speed = 0;
+
 void callback_right_line(const std_msgs::Float32MultiArray::ConstPtr& msg)
 {
-        //From MARCOSOFT
-        //Tracks line via angle and pixel position.
 
-        float A = msg->data[0];
-        float B = msg->data[1];
-        float C = msg->data[2];
-        //La imagen homografeada es de 640x700
-        float angle_error = atan(B/A);
-        float dist_error = (fabs(A*160 + B*120 +C)/sqrt(A*A + B*B) - 90);
-        steering_call = (int16_t)(100 + Kp_nav*dist_error + Ka_nav * angle_error * 10);
-        std::cout << "Found line: " << A << "\t" << B << "\t" << C << std::endl;
-        std::cout << "Angle error= " << angle_error << std::endl;
+    float A = msg->data[0];
+    float B = msg->data[1];
+    float C = msg->data[2];
+    if (A==0 && B==0)
+        return;
+    //La imagen homografeada es de 640x700
+    float angle_error = atan(B/A);
+    float dist_error = (fabs(A*160 + B*190 +C)/sqrt(A*A + B*B) - dist_to_lane);
+    steering = (int16_t)(100 + K_dist * dist_error + K_angle * angle_error);
+    speed    = (int16_t)(-(max_speed - K_brake * fabs(angle_error) * (max_speed - turn_speed)));
+    std::cout << "Found line: " << A << "\t" << B << "\t" << C << std::endl;
+    std::cout << "Angle error= " << angle_error << std::endl;
 }
 
 
@@ -146,8 +155,14 @@ int main(int argc, char** argv)
         n.param<int>("max_steer_right",max_steer_right,170);
         n.param<int>("mid_steer_right",mid_steer_right,130);
         n.param<float>("kp_park",kp_park,2.0);
-        n.param<float>("Kp_nav",Kp_nav,50.0/100.0);
-        n.param<float>("Ka_nav",Ka_nav,3.0);
+
+        n.param<float>("K_dist", K_dist, 0.5);
+        n.param<float>("K_angle", K_angle, 16.0);
+        n.param<float>("K_brake", K_brake, 1.0);
+        n.param<int>("max_speed", max_speed, 800);
+        n.param<int>("turn_speed", turn_speed, 400);
+        n.param<int>("dist_to_lane", dist_to_lane, 90);
+
         while (ros::ok())
         {
                 ros::Rate loop_rate(10);

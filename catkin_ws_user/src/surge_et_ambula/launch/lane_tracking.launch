@@ -1,6 +1,6 @@
 <launch>
 	<arg name="K_dist"       default="0.5"/>
-	<arg name="K_angle"      default="16.0"/>
+	<arg name="K_angle"      default="30.0"/>
 	<arg name="K_brake"      default="1.0"/>
 	<arg name="max_speed"    default="800"/>
 	<arg name="turn_speed"   default="400"/>

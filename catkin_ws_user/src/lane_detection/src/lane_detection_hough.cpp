@@ -10,7 +10,15 @@ void imageCallback(const sensor_msgs::ImageConstPtr& msg)
 {
         try{
                 Image = cv_bridge::toCvShare(msg, "bgr8")->image;
-                image_flag=true;
+                if (Image.data)
+                {
+                    image_flag=true;
+                }
+                else
+                {
+                    image_flag=false;
+                }
+
 //     std::cout << "Received image" << std::endl;
         }catch ( cv_bridge::Exception& e)
         {

@@ -14,7 +14,7 @@ int16_t speed = 0;
 
 void callback_right_line(const std_msgs::Float32MultiArray::ConstPtr& msg)
 {
-    
+
     float A = msg->data[0];
     float B = msg->data[1];
     float C = msg->data[2];
@@ -22,7 +22,7 @@ void callback_right_line(const std_msgs::Float32MultiArray::ConstPtr& msg)
         return;
     //La imagen homografeada es de 640x700
     float angle_error = atan(B/A);
-    float dist_error = (fabs(A*160 + B*120 +C)/sqrt(A*A + B*B) - dist_to_lane);
+    float dist_error = (fabs(A*160 + B*190 +C)/sqrt(A*A + B*B) - dist_to_lane);
     steering = (int16_t)(100 + K_dist * dist_error + K_angle * angle_error);
     speed    = (int16_t)(-(max_speed - K_brake * fabs(angle_error) * (max_speed - turn_speed)));
     std::cout << "Found line: " << A << "\t" << B << "\t" << C << std::endl;
@@ -34,15 +34,15 @@ int main(int argc, char** argv)
     std::cout << "INITIALIZING LANE TRACKING BY MARCOSOFT..."  << std::endl;
     ros::init(argc, argv, "lane_tracking");
     ros::NodeHandle n;
-    
-    
+
+
     n.param<float>("K_dist", K_dist, 0.5);
     n.param<float>("K_angle", K_angle, 16.0);
     n.param<float>("K_brake", K_brake, 1.0);
     n.param<int>("max_speed", max_speed, 800);
     n.param<int>("turn_speed", turn_speed, 400);
     n.param<int>("dist_to_lane", dist_to_lane, 90);
-    
+
     std::cout << "K_dist=" << K_dist << "\tK_angle=" << K_angle << "\tK_brake=" << K_brake << "\tmax_speed=";
     std::cout << max_speed << "\tturn_speed=" << turn_speed << "\tdist_to_lane=" << dist_to_lane << std::endl;
     ros::Publisher  pub_steering   = n.advertise<std_msgs::Int16>("/manual_control/steering", 1);
@@ -51,7 +51,7 @@ int main(int argc, char** argv)
     ros::Rate loop(20);
     std_msgs::Int16 msg_steering;
     std_msgs::Int16 msg_speed;
-    
+
 
     while(ros::ok())
     {
