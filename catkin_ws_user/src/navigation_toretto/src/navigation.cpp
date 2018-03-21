@@ -128,6 +128,12 @@ void Callback_stop(const std_msgs::Int16::ConstPtr& msg)
                 printf("!!!!!!Requesting shutdown!!!!!\n");
                 shutdown=true;
         }
+        else if(msg->data==0)
+        {
+                printf("!!!!!!Disabling shutdown!!!!!\n");
+                shutdown=false;
+        }
+
 }
 
 
@@ -144,14 +150,13 @@ int main(int argc, char** argv)
         ros::Publisher steering_pub = n.advertise<std_msgs::Int16>("/manual_control/steering", 1);
         ros::Publisher light_fr_pub = n.advertise<std_msgs::String>("/manual_control/lights", 1);
 
-        ros::Subscriber stop_subscriber = n.subscribe("/manual_control/stop", 1, Callback_stop);
+        //ros::Subscriber stop_subscriber = n.subscribe("/manual_control/stop", 1, Callback_stop);
         ros::Subscriber object_subscriber = n.subscribe("/object_detection/speed", 1, Callback_object);
         ros::Subscriber objectL_subscriber = n.subscribe("/object_detection/left", 1, Callback_objectL);
         ros::Subscriber objectR_subscriber = n.subscribe("/object_detection/right", 1, Callback_objectR);
         ros::Subscriber objectF_subscriber = n.subscribe("/object_detection/front", 1, Callback_objectF);
 
         int max_steer_left, max_steer_right, mid_steer_right;
-        int cruise_speed, turn_speed;
 
         n.param<float>("K_dist", K_dist, 0.5);
         n.param<float>("K_angle", K_angle, 16.0);
@@ -179,19 +184,21 @@ int main(int argc, char** argv)
                 float vu=0;
                 float time_s=0, t_100=3.4;
 
-                if (shutdown)
-                {
-                        printf("Shutdown\n" );
-                        msg_speed.data=0;
-                        speeds_pub.publish(msg_speed);
-                        break;
-                }
+                // if (shutdown)
+                // {
+                //         printf("Shutdown\n" );
+                //         msg_speed.data=0;
+                //         speeds_pub.publish(msg_speed);
+                //         continue;
+                // }
 
                 switch (state) {
                 case 0:
                         std::cout << "[State: 0]  Config" << '\n';
                         msg_speed.data=speed;
                         speeds_pub.publish(msg_speed);
+                        msg_steering.data=90;
+                        steering_pub.publish(msg_steering);
                         state=1;
                         break;
                 case 1:
@@ -248,8 +255,9 @@ int main(int argc, char** argv)
                                 msg_speed.data=speed;
                                 speeds_pub.publish(msg_speed);
                                 cout << "Speed: " << msg_speed.data <<"\n";
-                                //Use line tracking to steer
-                                                                steering_pub.publish(msg_steering);
+                                msg_steering.data=steering;
+                                steering_pub.publish(msg_steering);
+
 
                         }
 
@@ -296,7 +304,8 @@ int main(int argc, char** argv)
                         break;
                 case 4: //we are now in the left lane
                         printf("[State: %d] On left lane, following line, looking for obstacle\n", state);
-                                                steering_pub.publish(msg_steering);
+                        msg_steering.data=steering;
+                        steering_pub.publish(msg_steering);
                         msg_speed.data=speed;
                         speeds_pub.publish(msg_speed);
 
@@ -307,7 +316,7 @@ int main(int argc, char** argv)
                         break;
                 case 5:         //we are now in the left lane
                         printf("[State: %d] On left line, Found obstacle right\n", state);
-                                                steering_pub.publish(msg_steering);
+                        steering_pub.publish(msg_steering);
                         msg_speed.data=speed;
                         speeds_pub.publish(msg_speed);
                         if (!objectR)
@@ -359,13 +368,15 @@ int main(int argc, char** argv)
                         break;
                 case 8:
                         printf("[State: %d] On right line, following line again\n", state);
-                                                steering_pub.publish(msg_steering);
+                        msg_steering.data=steering;
+                        steering_pub.publish(msg_steering);
                         state=0;
                         break;
 
                 case 11:
                         printf("[State: %d] Crossing follow line again\n", state);
-                                                steering_pub.publish(msg_steering);
+                        msg_steering.data=steering;
+                        steering_pub.publish(msg_steering);
                         msg_speed.data=speed;
                         speeds_pub.publish(msg_speed);
                         if(!cross) {
@@ -374,7 +385,9 @@ int main(int argc, char** argv)
                         break;
                 case 12:
                         printf("[State: %d] Inside crossing\n", state);
-                                                steering_pub.publish(msg_steering);
+                        msg_steering.data=steering;
+                        steering_pub.publish(msg_steering);
+
                         msg_speed.data=speed;
                         speeds_pub.publish(msg_speed);
 
@@ -384,8 +397,9 @@ int main(int argc, char** argv)
                         break;
                 case 13:
                         printf("[State: %d] Exiting crossing\n", state);
-                                                steering_pub.publish(msg_steering);
-                        msg_speed.data=cruise_speed;
+                        msg_steering.data=steering;
+                        steering_pub.publish(msg_steering);
+                        msg_speed.data=speed;
                         speeds_pub.publish(msg_speed);
                         if(!cross) {
                                 state=1;         //crossing crossed return to cruising

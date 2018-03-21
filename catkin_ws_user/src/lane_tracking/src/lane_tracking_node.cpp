@@ -15,7 +15,6 @@ int16_t speed = 0;
 bool shutdown=false;
 void callback_right_line(const std_msgs::Float32MultiArray::ConstPtr& msg)
 {
-
         float A = msg->data[0];
         float B = msg->data[1];
         float C = msg->data[2];
@@ -28,6 +27,7 @@ void callback_right_line(const std_msgs::Float32MultiArray::ConstPtr& msg)
         speed    = (int16_t)(-(max_speed - K_brake * fabs(angle_error) * (max_speed - turn_speed)));
         std::cout << "Found line: " << A << "\t" << B << "\t" << C << std::endl;
         std::cout << "Angle error= " << angle_error << std::endl;
+
 }
 
 void Callback_stop(const std_msgs::Int16::ConstPtr& msg)
@@ -37,7 +37,12 @@ void Callback_stop(const std_msgs::Int16::ConstPtr& msg)
                 printf("!!!!!!Requesting shutdown!!!!!\n");
                 shutdown=true;
         }
-        
+        else if(msg->data==0)
+        {
+                //printf("!!!!!!Disabling shutdown!!!!!\n");
+                shutdown=false;
+        }
+
 }
 
 int main(int argc, char** argv)
@@ -60,7 +65,7 @@ int main(int argc, char** argv)
         ros::Publisher pub_speed      = n.advertise<std_msgs::Int16>("/manual_control/speed", 1);
         ros::Subscriber sub_lane_right = n.subscribe("/rightLine", 1, callback_right_line);
 
-        ros::Subscriber stop_subscriber = n.subscribe("/manual_control/stop", 1, Callback_stop);
+        //ros::Subscriber stop_subscriber = n.subscribe("/manual_control/stop", 1, Callback_stop);
 
         ros::Rate loop(20);
         std_msgs::Int16 msg_steering;
@@ -69,24 +74,31 @@ int main(int argc, char** argv)
 
         while(ros::ok())
         {
-                if(shutdown)
-                {
-                        msg_steering.data = 90;
-                        msg_speed.data    = 0;
-                        pub_steering.publish(msg_steering);
-                        pub_speed.publish(msg_speed);
-                        break;
+                // if(shutdown)
+                // {
+                //         msg_steering.data = 90;
+                //         msg_speed.data    = 0;
+                //         pub_steering.publish(msg_steering);
+                //         pub_speed.publish(msg_speed);
+                //         continue;
+                //
+                // }
+                printf("Debuggin 1\n");
 
-                }
                 msg_steering.data = steering;
                 msg_speed.data    = speed;
+                printf("Debuggin 2\n");
+
                 pub_steering.publish(msg_steering);
                 pub_speed.publish(msg_speed);
+                printf("Debuggin 3\n");
 
 
 
                 ros::spinOnce();
                 loop.sleep();
+
+
         }
         return 0;
 }

@@ -68,7 +68,7 @@ void Callback_object(const std_msgs::Int16::ConstPtr& msg)
 
 void Callback_objectR(const std_msgs::Float32::ConstPtr& msg)
 {
-        if((msg->data < 0.40) && (msg->data >0.01)) //while node starts a few messages will be received with data=0 must ignore
+        if((msg->data < 0.30) && (msg->data >0.01)) //while node starts a few messages will be received with data=0 must ignore
         {
                 objectR=true;
         }
@@ -117,6 +117,12 @@ void Callback_stop(const std_msgs::Int16::ConstPtr& msg)
                 printf("!!!!!!Requesting shutdown!!!!!\n");
                 shutdown=true;
         }
+        else if(msg->data==0)
+        {
+                printf("!!!!!!Disabling shutdown!!!!!\n");
+                shutdown=false;
+        }
+
 }
 
 
@@ -136,7 +142,7 @@ int main(int argc, char** argv)
         ros::Publisher steering_pub = n.advertise<std_msgs::Int16>("/manual_control/steering", 1);
         ros::Publisher light_fr_pub = n.advertise<std_msgs::String>("/manual_control/lights", 1);
 
-        ros::Subscriber stop_subscriber = n.subscribe("/manual_control/stop", 1, Callback_stop);
+        //ros::Subscriber stop_subscriber = n.subscribe("/manual_control/stop", 1, Callback_stop);
         ros::Subscriber objectF_subscriber = n.subscribe("/object_detection/front", 1, Callback_objectF);
         ros::Subscriber objectL_subscriber = n.subscribe("/object_detection/left", 1, Callback_objectL);
         ros::Subscriber objectR_subscriber = n.subscribe("/object_detection/right", 1, Callback_objectR);
@@ -167,13 +173,13 @@ int main(int argc, char** argv)
                 float vu=0;
                 float time_s=0, t_100=3.4;
 
-                if (shutdown)
-                {
-                        printf("Shutdown\n" );
-                        msg_speed.data=0;
-                        speeds_pub.publish(msg_speed);
-                        break;
-                }
+                // if (shutdown)
+                // {
+                //         printf("Shutdown\n" );
+                //         msg_speed.data=0;
+                //         speeds_pub.publish(msg_speed);
+                //         continue;
+                // }
 
 
                 switch (state) {

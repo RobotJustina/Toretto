@@ -76,7 +76,7 @@ int main(int argc, char** argv)
                 if (image)
                 {
                         bool crss= false;
-                        cv::Rect rect(0,360,640,120); //lower 1/4 of image
+                        cv::Rect rect(0,360,640,100); //lower 1/4 of image
                         cv::Mat resizeImage= Image(rect);
                         cv::Mat img_cross,edges;
                         cross.get_borders(resizeImage,edges, true);
