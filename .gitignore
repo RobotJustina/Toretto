@@ -13,3 +13,4 @@ catkin_ws_user/src/CMakeLists.txt
 catkin_ws_user/.catkin_tools/
 catkin_ws_user/.catkin_workspace
 *.tar.bz2
+*.png

@@ -4,6 +4,6 @@
        specific ROS_ROOT and ROS_PACKAGE_PATH values -->
   <!-- a basic listener node -->
   <node name="joy" pkg="joy" type="joy_node" />
-  <node name="joy_stopper" pkg="joystick_teleop" type="joystick_stopper.py" />
+  <node name="joy_stopper" pkg="joystick_teleop" type="joystick_stopper.py" output="screen"/>
 
 </launch>

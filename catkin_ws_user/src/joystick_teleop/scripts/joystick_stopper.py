@@ -25,9 +25,11 @@ def callbackJoy(msg):
     stop = msg.buttons[1]
     go = msg.buttons[0]
     if stop == 1:
+        print("Stopping")
         b_stop=True
 
     elif go == 1:
+        print("Enabling")
         b_stop=False
 
 
@@ -51,16 +53,16 @@ def main():
 
     rospy.Subscriber("/joy", Joy, callbackJoy)
 
-    pubStop = rospy.Publisher("/manual_control/stop", Int16, queue_size=1)
+    pubStop = rospy.Publisher("/manual_control/stop_start", Int16, queue_size=1)
 
     loop = rospy.Rate(10)
 
     while not rospy.is_shutdown():
 
         if b_stop:
-            print "Stop"
             msgStop.data= 1
             pubStop.publish(msgStop)
+
             #b_stop=False
         else:
             msgStop.data= 0

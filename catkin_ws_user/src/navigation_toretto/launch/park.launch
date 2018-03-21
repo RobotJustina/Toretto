@@ -4,9 +4,9 @@
   <param name="vu_m" value="0.9"/>
   <param name="max_steer_left" value="10" />
   <param name="max_steer_right" value="170"/>
-  <param name="mid_steer_right" value="160"/>
-  <param name="kp_park" value="7.5"/>
-  
+  <param name="mid_steer_right" value="155"/>
+  <param name="kp_park" value="8"/>
+
   <arg name="K_dist"       default="0.5"/>
   <arg name="K_angle"      default="30.0"/>
   <arg name="K_brake"      default="1.0"/>
