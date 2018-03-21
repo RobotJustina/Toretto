@@ -96,12 +96,13 @@ void LinesDetector::transformMatrix(cv::Mat img)
 
 void LinesDetector::linesVector(std::vector<cv::Point2f> p,std_msgs::Float32MultiArray &l, int cols, cv::Mat &drawing ,cv::Scalar color)
 {
-	cv::Vec4f line;
-	cv::fitLine(p,line, CV_DIST_WELSCH, 0, 0.01,0.01);
-    int x0 = line[2];
-    int y0 = line[3];
-	int x1 = x0+100*line[0];
-	int y1 = y0+100*line[1];
+	cv::Vec4f lines;
+	p.erase(p.begin());
+	cv::fitLine(p,lines, CV_DIST_WELSCH, 0, 0.01,0.01);
+    int x0 = drawing.cols-1;//line[2];
+    int y0 = ((drawing.cols-lines[2])*lines[1]/lines[0])+lines[3];//line[3];
+	int x1 = 0;//x0+300*line[0];
+	int y1 = (-lines[2]*lines[1]/lines[0])+lines[3];//y0+300*line[1];
     int A= y1-y0;//y2-y1
     int B= x0-x1; //x1-x2
     int C= -A*x0-B*y0; //-A*x1-B*y1
@@ -134,7 +135,7 @@ cv::Mat LinesDetector::segmentationLines(cv::Mat image, std_msgs::Float32MultiAr
 	cv::cvtColor(image,imageHSV,CV_BGR2HSV_FULL);
 	cv::split(imageHSV,hsv);
 	//cv::threshold(hsv[1], imageThreshold, 0, 255, CV_THRESH_OTSU);
-	cv::threshold(hsv[1], imageThreshold, 150, 255, CV_THRESH_BINARY);
+	cv::threshold(hsv[1], imageThreshold, 170, 255, CV_THRESH_BINARY);
 
 	//std::cout<<"xxxxxxxxxxxxxxxxxxxxxxxx Vive?"  <<"[prevPoint]" << this->prevPoint <<std::endl;
 	std::vector<cv::Point2f> peaks = LinesDetector::peakHistrogram(imageThreshold);
@@ -206,17 +207,8 @@ cv::Mat LinesDetector::segmentationLines(cv::Mat image, std_msgs::Float32MultiAr
 	//	}
 	//}
 
-	if (right.size()>2)
-	{
-		LinesDetector::linesVector(right,lRight,imageThreshold.cols,drawing,cv::Scalar(200,200,0));
+	
 
-    	std::cout<<"[A]: ["<<lRight.data[0]<<" [B]: "<<lRight.data[1]<<" [C]: "<<lRight.data[2]<<std::endl;
-	}
-
-	if (left.size()>1)
-	{
-		LinesDetector::linesVector(left,lLeft,imageThreshold.cols,drawing,cv::Scalar(0,200,200));
-	}
 
 
 	if (this->debug)
@@ -233,6 +225,23 @@ cv::Mat LinesDetector::segmentationLines(cv::Mat image, std_msgs::Float32MultiAr
     	{
    			circle( drawing, left[i], 4, cv::Scalar( 255, 0, 0 ), -1, 8, 0 );//blue
     	}
+
+	}
+	if (right.size()>1)
+	{
+		LinesDetector::linesVector(right,lRight,imageThreshold.cols,drawing,cv::Scalar(255,255,255));
+
+    	std::cout<<"[A]: ["<<lRight.data[0]<<" [B]: "<<lRight.data[1]<<" [C]: "<<lRight.data[2]<<std::endl;
+	}
+
+	//if (left.size()>1)
+	//{
+	//	LinesDetector::linesVector(left,lLeft,imageThreshold.cols,drawing,cv::Scalar(0,200,200));
+	//}
+	
+	if (this->debug)
+	{
+
     	cv::imshow("transformed",image);
     	cv::imshow("thres",imageThreshold);
    		cv::imshow( "Draw", drawing );
@@ -258,7 +267,7 @@ std::vector<cv::Point2f> LinesDetector::peakHistrogram(cv::Mat image)
 
 
 	
-	if(this->prevPoint.x < 0 && this->prevPoint.y<0){
+	//if(this->prevPoint.x < 0 && this->prevPoint.y<0){
 		for (int i = 0; i < histo.size()-1; ++i)
 		{
 			//histo[i]/=255;
@@ -281,7 +290,7 @@ std::vector<cv::Point2f> LinesDetector::peakHistrogram(cv::Mat image)
 				}
 			}
 		}
-	}else{
+	/*}else{
 		
 		int th=25;
 		int init = (this->prevPoint.x-th>0)?this->prevPoint.x-th:0;
@@ -309,7 +318,7 @@ std::vector<cv::Point2f> LinesDetector::peakHistrogram(cv::Mat image)
 			}
 		}
 		
-	}
+	}*/
 	
 	if (peaks.size()>0)
 	{
@@ -346,7 +355,6 @@ std::vector<cv::Point2f> LinesDetector::peakHistrogram(cv::Mat image)
 		}
 		cv::imshow("points",H);
 	}
-
   	return peaks;
 }
 

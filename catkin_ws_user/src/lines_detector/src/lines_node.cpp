@@ -112,7 +112,7 @@ int main(int argc, char** args)
       if (right.data.size()>1)
       {
         //std::cout<<"[right]: ["<<right.data[0]<<" X] ["<<right.data[1]<<" Y] ["<<right.data[2]<<" C]"<<std::endl;
-        rLine_pub.publish(right);
+        //rLine_pub.publish(right);
       }
       if (left.data.size()>1)
       {
