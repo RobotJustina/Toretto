@@ -49,6 +49,11 @@ int main(int argc, char** argv)
         nh_priv.param<int>("canny_thr_low",canny_thr_low,50);
         nh_priv.param<int>("canny_thr_high",canny_thr_high,100);
 
+        bool color;
+        nh_priv.param<bool>("color_detection",color,false);
+
+
+
         CrossDetector cross = CrossDetector(hough_thr,min_lin_len,max_gap_len,value_thr_low,
                                             value_thr_high,canny_thr_low,canny_thr_high);
         std_msgs::Bool msg_cross;
@@ -79,7 +84,7 @@ int main(int argc, char** argv)
                         cv::Rect rect(0,360,640,100); //lower 1/4 of image
                         cv::Mat resizeImage= Image(rect);
                         cv::Mat img_cross,edges;
-                        cross.get_borders(resizeImage,edges, true);
+                        cross.get_borders(resizeImage,edges, color);
                         cv: cvtColor(edges,img_cross,cv::COLOR_GRAY2BGR);
                         cross.segmentationCross(edges, img_cross, crss);
                         cv::addWeighted(img_cross, 0.5, resizeImage, 0.5, 0, img_cross);

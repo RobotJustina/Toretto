@@ -23,15 +23,16 @@
   <node pkg="laser_scan" type="laser_scan" name="laser_scan" output="log">
       </node>
 
-  <node pkg="cross" type="cross_node" name="cross_node" output="log">
-    <param name="hough_thr" value="30  "/>
-    <param name="min_lin_len" value="20" />
-    <param name="max_gap_len" value="20" />
-    <param name="value_thr_low" value="100"/>
-    <param name="value_thr_high" value="255" />
-    <param name="canny_thr_low" value="40" />
-    <param name="canny_thr_high" value="75" />
-    </node>
+ <node pkg="cross" type="cross_node" name="cross_node" output="log">
+   <param name="hough_thr" value="50"/>
+   <param name="min_lin_len" value="400" />
+   <param name="max_gap_len" value="40" />
+   <param name="value_thr_low" value="150"/>
+   <param name="value_thr_high" value="160" />
+   <param name="canny_thr_low" value="40" />
+   <param name="canny_thr_high" value="75" />
+   <param name="color_detection" value="false"/>
+   </node>
     <!-- <node pkg="lane_detection" type="lane_hough_node" name="lane_hough_node" output="screen">
       <remap from="image" to="/app/camera/rgb/image_raw"/> -->
 

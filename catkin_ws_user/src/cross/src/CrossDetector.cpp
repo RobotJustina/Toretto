@@ -53,7 +53,7 @@ void CrossDetector::segmentationCross(cv::Mat edges, cv::Mat &imageCross,  bool 
 								cv::Mat imageRoi(edges,roi);
 
 								std::vector< cv::Vec4i > linePoints;
-								cv::HoughLinesP( edges, linePoints, 1, CV_PI/180, hough_thr, minLen, gapLen);
+								cv::HoughLinesP( edges, linePoints, 8, CV_PI/180, hough_thr, minLen, gapLen);
 
 								cross=false;
 								int hor_cnt=0;

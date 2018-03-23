@@ -6,7 +6,7 @@ std::vector<cv::Point2f> v;
 
 void CallBackFunc(int event, int x, int y, int flags,void *vec)
 {
-	
+
 	if  ( event == cv::EVENT_LBUTTONDOWN )
     {
         std::cout << "Left button of the mouse is clicked - position (" << x << ", " << y << ")" << std::endl;
@@ -27,7 +27,7 @@ LinesDetector::LinesDetector(bool debug, std::string path)
 void LinesDetector::transformMatrix(cv::Mat img)
 {
 
-	
+
 	cv::Mat temp(img);
 	cv::imshow("Select Points", temp);
 	cv::setMouseCallback("Select Points", CallBackFunc, NULL);
@@ -49,23 +49,23 @@ void LinesDetector::transformMatrix(cv::Mat img)
 
 	for (int i = 0; i < v.size(); ++i)
 	{
-		
+
 		std::cout<<v[i]<<std::endl;
 	}
 	int t=0;
-	
+
 	for (; t < v.size()-1; ++t)
 	{
 		line(temp,cv::Point(v[t].x,v[t].y), cv::Point(v[t+1].x,v[t+1].y),cv::Scalar(0,255,0),2);
 	}
 	line(temp,cv::Point(v[t].x,v[t].y), cv::Point(v[0].x,v[0].y),cv::Scalar(0,255,0),2);
 
-	std::vector< cv::Point2f> dstPoints; 
+	std::vector< cv::Point2f> dstPoints;
 
-	dstPoints.push_back( cv::Point2f(0, 0)); 
-	dstPoints.push_back( cv::Point2f(img.cols/2, 0)); 
-	dstPoints.push_back( cv::Point2f(img.cols/2, img.rows)); 
-	dstPoints.push_back( cv::Point2f(0, img.rows)); 
+	dstPoints.push_back( cv::Point2f(0, 0));
+	dstPoints.push_back( cv::Point2f(img.cols/2, 0));
+	dstPoints.push_back( cv::Point2f(img.cols/2, img.rows));
+	dstPoints.push_back( cv::Point2f(0, img.rows));
 
 
 	for (t=0; t < v.size()-1; ++t)
@@ -74,14 +74,14 @@ void LinesDetector::transformMatrix(cv::Mat img)
 	}
 	line(temp,cv::Point(dstPoints[t].x,dstPoints[t].y), cv::Point(dstPoints[0].x,dstPoints[0].y),cv::Scalar(255,0,0),2);
 
-	cv::Size transfSize = cv::Size(img.cols/2, img.rows); 
+	cv::Size transfSize = cv::Size(img.cols/2, img.rows);
 	cv::Mat tMatrix = getPerspectiveTransform(v, dstPoints );
   	cv::Mat transformed;
   	cv::warpPerspective(temp, transformed, tMatrix, transfSize, cv::INTER_LINEAR, cv::BORDER_CONSTANT, cv::Scalar(127, 127, 127) );
 
   	cv::imshow("Transformed", transformed);
 	cv::imshow("Select Points", temp);
-	
+
 	int key;
 	while(key != 32)
 	{
@@ -91,7 +91,7 @@ void LinesDetector::transformMatrix(cv::Mat img)
 	cv::FileStorage fs(this->path, cv::FileStorage::WRITE);
 	fs<<"Homography"<<tMatrix;
 	fs<<"tSize"<<transfSize;
-	fs.release();  
+	fs.release();
 }
 
 void LinesDetector::linesVector(std::vector<cv::Point2f> p,std_msgs::Float32MultiArray &l, int cols, cv::Mat &drawing ,cv::Scalar color)
@@ -109,33 +109,33 @@ void LinesDetector::linesVector(std::vector<cv::Point2f> p,std_msgs::Float32Mult
     if (this->debug)
     {
     	cv::line(drawing,cv::Point(x0,y0),cv::Point(x1,y1),color,2);
-    }    	
+    }
     l.data.push_back(A);
     l.data.push_back(B);
     l.data.push_back(C);
 }
 
 cv::Mat LinesDetector::segmentationLines(cv::Mat image, std_msgs::Float32MultiArray &lRight,std_msgs::Float32MultiArray &lLeft)
-{	
-	
-	cv::Mat imageThreshold;
-	
+{
 
-	//cv::inRange(image,cv::Scalar(172,172,172),cv::Scalar(255,255,255),imageThreshold);
+	cv::Mat imageThreshold;
+
+
+	cv::inRange(image,cv::Scalar(172,172,172),cv::Scalar(255,255,255),imageThreshold);
 	//image=3*image-100; //contraste
 	//cv::inRange(image,cv::Scalar(0,0,0),cv::Scalar(100,100,100),imageThreshold);
-	
+
 	//cv::Mat imageGray;
 	//cv::cvtColor(image,imageGray,CV_BGR2GRAY);
-	//imageGray=255 - imageGray;	
-	
-	cv::Mat imageHSV(image.rows,image.cols,CV_8UC3);
-	std::cout<<"con HSV" <<std::endl;
-	std::vector<cv::Mat> hsv;
-	cv::cvtColor(image,imageHSV,CV_BGR2HSV_FULL);
-	cv::split(imageHSV,hsv);
+	//imageGray=255 - imageGray;
+
+	//cv::Mat imageHSV(image.rows,image.cols,CV_8UC3);
+	std::cout<<"TMR" <<std::endl;
+	//std::vector<cv::Mat> hsv;
+	//cv::cvtColor(image,imageHSV,CV_BGR2HSV_FULL);
+	//cv::split(imageHSV,hsv);
 	//cv::threshold(hsv[1], imageThreshold, 0, 255, CV_THRESH_OTSU);
-	cv::threshold(hsv[1], imageThreshold, 170, 255, CV_THRESH_BINARY);
+	//cv::threshold(hsv[1], imageThreshold, 170, 255, CV_THRESH_BINARY);
 
 	//std::cout<<"xxxxxxxxxxxxxxxxxxxxxxxx Vive?"  <<"[prevPoint]" << this->prevPoint <<std::endl;
 	std::vector<cv::Point2f> peaks = LinesDetector::peakHistrogram(imageThreshold);
@@ -145,17 +145,17 @@ cv::Mat LinesDetector::segmentationLines(cv::Mat image, std_msgs::Float32MultiAr
 	{
 		line(imageThreshold,cv::Point(0,i*20 ), cv::Point(image.cols,i*20),cv::Scalar(0,0,0),2);
 	}
-	
+
 
 	std::vector<std::vector<cv::Point> > contours;
-	
+
 	cv::findContours( imageThreshold, contours,  CV_RETR_EXTERNAL , CV_CHAIN_APPROX_SIMPLE, cv::Point(0, 0));
 	cv::Mat drawing = cv::Mat::zeros( imageThreshold.size(), CV_8UC3 );
-  	
+
 
 	std::vector<cv::Moments> mu;
 	for( int i = 0; i < contours.size(); i++ ){
-		mu.push_back(  cv::moments( contours[i], false )); 
+		mu.push_back(  cv::moments( contours[i], false ));
 	}
 	std::vector<cv::Point2f> mc;
 	for( int i = 0; i < contours.size(); i++ ){
@@ -164,7 +164,7 @@ cv::Mat LinesDetector::segmentationLines(cv::Mat image, std_msgs::Float32MultiAr
 		{
 			continue;
 		}
-		mc.push_back(p ); 
+		mc.push_back(p );
 	}
 
 
@@ -207,7 +207,7 @@ cv::Mat LinesDetector::segmentationLines(cv::Mat image, std_msgs::Float32MultiAr
 	//	}
 	//}
 
-	
+
 
 
 
@@ -238,7 +238,7 @@ cv::Mat LinesDetector::segmentationLines(cv::Mat image, std_msgs::Float32MultiAr
 	//{
 	//	LinesDetector::linesVector(left,lLeft,imageThreshold.cols,drawing,cv::Scalar(0,200,200));
 	//}
-	
+
 	if (this->debug)
 	{
 
@@ -266,7 +266,7 @@ std::vector<cv::Point2f> LinesDetector::peakHistrogram(cv::Mat image)
 	bool peak=false;
 
 
-	
+
 	//if(this->prevPoint.x < 0 && this->prevPoint.y<0){
 		for (int i = 0; i < histo.size()-1; ++i)
 		{
@@ -291,7 +291,7 @@ std::vector<cv::Point2f> LinesDetector::peakHistrogram(cv::Mat image)
 			}
 		}
 	/*}else{
-		
+
 		int th=25;
 		int init = (this->prevPoint.x-th>0)?this->prevPoint.x-th:0;
 		int endit = (this->prevPoint.x+th<histo.size()-1)?this->prevPoint.x+th:histo.size()-1;
@@ -317,9 +317,9 @@ std::vector<cv::Point2f> LinesDetector::peakHistrogram(cv::Mat image)
 				}
 			}
 		}
-		
+
 	}*/
-	
+
 	if (peaks.size()>0)
 	{
 		std::sort(peaks.begin(),peaks.end(),compare);
@@ -339,7 +339,7 @@ std::vector<cv::Point2f> LinesDetector::peakHistrogram(cv::Mat image)
 		}
 	}
 	if (this->debug)
-	{	
+	{
 		for (int i = 0; i < histo.size()-1; ++i)
 		{
 		histo[i]/=255;
@@ -367,6 +367,3 @@ float LinesDetector::distanceX(cv::Point2f point1,cv::Point2f point2)
 {
 	return abs(point1.x - point2.x);
 }
-
-
-

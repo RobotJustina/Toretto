@@ -30,7 +30,7 @@ void lane_extractor::get_borders(cv::Mat &image, cv::Mat &edges, bool color = fa
         }
         else{
                 cv::cvtColor(image, gray_img, cv::COLOR_BGR2GRAY);
-                cv::blur(gray_img,gray_img,cv::Size(11,11));
+                cv::blur(gray_img,gray_img,cv::Size(7,7));
                 cv::inRange(gray_img, lowValThr,highValThr, binarized);
         }
 
@@ -61,7 +61,7 @@ std_msgs::Float32MultiArray lane_extractor::extract_right_lane_hough(cv::Mat &ed
         std::vector<cv::Point> puntos;
         cv::HoughLinesP(cropped_img, lines,1,CV_PI/180, hough_thr, minLen, gapLen);
 
-        std::cout<<"Number of lines Right: "<< lines.size()<<std::endl;
+        //std::cout<<"Number of lines Right: "<< lines.size()<<std::endl;
         int ver_cnt=0;
         for (int i=0; i<lines.size(); i++)
         {
@@ -74,7 +74,7 @@ std_msgs::Float32MultiArray lane_extractor::extract_right_lane_hough(cv::Mat &ed
 
                 m=fabs(m);
                 //cv::line(image,ini+roi_corner,fin+roi_corner,cv::Scalar(0,250,0),3);
-                if ((m > 20*DEG2RAD) && (m< 160 *DEG2RAD))
+                if ((m > 40*DEG2RAD) && (m< 140 *DEG2RAD)) //20 & 160
                 {
                         //lines.erase(lines.begin()+i); does not work no idea why, vector is unchanged
                         cv::line(viz,ini+roi_corner,fin+roi_corner,cv::Scalar(0,0,250),3);
@@ -152,7 +152,7 @@ std_msgs::Float32MultiArray lane_extractor::extract_left_lane_hough(cv::Mat &edg
         std::vector<cv::Vec4i> lines;
         std::vector<cv::Point> puntos;
         cv::HoughLinesP(cropped_img, lines,1,CV_PI/180, hough_thr, minLen, gapLen);
-        std::cout<<"Number of lines left: "<< lines.size()<<std::endl;
+        //std::cout<<"Number of lines left: "<< lines.size()<<std::endl;
         for (int i=0; i<lines.size(); i++)
         {
 
@@ -163,7 +163,7 @@ std_msgs::Float32MultiArray lane_extractor::extract_left_lane_hough(cv::Mat &edg
 
                 m=fabs(m);
                 //cv::line(image,ini+roi_corner,fin+roi_corner,cv::Scalar(0,250,0),3);
-                if ((m > 20*DEG2RAD)  && (m< 160 *DEG2RAD))
+                if ((m > 40*DEG2RAD)  && (m< 160 *DEG2RAD))
                 {
                         //lines.erase(lines.begin()+i); does not work either
                         cv::line(viz,ini,fin,cv::Scalar(0,250,0),3);

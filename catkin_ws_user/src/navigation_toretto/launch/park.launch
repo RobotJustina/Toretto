@@ -1,6 +1,6 @@
 <launch>
   <param name="vu_r" value="2.45"/>
-  <param name="vu_l" value="2.0" />
+  <param name="vu_l" value="1.8" />
   <param name="vu_m" value="0.9"/>
   <param name="max_steer_left" value="10" />
   <param name="max_steer_right" value="170"/>

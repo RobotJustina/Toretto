@@ -2,15 +2,19 @@
 #include "std_msgs/Float32MultiArray.h"
 #include "std_msgs/Int16.h"
 
+#define filter_order 10
+
 float K_dist  = 0.5;
 float K_angle = 16.0;
 float K_brake = 1.0;
 int max_speed  = 800;
 int turn_speed = 400;
-int dist_to_lane = 90;
+int dist_to_lane = 100;
 
 int16_t steering = 100;;
 int16_t speed = 0;
+
+std::vector<float> filtered_theta;
 
 bool shutdown=false;
 void callback_right_line(const std_msgs::Float32MultiArray::ConstPtr& msg)
@@ -22,11 +26,19 @@ void callback_right_line(const std_msgs::Float32MultiArray::ConstPtr& msg)
                 return;
         //La imagen homografeada es de 640x700
         float angle_error = atan(B/A);
+        filtered_theta.erase(filtered_theta.begin());
+        filtered_theta.push_back(angle_error);
+        float avg=0;
+        for (int i = 0; i < filter_order; i++) {
+          avg+=filtered_theta[i];
+        }
+        avg/=filter_order; //same 10 as in main
+        angle_error=avg;
         float dist_error = (fabs(A*160 + B*190 +C)/sqrt(A*A + B*B) - dist_to_lane);
         steering = (int16_t)(100 + K_dist * dist_error + K_angle * angle_error);
         speed    = (int16_t)(-(max_speed - K_brake * fabs(angle_error) * (max_speed - turn_speed)));
-        std::cout << "Found line: " << A << "\t" << B << "\t" << C << std::endl;
-        std::cout << "Angle error= " << angle_error << std::endl;
+        // std::cout << "Found line: " << A << "\t" << B << "\t" << C << std::endl;
+        // std::cout << "Angle error= " << angle_error << std::endl;
 
 }
 
@@ -71,6 +83,11 @@ int main(int argc, char** argv)
         std_msgs::Int16 msg_steering;
         std_msgs::Int16 msg_speed;
 
+        for (int i=0; i<filter_order; i++)
+        {
+          filtered_theta.push_back(0.0);
+        }
+
 
         while(ros::ok())
         {
@@ -83,15 +100,15 @@ int main(int argc, char** argv)
                 //         continue;
                 //
                 // }
-                printf("Debuggin 1\n");
+                // printf("Debuggin 1\n");
 
                 msg_steering.data = steering;
                 msg_speed.data    = speed;
-                printf("Debuggin 2\n");
+                // printf("Debuggin 2\n");
 
                 pub_steering.publish(msg_steering);
                 pub_speed.publish(msg_speed);
-                printf("Debuggin 3\n");
+                // printf("Debuggin 3\n");
 
 
 

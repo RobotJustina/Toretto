@@ -12,11 +12,11 @@ void imageCallback(const sensor_msgs::ImageConstPtr& msg)
                 Image = cv_bridge::toCvShare(msg, "bgr8")->image;
                 if (Image.data)
                 {
-                    image_flag=true;
+                        image_flag=true;
                 }
                 else
                 {
-                    image_flag=false;
+                        image_flag=false;
                 }
 
 //     std::cout << "Received image" << std::endl;
@@ -60,6 +60,9 @@ int main(int argc, char** argv)
 
         nh.param<bool>("color_detection",color,false);
 
+        bool debug;
+        nh.param<bool>("debug",debug,false);
+
         lane_extractor extractor(hough_thr,min_lin_len,max_gap_len,value_thr_low,
                                  value_thr_high,canny_thr_low,canny_thr_high);
         std::string filepath;
@@ -98,13 +101,17 @@ int main(int argc, char** argv)
                         cv::Mat trans,edges,viz;
                         cv::warpPerspective(resizeImage, trans, transfMatrix, transfSize, cv::INTER_LINEAR, cv::BORDER_REPLICATE, cv::Scalar(127, 127, 127) );
                         extractor.get_borders(trans,edges,color);
-                        cv::cvtColor(edges,viz,cv::COLOR_GRAY2BGR);
                         line_r=extractor.extract_right_lane_hough(edges,viz);
                         line_l=extractor.extract_left_lane_hough(edges,viz);
-                        cv::addWeighted(viz, 0.5, trans, 0.5, 0, viz);
-                        sensor_msgs::ImagePtr msg=cv_bridge::CvImage(std_msgs::Header(),"bgr8",viz).toImageMsg();
 
-                        pub.publish(msg);
+                        if (debug) {
+                                cv::cvtColor(edges,viz,cv::COLOR_GRAY2BGR);
+                                cv::addWeighted(viz, 0.5, trans, 0.5, 0, viz);
+                                sensor_msgs::ImagePtr msg=cv_bridge::CvImage(std_msgs::Header(),"bgr8",viz).toImageMsg();
+                                pub.publish(msg);
+                        }
+
+
                         if(line_r.data.size()>0)
                         {
                                 angle_pub_r.publish(line_r);
