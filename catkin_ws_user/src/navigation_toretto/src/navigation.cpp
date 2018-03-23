@@ -30,38 +30,50 @@ bool cross=false;
 float l_obj=0, r_obj=0, f_obj=0;
 bool shutdown=false;
 
+#define filter_order 10
+
 float K_dist  = 0.5;
 float K_angle = 16.0;
 float K_brake = 1.0;
 int max_speed  = 800;
 int turn_speed = 400;
-int dist_to_lane = 90;
+int dist_to_lane = 100;
 
-int16_t steering = 90;;
+int16_t steering = 100;;
 int16_t speed = 0;
+
+std::vector<float> filtered_theta;
 
 void callback_right_line(const std_msgs::Float32MultiArray::ConstPtr& msg)
 {
+        float A = msg->data[0];
+        float B = msg->data[1];
+        float C = msg->data[2];
+        if (A==0 && B==0)
+                return;
+        //La imagen homografeada es de 640x700
+        float angle_error = atan(B/A);
+        filtered_theta.erase(filtered_theta.begin());
+        filtered_theta.push_back(angle_error);
+        float avg=0;
+        for (int i = 0; i < filter_order; i++) {
+                avg+=filtered_theta[i];
+        }
+        avg/=filter_order; //same 10 as in main
+        angle_error=avg;
+        float dist_error = (fabs(A*160 + B*190 +C)/sqrt(A*A + B*B) - dist_to_lane);
+        steering = (int16_t)(100 + K_dist * dist_error + K_angle * angle_error);
+        speed    = (int16_t)(-(max_speed - K_brake * fabs(angle_error) * (max_speed - turn_speed)));
+        // std::cout << "Found line: " << A << "\t" << B << "\t" << C << std::endl;
+        // std::cout << "Angle error= " << angle_error << std::endl;
 
-    float A = msg->data[0];
-    float B = msg->data[1];
-    float C = msg->data[2];
-    if (A==0 && B==0)
-        return;
-    //La imagen homografeada es de 640x700
-    float angle_error = atan(B/A);
-    float dist_error = (fabs(A*160 + B*190 +C)/sqrt(A*A + B*B) - dist_to_lane);
-    steering = (int16_t)(100 + K_dist * dist_error + K_angle * angle_error);
-    speed    = (int16_t)(-(max_speed - K_brake * fabs(angle_error) * (max_speed - turn_speed)));
-    std::cout << "Found line: " << A << "\t" << B << "\t" << C << std::endl;
-    std::cout << "Angle error= " << angle_error << std::endl;
 }
-
 
 void Callback_object(const std_msgs::Int16::ConstPtr& msg)
 {
-        //cout << "object true" << "\n";
+
         speed_obj.data = msg->data;
+        cout << "object true " << msg->data<<"\n";
 
 }
 
@@ -111,7 +123,7 @@ void Callback_objectF(const std_msgs::Float32::ConstPtr& msg)
 {
         //cout << "object left true" << "\n";
 
-        if((msg->data < 0.75) && (msg->data >0.01)) {
+        if((msg->data < 0.80) && (msg->data >0.01)) {
                 objectF=true;
         }
         else{
@@ -144,7 +156,7 @@ int main(int argc, char** argv)
 
 
         ros::Subscriber position_subscriber = n.subscribe("/rightLine", 1, callback_right_line);
-        ros::Subscriber cross_subscriber = n.subscribe("/cross", 1, Callback_cross);
+        //ros::Subscriber cross_subscriber = n.subscribe("/cross", 1, Callback_cross);
 
         ros::Publisher speeds_pub = n.advertise<std_msgs::Int16>("/manual_control/speed", 1);
         ros::Publisher steering_pub = n.advertise<std_msgs::Int16>("/manual_control/steering", 1);
@@ -178,6 +190,12 @@ int main(int argc, char** argv)
 
         int state = 0;
         int j=0;
+
+        for (int i=0; i<filter_order; i++)
+        {
+                filtered_theta.push_back(0.0);
+        }
+
         while (ros::ok())
         {
                 ros::Rate loop_rate(10);
@@ -254,7 +272,7 @@ int main(int argc, char** argv)
                         else {
                                 msg_speed.data=speed;
                                 speeds_pub.publish(msg_speed);
-                                cout << "Speed: " << msg_speed.data <<"\n";
+                                cout << "Speed Car: " << msg_speed.data <<"\n";
                                 msg_steering.data=steering;
                                 steering_pub.publish(msg_steering);
 

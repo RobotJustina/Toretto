@@ -108,20 +108,20 @@ int main(int argc, char** argv)
                 obsL.data=(obsL_0+obsL_1+obsL_2)/3;
                 obsR.data=(obsR_0+obsR_1+obsR_2)/3;
 
-                cout << "obsR: " << obsR.data << "\n";
-                cout << "obsL: " << obsL.data << "\n";
+                cout << "obsR: " << obsR.data << "\t";
+                cout << "obsL: " << obsL.data << "\t";
                 cout << "obsF: " << obs << "\n";
 
                 ros::spinOnce();
 
-                if (obs <= 1.00) { //before 1.25
+                if (obs <= 1.25) { //before 1.25
                         aux =(obs-dmin)*100;
                         if (aux <= 0)
                                 aux=0;
                         //cout <<"aux: "<< aux << "\n";
-                        cout <<"vmax: "<< vmax << "\n";
+                        cout <<"[]Vmax_car: "<< vmax << "\t";
                         speed.data = (vmax/((dmax-dmin)*100) * aux)* -1;
-                        cout <<"speed : "<< speed.data << "\n";
+                        cout <<"Speed : "<< speed.data << "\n";
                         if(speed.data < 10 && speed.data > -10) {
                                 speed.data=0;
                         }
@@ -147,7 +147,7 @@ int main(int argc, char** argv)
                 objectR_pub.publish(obsR);
                 objectL_pub.publish(obsL);
                 objectF_pub.publish(obsF);
-        
+
                 loop_rate.sleep();
         }
 }
