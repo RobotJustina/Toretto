@@ -15,5 +15,5 @@
 	<param name="turn_speed" value="$(arg turn_speed)"/>
 	<param name="dist_to_lane" value="$(arg dist_to_lane)"/>
 	<param name="cutoff" value="$(arg cutoff)"/>
-	<node name="lane_tracking" pkg="lane_tracking" type="lane_tracking_node" output="screen"/>
+	<node name="lane_tracking" pkg="lane_tracking" type="lane_tracking_reloaded" output="screen"/>
 </launch>

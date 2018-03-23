@@ -1,5 +1,5 @@
 <launch>
-  <param name="hough_thr" value="70"/>
+  <param name="hough_thr" value="40"/>
   <param name="min_lin_len" value="30" />
   <param name="max_gap_len" value="20" />
   <param name="value_thr_low" value="150"/>
