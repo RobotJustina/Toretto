@@ -34,7 +34,7 @@ void callback_right_line(const std_msgs::Float32MultiArray::ConstPtr& msg)
         }
         avg/=filter_order; //same 10 as in main
         angle_error=avg;
-        float dist_error = (fabs(A*160 + B*190 +C)/sqrt(A*A + B*B) - dist_to_lane);
+        float dist_error = (fabs(A*160 + B*200 +C)/sqrt(A*A + B*B) - dist_to_lane);
         steering = (int16_t)(100 + K_dist * dist_error + K_angle * angle_error);
         speed    = (int16_t)(-(max_speed - K_brake * fabs(angle_error) * (max_speed - turn_speed)));
         // std::cout << "Found line: " << A << "\t" << B << "\t" << C << std::endl;

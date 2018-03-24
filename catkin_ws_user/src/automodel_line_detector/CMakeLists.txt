@@ -1,4 +1,4 @@
-kjncmake_minimum_required(VERSION 2.8.3)
+cmake_minimum_required(VERSION 2.8.3)
 project(automodel_line_detector)
 
 ## Compile as C++11, supported in ROS Kinetic and newer

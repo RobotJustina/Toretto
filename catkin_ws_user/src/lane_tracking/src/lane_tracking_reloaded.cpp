@@ -40,12 +40,12 @@ void callback_right_line(const std_msgs::Float32MultiArray::ConstPtr& msg)
 	output_buffer.push_back(0);
 	for(int i =0; i <= filter_order; i++)
 	    filtered_angle += input_buffer[i] * butter_B[i];
-	for(int i=1; i <= filter_order; i++)
+	for(int i=0; i < filter_order; i++)
 	    filtered_angle -= output_buffer[i] * butter_A[i];
 	output_buffer[5] = filtered_angle;
 	//angle_error = filtered_angle;
 
-        float dist_error = (fabs(A*160 + B*190 +C)/sqrt(A*A + B*B) - dist_to_lane);
+        float dist_error = (fabs(A*160 + B*200 +C)/sqrt(A*A + B*B) - dist_to_lane);
         speed    = (int16_t)(-(max_speed - K_brake * fabs(angle_error) * (max_speed - turn_speed)));
 	float K_angle;
 	if(-speed < 700)
