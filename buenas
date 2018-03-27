@@ -1,0 +1,9 @@
+roslaunch lane_detection lane_tmr.launch angosta
+
+roslaunch surge_et_ambula lane_tracking_reloaded.launch max_speed:=700 turn_speed:=300 dist_to_lane:=105 K_angle_min:=10 K_angle_max:=30 cutoff:=1
+
+roslaunch surge_et_ambula lane_tracking_reloaded.launch x_speed:=1300 turn_speed:=400 dist_to_lane:=105 K_angle_min:=3 K_angle_max:=10 cutoff:=1
+
+
+roslaunch surge_et_ambula lane_tracking_reloaded.launch max_speed:=700 turn_speed:=300 dist_to_lane:=105 K_angle_min:=10 K_angle_max:=30 cutoff:=1
+

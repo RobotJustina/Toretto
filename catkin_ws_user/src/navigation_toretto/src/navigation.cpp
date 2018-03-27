@@ -123,7 +123,7 @@ void Callback_objectF(const std_msgs::Float32::ConstPtr& msg)
 {
         //cout << "object left true" << "\n";
 
-        if((msg->data < 0.80) && (msg->data >0.01)) {
+        if((msg->data < 1.00) && (msg->data >0.01)) {
                 objectF=true;
         }
         else{
