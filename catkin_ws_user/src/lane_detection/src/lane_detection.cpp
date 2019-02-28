@@ -1,3 +1,10 @@
+/**
+ * Lane Detection
+ * Purpose: Process images from the camera and detects lane lines from the road.
+ * @author:
+ * @version:
+ */
+
 #define BOXES 12
 #define MAX_VAL_IN_PIXEL 255
 #include "lane_detection.h"
@@ -16,26 +23,56 @@ lane_extractor::lane_extractor( int hough_thr,double minLen, double gapLen, int 
 
 }
 
+/**
+ * Camera image preprocess. Applies: 
+ *   1) BGR to HSV convertion.
+ *   2) Blurs the image.
+ *   3) Gets the 'value' matrix from HSV.
+ *   4) 
+ *   5) Applies a Threshold using range of values to binarize the image.
+ *
+ * @param The image, it's edges and a color bool.
+ * @return Preprocessed image with 
+ */
 void lane_extractor::get_borders(cv::Mat &image, cv::Mat &edges, bool color = false)
 {
         cv::Mat gray_img,hsv;
         cv::Mat binarized;
         if (color)
         {
+                // Convert the image from BGR to HSV
                 cv::cvtColor(image, hsv, cv::COLOR_BGR2HSV);
+
+                // Blurs HSV image using a normalized box filter.
                 cv::blur(hsv,hsv,cv::Size(7,7));
+
+                // Isolates the 'Value' matrix from HSV
                 cv::Mat chan_hsv[3];
+
+                
                 cv::split(hsv,chan_hsv);
+                
+                // Threshold based in lowValThr and highValThr.
                 cv::inRange(chan_hsv[1], lowValThr,highValThr, binarized);
         }
         else{
-                cv::cvtColor(image, gray_img, cv::COLOR_BGR2GRAY);
-                cv::blur(gray_img,gray_img,cv::Size(7,7));
-                cv::inRange(gray_img, lowValThr,highValThr, binarized);
-        }
+            // In case we prefer to use Grayscale instead of HSV to preprocess
+            // the image.
 
+                // Convert the image from BGR to Grayscale
+                cv::cvtColor(image, gray_img, cv::COLOR_BGR2GRAY);
+
+                // Blurs the image using a nromalized box filter.
+                cv::blur(gray_img,gray_img,cv::Size(7,7));
+
+                // Applies a Threshold to binarize the image.
+                cv::inRange(gray_img, lowValThr,highValThr, binarized);        
+        }
+        
+        // Applies Canny Algorithm to get the borders.
         cv::Canny( binarized, edges,canny_thr_low,canny_thr_high);
 }
+
 
 std_msgs::Float32MultiArray lane_extractor::extract_right_lane_hough(cv::Mat &edges, cv::Mat &viz)
 {
@@ -129,6 +166,15 @@ std_msgs::Float32MultiArray lane_extractor::extract_right_lane_hough(cv::Mat &ed
 
 }
 
+/**
+ * Extract Left Lane Hough
+ *
+ * Uses Probabilistic Hough Lines Transform to find lines segment 
+ * on the left side of the car.
+ *
+ * @param Preprocessed image and edges.
+ * @return Line direction.
+ */
 
 std_msgs::Float32MultiArray lane_extractor::extract_left_lane_hough(cv::Mat &edges, cv::Mat & viz )
 {
@@ -151,6 +197,8 @@ std_msgs::Float32MultiArray lane_extractor::extract_left_lane_hough(cv::Mat &edg
 
         std::vector<cv::Vec4i> lines;
         std::vector<cv::Point> puntos;
+        
+        // Uses HoughLinesP to get the lines on the left of the image.
         cv::HoughLinesP(cropped_img, lines,1,CV_PI/180, hough_thr, minLen, gapLen);
         //std::cout<<"Number of lines left: "<< lines.size()<<std::endl;
         for (int i=0; i<lines.size(); i++)
@@ -158,6 +206,8 @@ std_msgs::Float32MultiArray lane_extractor::extract_left_lane_hough(cv::Mat &edg
 
                 cv::Point ini(lines[i][0],lines[i][1]);
                 cv::Point fin(lines[i][2],lines[i][3]);
+
+                // Calculates the line slope.
                 float m=atan2(fin.y-ini.y,fin.x-ini.x);
                 //std::cout<<m*RAD2DEG<<std::endl;
 
@@ -191,13 +241,14 @@ std_msgs::Float32MultiArray lane_extractor::extract_left_lane_hough(cv::Mat &edg
         cv::Vec4f lineL;
         if(puntos.size()>0)
         {
+                // Uses Welsh Distance to fit a line with the points found. 
                 cv::fitLine(puntos,lineL, CV_DIST_WELSCH, 0, 0.01,0.01);
                 lineL[2]+=roi_corner.x; lineL[3]+=roi_corner.y;
                 cv::Point2f ini(lineL[2],lineL[3]);
                 //ini=ini+roi_corner;
                 cv::Point2f dir(lineL[0],lineL[1]);
                 cv::Point2f fin(ini+100*dir);
-                cv::line(viz,ini,fin, cv::Scalar(188,193,46),5); //azul clarito
+                cv::line(viz,ini,fin, cv::Scalar(188,193,46),5); //Bright Blue
                 msg_direction.data.clear();
 
                 float A=1/lineL[0];
