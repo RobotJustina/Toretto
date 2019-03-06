@@ -32,11 +32,21 @@ catkin_make
 ```
 
 4. Run the Justina Software package to verify everything installed correctly
-
+```
+roslaunch surge_et_ambula getting_started.launch
+```
 
 ## Deployment
 
 There are various parts of the project that you will be using. In the next couple sections we talk about how to use different modules during the development process and finish by providing comands to execute it on the car.
+
+### Connect to the car
+To connect to the car you need to open an ssh connection to the car:
+
+
+1. Connect to the network where the car is connected as well. In our case we have the car connected with the IP addres: 192.168.43.102.
+2. `ssh root@192.168.43.102`
+3. `export ROS_MASTER_URI='http://192.168.43.102:11311'` to store it. 
 
 ### Run the car
 
@@ -50,6 +60,7 @@ Open a new terminal (Terminal #2)  and run:
 
 ```
 roslaunch surge_et_embula lane_tracking.launch
+
 ```
 
 
