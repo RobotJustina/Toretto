@@ -72,6 +72,8 @@ To copy you need to copy the workspace into the model car. And reconfigure the w
 target=root@192.168.43.102:./$ws_name/
 ```
 As it is now. The configuration script only works if you copy the workspace into /root/model_car inside the model car. If you want to compile somewhere else you must change the workspace directory on the container to match exactly the path of the workspace in the model car.
+As there are a lot of dependencies inside setup files on the devel folder that depend on having a properly named directory.
+O sea que esta hardcodeado el destino de la copia en /root/model_car por que muchos de los scripts de setupeo dependen del nombre de la carpeta donde se compilaron (o sea el nombre del pwd dentro del docker)
 
 ## Testing compilation
 In case you intend to try if your code compile using ros-indigo. You can simply attach to the container and navigate to the proper directory there you can use:
@@ -79,3 +81,4 @@ In case you intend to try if your code compile using ros-indigo. You can simply 
   catkin_make
 ```
 The compiled binaries will be useless but you can check if you code is indigo compliant.
+hola

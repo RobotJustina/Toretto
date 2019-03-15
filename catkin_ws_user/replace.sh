@@ -4,7 +4,7 @@ ws_name=$(basename $var)
 tmpfile=/tmp/magicReplaceTempFile
 target=root@192.168.43.102:./$ws_name/
 echo "The workspace directory is $var."
-
+#execute OUTSIDE DOCKER
 
 rsync -r  $var/src $target
 rsync -r $var/odroid-devel $target
