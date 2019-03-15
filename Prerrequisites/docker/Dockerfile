@@ -27,7 +27,7 @@ RUN  tar -xjf /opt/odroid-x2/compilerOdroid.tar.bz2 -C /opt/odroid-x2/
 #RUN mkdir -p /root/model_car/catkin_ws && cd /root/model_car/catkin_ws
 RUN mkdir -p /root/catkin_ws_user &&cd /root/catkin_ws_user
 
-RUN catkin config --profile odroid -b build -d devel -i install
+RUN catkin config --profile odroid -b odroid-build -d odroid-devel -i install -s src
 RUN catkin config --profile odroid --cmake-args  -DCMAKE_TOOLCHAIN_FILE=/root/catkin_ws_user/src/Toolchain-arm-linux-gnueabihf.cmake
 RUN catkin config --profile odroid --extend /opt/odroid-x2/sdk/opt/ros/indigo/
 RUN catkin config --merge-devel --profile odroid

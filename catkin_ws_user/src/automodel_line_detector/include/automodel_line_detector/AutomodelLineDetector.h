@@ -11,7 +11,7 @@
 #include "cv_bridge/cv_bridge.h"
 #include "std_msgs/Float32MultiArray.h"
 #include <opencv2/opencv.hpp>
-#include "opencv2/imgproc.hpp"
+#include <opencv2/imgproc/imgproc.hpp>
 #include <image_transport/image_transport.h>
 #include <iostream>
 

@@ -8,10 +8,10 @@ To circumvent this the presnt docker file is created. It lets emulate a Indigo m
 1. Pull this repo.
 2. Install Docker: https://docs.docker.com/install/linux/docker-ce/ubuntu/
 3. Download SDK and compiler from AutoModelCar https://github.com/AutoModelCar/AutoModelCarWiki/wiki/Cross-compile
-4. Copy and rename to sdkOdroid.tar.bz2 and compilerOdroid.tar.bz2 in this folder
+4. Copy and rename to sdkOdroid.tar.bz2 and compilerOdroid.tar.bz2 to a location you choose. copy the Dockefile there
 
 ## Build image
- First you need to build the image. Run the following on /docker:
+ First you need to build the image. Run the following the fodler where both the docker file, the compiler are the sdk are stored:
 ```bash
   docker buld -t automodel .
 ```
@@ -37,7 +37,7 @@ This will likely fail as there is a bug with catkin. To continue simpli
   touch src/Toolchain-arm-linux-gnueabihf.cmake
   catkin build --profile odroid
 ```
-Reperat until everythin is compiled. Alternatively if you want to compile only one package:
+Repeat until everythin is compiled. Alternatively if you want to compile only one package:
 
 ```bash
   catkin build --profile odroid package_to_build
