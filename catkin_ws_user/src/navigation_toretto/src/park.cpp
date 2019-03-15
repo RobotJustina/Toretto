@@ -36,7 +36,7 @@ int max_speed  = 800;
 int turn_speed = 400;
 int dist_to_lane = 90;
 
-int16_t steering = 90;;
+int16_t steering = 90;
 int16_t speed = 0;
 
 void callback_right_line(const std_msgs::Float32MultiArray::ConstPtr& msg)
@@ -49,7 +49,8 @@ void callback_right_line(const std_msgs::Float32MultiArray::ConstPtr& msg)
         return;
     //La imagen homografeada es de 640x700
     float angle_error = atan(B/A);
-    float dist_error = (fabs(A*160 + B*190 +C)/sqrt(A*A + B*B) - dist_to_lane);
+    float dist_error = (fabs(A*160 + B*200 +C)/sqrt(A*A + B*B) - dist_to_lane);
+
     steering = (int16_t)(100 + K_dist * dist_error + K_angle * angle_error);
     speed    = (int16_t)(-(max_speed - K_brake * fabs(angle_error) * (max_speed - turn_speed)));
     std::cout << "Found line: " << A << "\t" << B << "\t" << C << std::endl;
@@ -224,6 +225,9 @@ int main(int argc, char** argv)
 
                         if (objectR)
                         {
+                        		msg_speed.data=-100;
+                                speeds_pub.publish(msg_speed);
+                                sleep(1);
                                 msg_speed.data=0;
                                 speeds_pub.publish(msg_speed);
                                 sleep(1);
@@ -239,16 +243,16 @@ int main(int argc, char** argv)
                         msg_steering.data=max_steer_right; //-50 orig
                         steering_pub.publish(msg_steering);
                         cout << "Pub Steering :" << msg_steering.data << "\n";
-                        msg_speed.data=100;
+                        msg_speed.data=120;
                         speeds_pub.publish(msg_speed);
                         cout << "Pub speed :" << msg_speed.data << "\n";
-                        time_s=(t_100*100/msg_speed.data);
-                        time_s=time_s*vu;
-                        if (time_s < 0) {
-                                time_s=-1*time_s;
-                        }
-                        cout << "Time case 0: "<< time_s << "\n";
-                        sleep(time_s);
+                        //time_s=(t_100*100/msg_speed.data);
+                        //time_s=time_s*vu;
+                        //if (time_s < 0) {
+                        //        time_s=-1*time_s;
+                        //}
+                        //cout << "Time case 0: "<< time_s << "\n";
+                        sleep(8); //7.99
                         msg_speed.data=00;
                         speeds_pub.publish(msg_speed);
                         sleep(1);
@@ -262,16 +266,16 @@ int main(int argc, char** argv)
                         msg_steering.data=max_steer_left; //290 orig
                         steering_pub.publish(msg_steering);
                         cout << "Pub Steering :" << msg_steering.data << "\n";
-                        msg_speed.data=100;
+                        msg_speed.data=120;
                         speeds_pub.publish(msg_speed);
                         cout << "Pub speed :" << msg_speed.data << "\n";
-                        time_s=(t_100*100/msg_speed.data);
-                        time_s=time_s*vu;
-                        if (time_s < 0) {
-                                time_s=-1*time_s;
-                        }
-                        cout << "Time case 1: "<< time_s << "\n";
-                        sleep(time_s);
+                        //time_s=(t_100*100/msg_speed.data);
+                        //time_s=time_s*vu;
+                        //if (time_s < 0) {
+                        //        time_s=-1*time_s;
+                        //}
+                        //cout << "Time case 1: "<< time_s << "\n";
+                        sleep(7.5);
                         msg_speed.data=00;
                         speeds_pub.publish(msg_speed);
                         sleep(1);
@@ -289,13 +293,13 @@ int main(int argc, char** argv)
                         speeds_pub.publish(msg_speed);
                         cout << "Pub speed :" << msg_speed.data << "\n";
 
-                        time_s=(t_100*100/msg_speed.data);
-                        time_s=time_s*vu;
-                        if (time_s < 0) {
-                                time_s=-1*time_s;
-                        }
-                        cout << "Time case 2: "<< time_s << "\n";
-                        sleep(time_s);
+                        //time_s=(t_100*100/msg_speed.data);
+                        //time_s=time_s*vu;
+                        //if (time_s < 0) {
+                        //        time_s=-1*time_s;
+                        //}
+                        //cout << "Time case 2: "<< time_s << "\n";
+                        sleep(2.70);
 
                         state = 7;
                         break;
