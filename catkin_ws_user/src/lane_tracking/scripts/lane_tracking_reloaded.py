@@ -22,7 +22,7 @@ buffer_A = np.array([0,0,0,0,0,0])
 buffer_B = np.array([0,0,0,0,0,0])
 buffer_ae = np.array([0,0,0]) #buffer de angle error, con 2 estados guardados
 filter_order = 5
-enabled = 1
+enabled = True
 pub_steering = rospy.Publisher("/manual_control/steering",Int16, queue_size = 1) 
 pub_speed = rospy.Publisher("/manual_control/speed",Int16, queue_size = 1)
 
@@ -43,8 +43,8 @@ def processing_right_line(data):
 	#ae_prom = (buffer_ae[1]*.75) + (buffer_ae[2]*.25)
 	#dif = fabs(ae_prom - buffer_ae[0])
 	#if(dif < 300 or buffer_ae[2] == 0):
-	angle_error = math.atan(B/A)
-
+	    #angle_error = math.atan(B/A)
+        angle_error = math.atan(B/A)
 	#Buffer de entrada, usado para filtro paso bajas y quitar ruido de la linea
 	
 	input_buffer.insert(len(input_buffer),angle_error)
@@ -69,7 +69,8 @@ def processing_right_line(data):
 			K_angle = K_angle_max - (-speed -700)/800 * (K_angle_max - K_angle_min)
 	steering = 100 + K_dist * dist_error + K_angle * angle_error
 	
-	print('data:'+str(steering)+'......\n')
+	print('steering:'+str(steering)+'......\n')
+	print('speed:'+str(speed)+'......\n')
 	input_buffer.pop(0)
 	output_buffer.pop(0)
 	#msg_steering = steering
@@ -78,9 +79,9 @@ def processing_right_line(data):
 
 def processing_stop(data):
 	if(data == 1):
-		enabled = true
+		enabled = True
 	else:
-		enabled = false
+		enabled = False
 
 def switch(data):
 	if data == 1:
@@ -141,10 +142,10 @@ def listener():
 	rospy.init_node("lane_tracking")
 	if(enabled):
 		rospy.Subscriber("/rightLine",Float32MultiArray,processing_right_line)
-	#rospy.Subscriber("/stop",Int16,processing_stop)
+	rospy.Subscriber("/manual_control/stop",Int16,processing_stop)
 
-	
-
+        #pub_steering = rospy.Publisher("/manual_control/steering",Int16, queue_size = 1) 
+        #pub_speed = rospy.Publisher("/manual_control/speed",Int16, queue_size = 1)
 
 	np.resize(buffer_A,(filter_order+1))
 	np.resize(buffer_B,(filter_order+1))

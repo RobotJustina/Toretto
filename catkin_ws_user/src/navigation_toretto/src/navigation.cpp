@@ -23,6 +23,7 @@ using namespace std;
 std_msgs::Int16 msg_steering;
 std_msgs::Int16 msg_speed;
 std_msgs::Int16 speed_obj;
+std_msgs::Int16 stop_flag;
 
 
 bool objectF=false,objectR=false,objectL=false; //object detected
@@ -161,6 +162,7 @@ int main(int argc, char** argv)
         ros::Publisher speeds_pub = n.advertise<std_msgs::Int16>("/manual_control/speed", 1);
         ros::Publisher steering_pub = n.advertise<std_msgs::Int16>("/manual_control/steering", 1);
         ros::Publisher light_fr_pub = n.advertise<std_msgs::String>("/manual_control/lights", 1);
+        ros::Publisher stop_line_det_pub = n.advertise<std_msgs::Int16>("/manual_control/stop", 1);
 
         //ros::Subscriber stop_subscriber = n.subscribe("/manual_control/stop", 1, Callback_stop);
         ros::Subscriber object_subscriber = n.subscribe("/object_detection/speed", 1, Callback_object);
@@ -214,6 +216,8 @@ int main(int argc, char** argv)
                 case 0:
                         std::cout << "[State: 0]  Config" << '\n';
                         msg_speed.data=speed;
+                        stop_flag.data = 0;
+                        stop_line_det_pub.publish(stop_flag);
                         speeds_pub.publish(msg_speed);
                         msg_steering.data=90;
                         steering_pub.publish(msg_steering);
@@ -225,6 +229,8 @@ int main(int argc, char** argv)
                         {
                                 printf("[State: %d] Object @ front\n", state);
                                 speeds_pub.publish(speed_obj);
+                                stop_flag.data=1;
+                                stop_line_det_pub.publish(stop_flag);
                                 //Match obj speed and if static overtake
                                 cout << "j: " << j << "\n";
                                 cout << "Speed Object: " << speed_obj.data <<"\n";
@@ -275,13 +281,16 @@ int main(int argc, char** argv)
                                 cout << "Speed Car: " << msg_speed.data <<"\n";
                                 msg_steering.data=steering;
                                 steering_pub.publish(msg_steering);
-
+                                stop_flag.data=0;
+                                stop_line_det_pub.publish(stop_flag);
 
                         }
 
                         break;
 
                 case 2: //turn left to overtake obstacle
+                        stop_flag.data = 1;
+                        stop_line_det_pub.publish(stop_flag); // stops line detection to avoid obstacle.
                         printf("[State: %d] Turning left\n", state);
                         msg_steering.data=max_steer_left;
                         steering_pub.publish(msg_steering);
@@ -303,6 +312,8 @@ int main(int argc, char** argv)
 
                 case 3: //turn right to enter left lane
                         printf("[State: %d] Turning right\n", state);
+                        stop_flag.data = 1;
+                        stop_line_det_pub.publish(stop_flag); // stops line detection to avoid obstacle.
                         vu=vu_r1;
                         msg_steering.data=max_steer_right; // orig 20
                         steering_pub.publish(msg_steering);
@@ -323,6 +334,8 @@ int main(int argc, char** argv)
                 case 4: //we are now in the left lane
                         printf("[State: %d] On left lane, following line, looking for obstacle\n", state);
                         msg_steering.data=steering;
+                        stop_flag.data = 1;
+                        stop_line_det_pub.publish(stop_flag); // stops line detection to avoid obstacle.
                         steering_pub.publish(msg_steering);
                         msg_speed.data=speed;
                         speeds_pub.publish(msg_speed);
@@ -334,6 +347,8 @@ int main(int argc, char** argv)
                         break;
                 case 5:         //we are now in the left lane
                         printf("[State: %d] On left line, Found obstacle right\n", state);
+                        stop_flag.data = 1;
+                        stop_line_det_pub.publish(stop_flag); // stops line detection to avoid obstacle.
                         steering_pub.publish(msg_steering);
                         msg_speed.data=speed;
                         speeds_pub.publish(msg_speed);
@@ -342,9 +357,10 @@ int main(int argc, char** argv)
                                 state=6;
                         }
                         break;
-                case 6: //objcect celar return to right lane
+                case 6: //object cleared return to right lane
                         printf("[State: %d]Turning to right lane\n", state);
                         vu=vu_r2;
+                        stop_line_det_pub.publish(stop_flag); // stops line detection to avoid obstacle.
                         msg_steering.data=max_steer_right;
                         steering_pub.publish(msg_steering);
                         msg_speed.data=-100;
@@ -366,6 +382,7 @@ int main(int argc, char** argv)
                 case 7:
                         printf("[State: %d]Turning left to match right lane\n", state);
                         vu=vu_l2;
+                        stop_line_det_pub.publish(stop_flag); // stops line detection to avoid obstacle.
                         msg_steering.data=max_steer_left;
                         steering_pub.publish(msg_steering);
                         msg_speed.data=-100;
@@ -386,6 +403,8 @@ int main(int argc, char** argv)
                         break;
                 case 8:
                         printf("[State: %d] On right line, following line again\n", state);
+                        stop_flag.data = 0;
+                        stop_line_det_pub.publish(stop_flag); // continues line detection to avoid obstacle.
                         msg_steering.data=steering;
                         steering_pub.publish(msg_steering);
                         state=0;

@@ -157,8 +157,8 @@ int main(int argc, char** argv)
         n.param<float>("vu_l",vu_l,2.2);
         n.param<float>("vu_m",vu_m,0.8);
         n.param<int>("max_steer_left",max_steer_left,10);
-        n.param<int>("max_steer_right",max_steer_right,170);
-        n.param<int>("mid_steer_right",mid_steer_right,130);
+        n.param<int>("max_steer_right",max_steer_right,180);
+        n.param<int>("mid_steer_right",mid_steer_right,140);
         n.param<float>("kp_park",kp_park,2.0);
 
         n.param<float>("K_dist", K_dist, 0.5);
@@ -225,13 +225,10 @@ int main(int argc, char** argv)
 
                         if (objectR)
                         {
-                        		msg_speed.data=-100;
-                                speeds_pub.publish(msg_speed);
-                                sleep(0.9);
                                 msg_speed.data=0;
                                 speeds_pub.publish(msg_speed);
                                 sleep(1);
-                                state=4;
+                                state=9;
                         }
 
                         break;
@@ -252,7 +249,7 @@ int main(int argc, char** argv)
                         //        time_s=-1*time_s;
                         //}
                         //cout << "Time case 0: "<< time_s << "\n";
-                        sleep(8); //7.99
+                        sleep(7.5); //7.99
                         msg_speed.data=00;
                         speeds_pub.publish(msg_speed);
                         sleep(1);
@@ -275,7 +272,7 @@ int main(int argc, char** argv)
                         //        time_s=-1*time_s;
                         //}
                         //cout << "Time case 1: "<< time_s << "\n";
-                        sleep(6);
+                        sleep(5.2);
                         msg_speed.data=00;
                         speeds_pub.publish(msg_speed);
                         sleep(1);
@@ -299,7 +296,7 @@ int main(int argc, char** argv)
                         //        time_s=-1*time_s;
                         //}
                         //cout << "Time case 2: "<< time_s << "\n";
-                        sleep(2.5);
+                        sleep(4);
 
                         state = 7;
                         break;
@@ -321,7 +318,7 @@ int main(int argc, char** argv)
                                 speeds_pub.publish(msg_speed);
                         }
 
-                        msg_steering.data = 90; //90 deg offset
+                        msg_steering.data = 100; //90 deg offset
                         steering_pub.publish(msg_steering);
 
                         break;
@@ -330,6 +327,18 @@ int main(int argc, char** argv)
                         msg_speed.data=0;
                         speeds_pub.publish(msg_speed);
                         sleep(3);
+                        break;
+                case 9:
+                        printf("[State: %d] Aiming \n", state);
+                        msg_steering.data= 20;
+                        steering_pub.publish(msg_steering);
+                        msg_speed.data=-100;
+                        speeds_pub.publish(msg_speed);
+                        sleep(2.5);
+                        msg_speed.data=00;
+                        speeds_pub.publish(msg_speed);
+                        sleep(1);
+                        state=4;
                         break;
                 default:
 
