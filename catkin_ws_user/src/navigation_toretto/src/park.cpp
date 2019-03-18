@@ -227,7 +227,7 @@ int main(int argc, char** argv)
                         {
                         		msg_speed.data=-100;
                                 speeds_pub.publish(msg_speed);
-                                sleep(1);
+                                sleep(0.9);
                                 msg_speed.data=0;
                                 speeds_pub.publish(msg_speed);
                                 sleep(1);
@@ -275,7 +275,7 @@ int main(int argc, char** argv)
                         //        time_s=-1*time_s;
                         //}
                         //cout << "Time case 1: "<< time_s << "\n";
-                        sleep(7.5);
+                        sleep(6);
                         msg_speed.data=00;
                         speeds_pub.publish(msg_speed);
                         sleep(1);
@@ -299,7 +299,7 @@ int main(int argc, char** argv)
                         //        time_s=-1*time_s;
                         //}
                         //cout << "Time case 2: "<< time_s << "\n";
-                        sleep(2.70);
+                        sleep(2.5);
 
                         state = 7;
                         break;
@@ -321,7 +321,7 @@ int main(int argc, char** argv)
                                 speeds_pub.publish(msg_speed);
                         }
 
-                        msg_steering.data=kp_park*(r_obj-MAX_DIST_TO_SIDEWALK)+90; //90 deg offset
+                        msg_steering.data = 90; //90 deg offset
                         steering_pub.publish(msg_steering);
 
                         break;
