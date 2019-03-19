@@ -21,7 +21,8 @@ std::vector<float> input_buffer;
 std::vector<float> output_buffer;
 std::vector<float> butter_A;
 std::vector<float> butter_B;
-
+std::vector<float> buffer_angle;
+//0Jala, 1 Para -> stop-flag
 bool shutdown=false;
 void callback_right_line(const std_msgs::Float32MultiArray::ConstPtr& msg)
 {
@@ -32,6 +33,17 @@ void callback_right_line(const std_msgs::Float32MultiArray::ConstPtr& msg)
                 return;
         //La imagen homografeada es de 640x700
         float angle_error = atan(B/A);
+        /*Filtrado de angulo
+        buffer_angle.insert(0)=angle_error;
+        buffer_angle.insert(1)=buffer_angle.at(0);
+        buffer_angle.insert(2)=buffer_angle.at(1);
+        float dif_angle = buffer_angle.at(0) + buffer_angle.at(1);
+        if(abs(dif_angle) < 500 && buffer_angle.at(2)!= -99999){
+            angle_error = buffer_angle.at(1);
+            buffer_angle.insert(0)=angle_error;
+        }
+        */
+
         input_buffer.erase(input_buffer.begin());
         input_buffer.push_back(angle_error);
 
@@ -99,14 +111,15 @@ int main(int argc, char** argv)
         ros::Publisher pub_speed      = n.advertise<std_msgs::Int16>("/manual_control/speed", 1);
         ros::Subscriber sub_lane_right = n.subscribe("/rightLine", 1, callback_right_line);
 
-        //ros::Subscriber stop_subscriber = n.subscribe("/manual_control/stop", 1, Callback_stop);
-
+        //ros::Subscriber stop_subscriber = n.subscribe("/manual_control/stop",1,Call_backstop);
+        ros::Subscriber stop_flag = n.subscribe("/manual_control/stop_flag",1,Callback_stop);
         ros::Rate loop(20);
         std_msgs::Int16 msg_steering;
         std_msgs::Int16 msg_speed;
 
 	butter_A.resize(filter_order + 1);
 	butter_B.resize(filter_order + 1);
+    buffer_angle.resize(3);
 	butter_A[5] = 1;
         for (int i=0; i<=filter_order; i++)
 	{
@@ -114,6 +127,9 @@ int main(int argc, char** argv)
 	    output_buffer.push_back(0.0);
 	}
 
+        buffer_angle.insert(0)=-99999;
+        buffer_angle.insert(1)=-99999;
+        buffer_angle.insert(2)=-99999;
 	switch(cutoff)
 	{
 	case 1:

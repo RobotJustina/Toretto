@@ -26,6 +26,7 @@ enabled = True
 pub_steering = rospy.Publisher("/manual_control/steering",Int16, queue_size = 1) 
 pub_speed = rospy.Publisher("/manual_control/speed",Int16, queue_size = 1)
 
+sub_stop=rospy.Subscriber("/manual_control/stop_start",Int16,processing_stop)
 
 
 def processing_right_line(data):
@@ -71,6 +72,7 @@ def processing_right_line(data):
 	
 	print('steering:'+str(steering)+'......\n')
 	print('speed:'+str(speed)+'......\n')
+        print('flag stop'+str(sub_stop)+'.....\n')
 	input_buffer.pop(0)
 	output_buffer.pop(0)
 	#msg_steering = steering
@@ -142,7 +144,7 @@ def listener():
 	rospy.init_node("lane_tracking")
 	if(enabled):
 		rospy.Subscriber("/rightLine",Float32MultiArray,processing_right_line)
-	rospy.Subscriber("/manual_control/stop",Int16,processing_stop)
+	#rospy.Subscriber("/manual_control/stop_start",Int16,processing_stop)
 
         #pub_steering = rospy.Publisher("/manual_control/steering",Int16, queue_size = 1) 
         #pub_speed = rospy.Publisher("/manual_control/speed",Int16, queue_size = 1)
