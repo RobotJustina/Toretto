@@ -26,10 +26,10 @@ The configuration for the cross compiling is already set via the dockerfile all 
 This will return a bash session inside the container. However it is important to note the usage of the -v tag. This tells docker to mount a file on the host machine on the container file system. so any changes on the container will be reflected on the host system.
 
 ## Compiling
-Once inside the container go to /root/model_car it is important to use this directory as, currently, the configuration of the catkin_ws_user will point to this file. If eveything was succesful you should see catkin_ws_user inside.
+Once inside the container go to /root/catkin_ws_user it is important to use this directory as, currently, the configuration of the catkin_ws_user will point to this file. If eveything was succesful you should see catkin_ws_user inside.
 Move to the workspace directory and:
 ```bash
-  cd catkin_ws/
+  cd catkin_ws_user/
   catkin build --profile odroid
 ```
 This will likely fail as there is a bug with catkin. To continue simpli

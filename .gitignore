@@ -15,3 +15,4 @@ catkin_ws_user/.catkin_tools/
 catkin_ws_user/.catkin_workspace
 *.tar.bz2
 *.png
+.catkin_workspace

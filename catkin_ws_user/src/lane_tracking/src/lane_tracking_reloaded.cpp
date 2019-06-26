@@ -127,9 +127,9 @@ int main(int argc, char** argv)
 	    output_buffer.push_back(0.0);
 	}
 
-        buffer_angle.insert(0)=-99999;
-        buffer_angle.insert(1)=-99999;
-        buffer_angle.insert(2)=-99999;
+        //buffer_angle.insert(0)=-99999;
+        //buffer_angle.insert(1)=-99999;
+        //buffer_angle.insert(2)=-99999;
 	switch(cutoff)
 	{
 	case 1:
