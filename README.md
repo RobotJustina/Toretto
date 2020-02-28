@@ -1,5 +1,5 @@
 # Toretto
-A Fast and Furious software for self driving cars.
+Software for operating 1:10 scaled self driving cars.
 
 ## Getting Started
 
@@ -63,10 +63,6 @@ roslaunch surge_et_embula lane_tracking.launch
 
 ```
 
-
-## License
-
-TODO
 
 
 

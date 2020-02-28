@@ -2,7 +2,7 @@
 
 The mini car runs on Ros indigo and Ubuntu 14.04 Trusty, So Compiling from
 ros Kinetic is impossible.
-To circumvent this the presnt docker file is created. It lets emulate a Indigo machine inside any Docker-capable computer.
+To circumvent this the presnt docker file is created. It lets emulate an Indigo machine inside any Docker-capable computer.
 
 ## Requirements
 1. Pull this repo.

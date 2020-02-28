@@ -28,7 +28,6 @@ pub_speed = rospy.Publisher("/manual_control/speed",Int16, queue_size = 1)
 
 sub_stop=rospy.Subscriber("/manual_control/stop_start",Int16,processing_stop)
 
-
 def processing_right_line(data):
 	
 
